@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal School ERP</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#071028;
+color:white;
+overflow-x:hidden;
+}
+
+/* LOGIN */
+
+#loginPage{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background:linear-gradient(to bottom,#020617,#071028);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+}
+
+.login-box{
+width:400px;
+background:rgba(255,255,255,0.05);
+padding:35px;
+border-radius:25px;
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+}
+
+.login-title{
+text-align:center;
+font-size:35px;
+margin-bottom:25px;
+color:#facc15;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:280px;
+height:100vh;
+position:fixed;
+left:0;
+top:0;
+background:linear-gradient(to bottom,#020617,#0f172a);
+padding:20px;
+border-right:2px solid #facc15;
+overflow-y:auto;
+}
+
+.logo-box{
+text-align:center;
+margin-bottom:25px;
+}
+
+#schoolLogo{
+width:90px;
+height:90px;
+border-radius:50%;
+border:3px solid #facc15;
+object-fit:cover;
+background:white;
+margin:auto;
+display:block;
+}
+
+#schoolName{
+margin-top:12px;
+font-size:24px;
+font-weight:bold;
+color:#facc15;
+}
+
+.menu-btn{
+width:100%;
+padding:14px;
+margin-top:10px;
+background:transparent;
+border:none;
+border-radius:14px;
+text-align:left;
+color:white;
+cursor:pointer;
+transition:0.3s;
+font-size:16px;
+}
+
+.menu-btn:hover{
+background:#1e293b;
+}
+
+.dropdown{
+display:none;
+margin-left:15px;
+}
+
+/* MAIN */
+
+.main{
+margin-left:280px;
+padding:30px;
+}
+
+.page{
+display:none;
+}
+
+.active{
+display:block;
+}
+
+/* GLASS */
+
+.glass{
+background:rgba(255,255,255,0.05);
+border-radius:25px;
+padding:25px;
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(10px);
+margin-bottom:20px;
+}
+
+.section-title{
+font-size:30px;
+margin-bottom:25px;
+color:#facc15;
+}
+
+.grid-3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.grid-2{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+input,select{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#0f172a;
+color:white;
+}
+
+.btn{
+padding:12px 18px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.04);
+}
+
+.gold-btn{
+background:#facc15;
+color:black;
+}
+
+.blue-btn{
+background:#2563eb;
+color:white;
+}
+
+.green-btn{
+background:#16a34a;
+color:white;
+}
+
+.red-btn{
+background:#dc2626;
+color:white;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#1e293b;
+padding:14px;
+color:#facc15;
+}
+
+td{
+background:#0f172a;
+padding:14px;
+border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.action-box{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:999999;
+}
+
+.popup-box{
+width:90%;
+max-width:1000px;
+max-height:90vh;
+overflow:auto;
+background:#0f172a;
+padding:25px;
+border-radius:25px;
+border:2px solid #facc15;
+}
+
+@media(max-width:900px){
+
+.grid-3,.grid-2{
+grid-template-columns:1fr;
+}
+
+.sidebar{
+width:100%;
+height:auto;
+position:relative;
+}
+
+.main{
+margin-left:0;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loginPage">
+
+<div class="login-box">
+
+<h1 class="login-title">
+👑 ADMIN LOGIN
+</h1>
+
+<input id="loginUsername" placeholder="Username">
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Password"
+style="margin-top:15px;"
+>
+
+<button
+class="btn gold-btn"
+style="width:100%;margin-top:20px;"
+onclick="adminLogin()"
+>
+🔐 Login
+</button>
+
+</div>
+
+</div>
+
+<div class="sidebar">
+
+<div class="logo-box">
+
+<img id="schoolLogo">
+
+<h1 id="schoolName">
+ROYAL SCHOOL ERP
+</h1>
+
+</div>
+
+<button class="menu-btn" onclick="showPage('dashboardPage')">
+🏠 Dashboard
+</button>
+
+<button class="menu-btn" onclick="toggleMenu('studentMenu')">
+🎓 Students ▼
+</button>
+
+<div id="studentMenu" class="dropdown">
+
+<button class="menu-btn" onclick="showPage('addStudentPage')">
+➕ Admission
+</button>
+
+<button class="menu-btn" onclick="showPage('studentRecordPage')">
+📋 Student Records
+</button>
+
+</div>
+
+<button class="menu-btn" onclick="toggleMenu('teacherMenu')">
+👨‍🏫 Teachers ▼
+</button>
+
+<div id="teacherMenu" class="dropdown">
+
+<button class="menu-btn" onclick="showPage('addTeacherPage')">
+➕ Add Teacher
+</button>
+
+<button class="menu-btn" onclick="showPage('teacherRecordPage')">
+📋 Teacher Records
+</button>
+
+</div>
+
+<button class="menu-btn" onclick="toggleMenu('feeMenu')">
+💰 Fees ▼
+</button>
+
+<div id="feeMenu" class="dropdown">
+
+<button class="menu-btn" onclick="showPage('addFeePage')">
+➕ Add Fee
+</button>
+
+<button class="menu-btn" onclick="showPage('feeRecordPage')">
+📋 Fee Records
+</button>
+
+</div>
+
+<button class="menu-btn" onclick="toggleMenu('marksMenu')">
+📝 Marksheet ▼
+</button>
+
+<div id="marksMenu" class="dropdown">
+
+<button class="menu-btn" onclick="showPage('addMarksheetPage')">
+➕ Add Marksheet
+</button>
+
+<button class="menu-btn" onclick="showPage('marksheetRecordPage')">
+📋 Marksheet Records
+</button>
+
+</div>
+
+<button class="menu-btn" onclick="showPage('settingsPage')">
+⚙ Settings
+</button>
+
+</div>
+
+<div class="main">
+
+<div id="dashboardPage" class="page active">
+
+<div class="grid-3">
+
+<div class="glass">
+<h2>Total Students</h2>
+<h1 id="studentCount">0</h1>
+</div>
+
+<div class="glass">
+<h2>Total Teachers</h2>
+<h1 id="teacherCount">0</h1>
+</div>
+
+<div class="glass">
+<h2>Total Fee</h2>
+<h1 id="feeCount">₹0</h1>
+</div>
+
+</div>
+
+</div>
+
+<div id="addStudentPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+🎓 Student Admission
+</h1>
+
+<div class="grid-3">
+
+<input id="sid" readonly>
+
+<input id="studentName" placeholder="Student Name">
+
+<select id="studentClass">
+
+<option>Select Class</option>
+
+<option>Nursery</option>
+<option>LKG</option>
+<option>UKG</option>
+
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+
+</select>
+
+<input id="fatherName" placeholder="Father Name">
+
+<input id="mobile" placeholder="Mobile Number">
+
+<input id="yearlyFee" type="number" placeholder="Yearly Fee">
+
+<input id="address" placeholder="Address">
+
+<input id="dob" type="date">
+
+<select id="gender">
+
+<option>Gender</option>
+<option>Male</option>
+<option>Female</option>
+
+</select>
+
+</div>
+
+<div style="margin-top:25px;">
+
+<button
+class="btn gold-btn"
+onclick="saveStudent()"
+>
+💾 Save Admission
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="studentRecordPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+📋 Student Records
+</h1>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>SID</th>
+<th>Name</th>
+<th>Class</th>
+<th>Father</th>
+<th>Fee</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="studentTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="addTeacherPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+👨‍🏫 Add Teacher
+</h1>
+
+<div class="grid-3">
+
+<input id="teacherNameInput" placeholder="Teacher Name">
+
+<input id="teacherMobile" placeholder="Mobile Number">
+
+<input id="teacherSubject" placeholder="Subject">
+
+<input id="teacherSalary" type="number" placeholder="Salary">
+
+</div>
+
+<div style="margin-top:25px;">
+
+<button
+class="btn gold-btn"
+onclick="saveTeacher()"
+>
+💾 Save Teacher
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="teacherRecordPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+📋 Teacher Records
+</h1>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Subject</th>
+<th>Salary</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="teacherTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="addFeePage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+💰 Add Fee
+</h1>
+
+<div class="grid-3">
+
+<input
+id="searchSID"
+placeholder="Enter SID"
+onkeyup="findStudent()"
+>
+
+<input
+id="feeStudentName"
+readonly
+placeholder="Student Name"
+>
+
+<input
+id="feeClass"
+readonly
+placeholder="Class"
+>
+
+<input
+id="monthlyFee"
+readonly
+placeholder="Monthly Fee"
+>
+
+<input
+id="feeMonth"
+placeholder="Month"
+>
+
+</div>
+
+<div style="margin-top:25px;">
+
+<button
+class="btn gold-btn"
+onclick="saveFee()"
+>
+💾 Save Fee
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="feeRecordPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+📋 Fee Records
+</h1>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>SID</th>
+<th>Name</th>
+<th>Month</th>
+<th>Fee</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="feeTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="addMarksheetPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+📝 Add Marksheet
+</h1>
+
+<div class="grid-3">
+
+<input
+id="marksheetSID"
+placeholder="Enter SID"
+onkeyup="findMarksheetStudent()"
+>
+
+<input
+id="markStudent"
+readonly
+placeholder="Student Name"
+>
+
+<input
+id="markClass"
+readonly
+placeholder="Class"
+>
+
+<select id="markExam" onchange="loadSubjectMarksArea()"></select>
+
+<input
+id="markTotal"
+readonly
+placeholder="Total Marks"
+>
+
+</div>
+
+<div
+id="subjectMarksArea"
+style="margin-top:25px;"
+></div>
+
+<div style="margin-top:25px;">
+
+<button
+class="btn gold-btn"
+onclick="saveMarksheet()"
+>
+💾 Save Marksheet
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="marksheetRecordPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+📋 Marksheet Records
+</h1>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>SID</th>
+<th>Name</th>
+<th>Class</th>
+<th>Exam</th>
+<th>Total</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="marksheetTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div id="settingsPage" class="page">
+
+<div class="glass">
+
+<h1 class="section-title">
+⚙ Settings
+</h1>
+
+<div class="grid-3">
+
+<input id="newUsername" placeholder="New Username">
+
+<input
+id="newPassword"
+type="password"
+placeholder="New Password"
+>
+
+<input
+id="schoolNameInput"
+placeholder="School Name"
+>
+
+<input
+type="file"
+id="schoolLogoInput"
+>
+
+</div>
+
+<div style="margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;">
+
+<button
+class="btn gold-btn"
+onclick="saveSettings()"
+>
+💾 Save Settings
+</button>
+
+<button
+class="btn blue-btn"
+onclick="openMarksheetPopup()"
+>
+📝 Marksheet Management
+</button>
+
+</div>
+
+</div>
+
+<div class="glass" style="margin-top: 30px; border: 2px solid #2563eb;">
+<h2 style="font-size:22px; color:#facc15; margin-bottom:10px;">🤖 Google Drive Integration</h2>
+<p style="font-size:14px; color:#94a3b8; margin-bottom:15px;">Ek baar link karein, aapka saara data automatic sheet me backup hota rahega.</p>
+
+<button id="googleAuthBtn" class="btn blue-btn" style="display: flex; align-items: center; gap: 10px;" onclick="handleAuthClick()">
+<svg style="width:20px; height:20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C17.955 2.192 15.34 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.478 0 10.793-4.537 10.793-10.986 0-.746-.08-1.32-.176-1.886H12.24z"/></svg>
+Sign In & Link Google Drive
+</button>
+<p id="syncStatusText" style="margin-top: 12px; font-size:14px; color:#10b981; display:none; font-weight: bold;">✓ Linked! 4 Sheets Created Automatically on Cloud.</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="marksheetPopup" class="popup">
+
+<div class="popup-box">
+
+<h1 class="section-title">
+📝 Marksheet Management
+</h1>
+
+<div class="glass">
+
+<h2 style="margin-bottom:15px;">
+➕ Add Exam
+</h2>
+
+<div class="grid-2">
+
+<input
+id="examName"
+placeholder="Exam Name"
+>
+
+<button
+class="btn gold-btn"
+onclick="addExam()"
+>
+➕ Add Exam
+</button>
+
+</div>
+
+<div id="examList"></div>
+
+</div>
+
+<div class="glass">
+
+<h2 style="margin-bottom:15px;">
+📚 Add Subject
+</h2>
+
+<div class="grid-3">
+
+<select id="popupSubjectClass">
+
+<option>Select Class</option>
+
+<option>Nursery</option>
+<option>LKG</option>
+<option>UKG</option>
+
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+
+</select>
+
+<select id="subjectExam"></select>
+
+<input
+id="subjectName"
+placeholder="Subject Name"
+>
+
+<input
+id="subjectTotal"
+type="number"
+placeholder="Total Marks"
+>
+
+<button
+class="btn gold-btn"
+onclick="addSubject()"
+>
+➕ Add Subject
+</button>
+
+</div>
+
+<div id="subjectList"></div>
+
+</div>
+
+<div style="margin-top:25px;">
+
+<button
+class="btn red-btn"
+onclick="closeMarksheetPopup()"
+>
+❌ Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* LOGIN CONSTANTS */
+if(!localStorage.getItem('adminUsername')) localStorage.setItem('adminUsername','admin');
+if(!localStorage.getItem('adminPassword')) localStorage.setItem('adminPassword','1234');
+
+/* LOCAL STORAGE ARRAYS */
+let students = JSON.parse(localStorage.getItem('students')||'[]');
+let teachers = JSON.parse(localStorage.getItem('teachers')||'[]');
+let fees = JSON.parse(localStorage.getItem('fees')||'[]');
+let marksheets = JSON.parse(localStorage.getItem('marksheets')||'[]');
+let exams = JSON.parse(localStorage.getItem('exams')||'[]');
+let subjects = JSON.parse(localStorage.getItem('subjects')||'[]');
+
+/* LOGIN SCREEN */
+function adminLogin(){
+    if(loginUsername.value===localStorage.getItem('adminUsername') && loginPassword.value===localStorage.getItem('adminPassword')){
+        loginPage.style.display='none';
+    } else {
+        alert('Wrong Username Password');
+    }
+}
+
+/* NAVIGATION */
+function showPage(id){
+    document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+function toggleMenu(id){
+    let menu=document.getElementById(id);
+    menu.style.display = (menu.style.display==='block') ? 'none' : 'block';
+}
+
+/* SID GENERATION */
+function generateSID(){
+    sid.value='SID'+String(students.length+1).padStart(4,'0');
+}
+generateSID();
+
+/* ================== FIXED STUDENT CRUD ================== */
+function saveStudent(){
+    if(!studentName.value) { alert("Enter Name!"); return; }
+    let s = {
+        sid: sid.value,
+        name: studentName.value,
+        studentClass: studentClass.value,
+        father: fatherName.value,
+        mobile: mobile.value,
+        fee: yearlyFee.value || 0
+    };
+    students.push(s);
+    localStorage.setItem('students', JSON.stringify(students));
+    
+    renderStudents();
+    updateDashboardCounts();
+    syncAllDataToGoogleDrive();
+
+    alert('Admission Saved Successfully!');
+    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value='';
+    generateSID();
+}
+
+function renderStudents(){
+    studentTable.innerHTML='';
+    students.forEach((s,index)=>{
+        studentTable.innerHTML+=`<tr>
+            <td>${s.sid}</td>
+            <td>${s.name}</td>
+            <td>${s.studentClass}</td>
+            <td>${s.father}</td>
+            <td>₹${s.fee}</td>
+            <td>
+                <div class="action-box">
+                    <button class="btn green-btn" onclick="editStudent(${index})">✏</button>
+                    <button class="btn red-btn" onclick="deleteStudent(${index})">🗑</button>
+                </div>
+            </td>
+        </tr>`;
+    });
+}
+
+function editStudent(index){
+    let s=students[index];
+    sid.value=s.sid;
+    studentName.value=s.name;
+    studentClass.value=s.studentClass;
+    fatherName.value=s.father;
+    mobile.value=s.mobile;
+    yearlyFee.value=s.fee;
+    students.splice(index,1);
+    localStorage.setItem('students', JSON.stringify(students));
+    renderStudents();
+    showPage('addStudentPage');
+}
+
+function deleteStudent(index){
+    if(confirm("Are you sure?")){
+        students.splice(index,1);
+        localStorage.setItem('students', JSON.stringify(students));
+        renderStudents();
+        updateDashboardCounts();
+        syncAllDataToGoogleDrive();
+    }
+}
+
+/* ================== FIXED TEACHER CRUD ================== */
+function saveTeacher(){
+    if(!teacherNameInput.value) { alert("Enter Teacher Name!"); return; }
+    let t = {
+        name: teacherNameInput.value,
+        mobile: teacherMobile.value,
+        subject: teacherSubject.value,
+        salary: teacherSalary.value || 0
+    };
+    teachers.push(t);
+    localStorage.setItem('teachers', JSON.stringify(teachers));
+    renderTeachers();
+    updateDashboardCounts();
+    syncAllDataToGoogleDrive();
+    alert("Teacher Record Saved!");
+    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
+}
+
+function renderTeachers(){
+    teacherTable.innerHTML='';
+    teachers.forEach((t, index)=>{
+        teacherTable.innerHTML+=`<tr>
+            <td>${t.name}</td>
+            <td>${t.subject}</td>
+            <td>₹${t.salary}</td>
+            <td><button class="btn red-btn" onclick="deleteTeacher(${index})">🗑</button></td>
+        </tr>`;
+    });
+}
+
+function deleteTeacher(index){
+    teachers.splice(index,1);
+    localStorage.setItem('teachers', JSON.stringify(teachers));
+    renderTeachers();
+    updateDashboardCounts();
+    syncAllDataToGoogleDrive();
+}
+
+/* ================== FIXED FEE SYSTEM ================== */
+function findStudent(){
+    let found = students.find(s => s.sid === searchSID.value.trim());
+    if(found){
+        feeStudentName.value = found.name;
+        feeClass.value = found.studentClass;
+        monthlyFee.value = Math.round((found.fee / 12) || 0);
+    } else {
+        feeStudentName.value = ''; feeClass.value = ''; monthlyFee.value = '';
+    }
+}
+
+function saveFee(){
+    if(!feeStudentName.value) { alert("Find a valid student first!"); return; }
+    let f = {
+        sid: searchSID.value,
+        name: feeStudentName.value,
+        month: feeMonth.value || 'N/A',
+        amount: monthlyFee.value
+    };
+    fees.push(f);
+    localStorage.setItem('fees', JSON.stringify(fees));
+    renderFees();
+    updateDashboardCounts();
+    syncAllDataToGoogleDrive();
+    alert("Fee Paid successfully!");
+    searchSID.value=''; feeStudentName.value=''; feeClass.value=''; monthlyFee.value=''; feeMonth.value='';
+}
+
+function renderFees(){
+    feeTable.innerHTML='';
+    fees.forEach((f,index)=>{
+        feeTable.innerHTML+=`<tr>
+            <td>${f.sid}</td>
+            <td>${f.name}</td>
+            <td>${f.month}</td>
+            <td>₹${f.amount}</td>
+            <td><button class="btn red-btn" onclick="deleteFee(${index})">🗑</button></td>
+        </tr>`;
+    });
+}
+
+function deleteFee(index){
+    fees.splice(index,1);
+    localStorage.setItem('fees', JSON.stringify(fees));
+    renderFees();
+    updateDashboardCounts();
+    syncAllDataToGoogleDrive();
+}
+
+/* ================== FIXED MARKSHEET SYSTEM ================== */
+function findMarksheetStudent(){
+    let found = students.find(s => s.sid === marksheetSID.value.trim());
+    if(found){
+        markStudent.value = found.name;
+        markClass.value = found.studentClass;
+        loadSubjectMarksArea();
+    } else {
+        markStudent.value = ''; markClass.value = ''; subjectMarksArea.innerHTML='';
+    }
+}
+
+function loadSubjectMarksArea(){
+    let cls = markClass.value;
+    let exm = markExam.value;
+    let filtered = subjects.filter(sub => sub.subjectClass === cls && sub.exam === exm);
+    subjectMarksArea.innerHTML = '';
+    let totalMax = 0;
+    
+    filtered.forEach((sub, i) => {
+        totalMax += parseInt(sub.total || 0);
+        subjectMarksArea.innerHTML += `<div style="margin-top:10px;">
+            <label>${sub.name} (Max: ${sub.total})</label>
+            <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Enter Marks Obtained" onkeyup="calcTotalMarks()">
+        </div>`;
+    });
+    markTotal.value = '0 / ' + totalMax;
+}
+
+function calcTotalMarks(){
+    let inputs = document.querySelectorAll('.sub-mark-input');
+    let totalObtained = 0;
+    let totalMax = 0;
+    inputs.forEach(inp => {
+        totalObtained += parseInt(inp.value || 0);
+        totalMax += parseInt(inp.getAttribute('data-max') || 0);
+    });
+    markTotal.value = totalObtained + " / " + totalMax;
+}
+
+function saveMarksheet(){
+    if(!markStudent.value) { alert("Select student first!"); return; }
+    let inputs = document.querySelectorAll('.sub-mark-input');
+    let subMarks = {};
+    inputs.forEach(inp => { subMarks[inp.getAttribute('data-name')] = inp.value || 0; });
+    
+    let m = {
+        sid: marksheetSID.value,
+        name: markStudent.value,
+        studentClass: markClass.value,
+        exam: markExam.value,
+        total: markTotal.value,
+        marks: subMarks
+    };
+    marksheets.push(m);
+    localStorage.setItem('marksheets', JSON.stringify(marksheets));
+    renderMarksheets();
+    syncAllDataToGoogleDrive();
+    alert("Marksheet Saved!");
+    marksheetSID.value=''; markStudent.value=''; markClass.value=''; subjectMarksArea.innerHTML=''; markTotal.value='';
+}
+
+function renderMarksheets(){
+    marksheetTable.innerHTML='';
+    marksheets.forEach((m,index)=>{
+        marksheetTable.innerHTML+=`<tr>
+            <td>${m.sid}</td>
+            <td>${m.name}</td>
+            <td>${m.studentClass}</td>
+            <td>${m.exam}</td>
+            <td>${m.total}</td>
+            <td><button class="btn red-btn" onclick="deleteMarksheet(${index})">🗑</button></td>
+        </tr>`;
+    });
+}
+
+function deleteMarksheet(index){
+    marksheets.splice(index,1);
+    localStorage.setItem('marksheets', JSON.stringify(marksheets));
+    renderMarksheets();
+    syncAllDataToGoogleDrive();
+}
+
+/* ================== FIXED POPUP MANAGEMENT ================== */
+function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
+function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
+
+function addExam(){
+    if(!examName.value) return;
+    exams.push(examName.value);
+    localStorage.setItem('exams', JSON.stringify(exams));
+    examName.value='';
+    renderExamsAndSubjects();
+}
+
+function addSubject(){
+    if(!subjectName.value) return;
+    let s = {
+        subjectClass: popupSubjectClass.value,
+        exam: subjectExam.value,
+        name: subjectName.value,
+        total: subjectTotal.value || 100
+    };
+    subjects.push(s);
+    localStorage.setItem('subjects', JSON.stringify(subjects));
+    subjectName.value=''; subjectTotal.value='';
+    renderExamsAndSubjects();
+}
+
+function renderExamsAndSubjects(){
+    examList.innerHTML = "<strong>Exams:</strong> " + exams.join(', ');
+    subjectList.innerHTML = '';
+    subjects.forEach(s => {
+        subjectList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} Marks)</div>`;
+    });
+    updateExamDropdowns();
+}
+
+function updateExamDropdowns(){
+    markExam.innerHTML = ''; subjectExam.innerHTML = '';
+    exams.forEach(ex => {
+        markExam.innerHTML += `<option>${ex}</option>`;
+        subjectExam.innerHTML += `<option>${ex}</option>`;
+    });
+}
+
+/* ================== APP SETTINGS ================== */
+function saveSettings(){
+    if(schoolNameInput.value) localStorage.setItem('schoolName', schoolNameInput.value);
+    if(newUsername.value) localStorage.setItem('adminUsername', newUsername.value);
+    if(newPassword.value) localStorage.setItem('adminPassword', newPassword.value);
+    
+    let file = schoolLogoInput.files[0];
+    if(file){
+        let reader = new FileReader();
+        reader.onloadend = function() {
+            localStorage.setItem('schoolLogo', reader.result);
+            schoolLogo.src = reader.result;
+        }
+        reader.readAsDataURL(file);
+    }
+    if(schoolNameInput.value) schoolName.innerText = schoolNameInput.value;
+    alert("Settings Saved!");
+}
+
+/* DASHBOARD UTILS */
+function updateDashboardCounts(){
+    studentCount.innerText = students.length;
+    teacherCount.innerText = teachers.length;
+    let totalF = fees.reduce((sum, f) => sum + parseInt(f.amount || 0), 0);
+    feeCount.innerText = "₹" + totalF;
+}
+
+/* ========================================================
+   ONE-CLICK DIRECT GOOGLE DRIVE SYNC SYSTEM
+   ======================================================== */
+const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; 
+const API_KEY = 'YOUR_GOOGLE_API_KEY';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
+
+let tokenClient, gapiInited = false, gsiInited = false;
+let accessToken = localStorage.getItem('g_access_token') || null;
+
+function gapiLoaded() { gapi.load('client', intializeGapiClient); }
+async function intializeGapiClient() {
+    await gapi.client.init({ apiKey: API_KEY, discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest'] });
+    gapiInited = true; checkInitialization();
+}
+function gsiLoaded() {
+    tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: (resp) => { if (resp.error) return; accessToken = resp.access_token; localStorage.setItem('g_access_token', accessToken); onAuthSuccess(); } });
+    gsiInited = true; checkInitialization();
+}
+function checkInitialization(){ if(gapiInited && gsiInited && accessToken) { gapi.client.setToken({access_token: accessToken}); showSyncedUI(); } }
+function handleAuthClick() { if (!accessToken) { tokenClient.requestAccessToken({prompt: 'consent'}); } else { onAuthSuccess(); } }
+
+async function onAuthSuccess() {
+    showSyncedUI();
+    try {
+        let folderId = localStorage.getItem('g_folder_id');
+        if (!folderId) {
+            let folderMeta = { name: 'Royal School ERP Data', mimeType: 'application/vnd.google-apps.folder' };
+            let folderRes = await gapi.client.drive.files.create({ resource: folderMeta, fields: 'id' });
+            folderId = folderRes.result.id; localStorage.setItem('g_folder_id', folderId);
+
+            let sheets = ['🎓 Students', '👨‍🏫 Teachers', '💰 Fees', '📝 Marksheet'];
+            for(let title of sheets) {
+                let sheetMeta = { name: title, mimeType: 'application/vnd.google-apps.spreadsheet', parents: [folderId] };
+                let res = await gapi.client.drive.files.create({ resource: sheetMeta, fields: 'id' });
+                localStorage.setItem(`sheet_${title}`, res.result.id);
+            }
+        }
+        syncAllDataToGoogleDrive();
+    } catch (err) { console.error(err); }
+}
+
+function showSyncedUI() {
+    document.getElementById('syncStatusText').style.display = 'block';
+    document.getElementById('googleAuthBtn').innerText = "⚡ Connected to Drive";
+    document.getElementById('googleAuthBtn').className = "btn green-btn";
+}
+
+async function syncAllDataToGoogleDrive() {
+    if (!accessToken) return;
+    try {
+        let dataset = { '🎓 Students': students, '👨‍🏫 Teachers': teachers, '💰 Fees': fees, '📝 Marksheet': marksheets };
+        for (let title in dataset) {
+            let sheetId = localStorage.getItem(`sheet_${title}`);
+            if (!sheetId) continue;
+            let list = dataset[title];
+            let rows = [];
+            if(list.length > 0) {
+                let headers = Object.keys(list[0]);
+                rows.push(headers);
+                list.forEach(item => { rows.push(headers.map(h => typeof item[h] === 'object' ? JSON.stringify(item[h]) : item[h] || '')); });
+            } else { rows = [["No Data Available"]]; }
+
+            await gapi.client.sheets.spreadsheets.values.clear({ spreadsheetId: sheetId, range: 'Sheet1!A:Z' });
+            await gapi.client.sheets.spreadsheets.values.update({ spreadsheetId: sheetId, range: 'Sheet1!A1', valueInputOption: 'USER_ENTERED', resource: { values: rows } });
+        }
+    } catch (e) { console.log("Cloud sync delayed...", e); }
+}
+
+// Dynamic Scripts Injection for Google API
+const script1 = document.createElement('script'); script1.src = "https://apis.google.com/js/api.js"; script1.onload = gapiLoaded; document.body.appendChild(script1);
+const script2 = document.createElement('script'); script2.src = "https://accounts.google.com/gsi/client"; script2.onload = gsiLoaded; document.body.appendChild(script2);
+
+/* WINDOW LOAD INITIALIZER */
+window.onload = function(){
+    renderStudents();
+    renderTeachers();
+    renderFees();
+    renderMarksheets();
+    updateDashboardCounts();
+    updateExamDropdowns();
+    checkInitialization();
+
+    let name = localStorage.getItem('schoolName');
+    let logo = localStorage.getItem('schoolLogo');
+    if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
+    if(logo) schoolLogo.src = logo;
+};
+
+</script>
+</body>
+</html>
