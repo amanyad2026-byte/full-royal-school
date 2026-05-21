@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal School ERP</title>
+<title>Royal School ERP Pro v5</title>
 
 <meta name="google-site-verification" content="YAHAN_APNA_PURANA_CODE_PASTE_KAREIN" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial;
+font-family:Arial, sans-serif;
 }
 
 body{
@@ -25,7 +24,6 @@ overflow-x:hidden;
 }
 
 /* LOGIN */
-
 #loginPage{
 position:fixed;
 top:0;
@@ -56,7 +54,6 @@ color:#facc15;
 }
 
 /* SIDEBAR */
-
 .sidebar{
 width:280px;
 height:100vh;
@@ -116,7 +113,6 @@ margin-left:15px;
 }
 
 /* MAIN */
-
 .main{
 margin-left:280px;
 padding:30px;
@@ -131,7 +127,6 @@ display:block;
 }
 
 /* GLASS */
-
 .glass{
 background:rgba(255,255,255,0.05);
 border-radius:25px;
@@ -150,6 +145,12 @@ color:#facc15;
 .grid-3{
 display:grid;
 grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.grid-4{
+display:grid;
+grid-template-columns:repeat(4,1fr);
 gap:20px;
 }
 
@@ -175,31 +176,20 @@ border-radius:12px;
 font-weight:bold;
 cursor:pointer;
 transition:0.3s;
+display: inline-flex;
+align-items: center;
+gap: 6px;
 }
 
 .btn:hover{
 transform:scale(1.04);
 }
 
-.gold-btn{
-background:#facc15;
-color:black;
-}
-
-.blue-btn{
-background:#2563eb;
-color:white;
-}
-
-.green-btn{
-background:#16a34a;
-color:white;
-}
-
-.red-btn{
-background:#dc2626;
-color:white;
-}
+.gold-btn{ background:#facc15; color:black; }
+.blue-btn{ background:#2563eb; color:white; }
+.green-btn{ background:#16a34a; color:white; }
+.red-btn{ background:#dc2626; color:white; }
+.purple-btn{ background:#7c3aed; color:white; }
 
 table{
 width:100%;
@@ -211,6 +201,7 @@ th{
 background:#1e293b;
 padding:14px;
 color:#facc15;
+text-align: left;
 }
 
 td{
@@ -240,7 +231,7 @@ z-index:999999;
 
 .popup-box{
 width:90%;
-max-width:1000px;
+max-width:800px;
 max-height:90vh;
 overflow:auto;
 background:#0f172a;
@@ -249,46 +240,28 @@ border-radius:25px;
 border:2px solid #facc15;
 }
 
-@media(max-width:900px){
-
-.grid-3,.grid-2{
-grid-template-columns:1fr;
-}
-
-.sidebar{
-width:100%;
-height:auto;
-position:relative;
-}
-
-.main{
-margin-left:0;
-}
-
-}
-
-/* PRINT AREA OVERLAY STYLES */
+/* PRINT PREVIEW OVERLAY STYLE */
 #printViewArea {
     background: white;
     color: black;
-    padding: 30px;
+    padding: 25px;
     border-radius: 10px;
 }
-#printViewArea table {
-    width: 100%;
-    margin-top: 15px;
-}
-#printViewArea th {
-    background: #e2e8f0;
-    color: black;
-    border: 1px solid #cbd5e1;
-}
-#printViewArea td {
-    background: white;
-    color: black;
-    border: 1px solid #cbd5e1;
-}
 
+@media print {
+    body * { visibility: hidden; }
+    #printViewArea, #printViewArea * { visibility: visible; }
+    #printViewArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0px !important;
+        margin: 0px !important;
+        border: none !important;
+    }
+    @page { size: A4 portrait; margin: 15mm; }
+}
 </style>
 </head>
 
@@ -313,6 +286,8 @@ margin-left:0;
 <div id="studentMenu" class="dropdown">
 <button class="menu-btn" onclick="showPage('addStudentPage')">➕ Admission</button>
 <button class="menu-btn" onclick="showPage('studentRecordPage')">📋 Student Records</button>
+<button class="menu-btn" onclick="showPage('promotionPage')">📈 Student Promotion</button>
+<button class="menu-btn" onclick="showPage('tcPage')">📄 TC Print / Issue</button>
 </div>
 <button class="menu-btn" onclick="toggleMenu('teacherMenu')">👨‍🏫 Teachers ▼</button>
 <div id="teacherMenu" class="dropdown">
@@ -344,12 +319,12 @@ margin-left:0;
 
 <div id="addStudentPage" class="page">
 <div class="glass">
-<h1 class="section-title">🎓 Student Admission</h1>
+<h1 class="section-title">🎓 Student Admission / Modification</h1>
 <div class="grid-3">
 <input id="sid" readonly>
 <input id="studentName" placeholder="Student Name">
 <select id="studentClass">
-<option>Select Class</option>
+<option value="">Select Class</option>
 <option>Nursery</option><option>LKG</option><option>UKG</option>
 <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
 <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
@@ -362,9 +337,14 @@ margin-left:0;
 <select id="gender">
 <option>Gender</option><option>Male</option><option>Female</option>
 </select>
+<div>
+  <label style="font-size:12px; color:#facc15; display:block; margin-bottom:4px;">🧑‍🎓 Upload Student Photo:</label>
+  <input type="file" id="studentPhotoInput" accept="image/*">
 </div>
-<div style="margin-top:25px;">
+</div>
+<div style="margin-top:25px; display:flex; gap:10px;">
 <button class="btn gold-btn" onclick="saveStudent()">💾 Save Admission</button>
+<button class="btn red-btn" onclick="cancelEdit()" id="cancelEditBtn" style="display:none;">❌ Cancel Edit</button>
 </div>
 </div>
 </div>
@@ -372,12 +352,84 @@ margin-left:0;
 <div id="studentRecordPage" class="page">
 <div class="glass">
 <h1 class="section-title">📋 Student Records</h1>
+<div class="grid-3" style="margin-bottom:20px; align-items:end;">
+    <div>
+        <label style="color:#facc15; font-size:14px;">Filter By Class:</label>
+        <select id="filterClass" onchange="renderStudents()" style="margin-top:5px;">
+            <option value="All">All Classes</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+    </div>
+    <button class="btn blue-btn" onclick="printStudentClassWise()">🖨 Print List</button>
+    <div style="font-size:16px; font-weight:bold; color:#facc15; padding:14px;">
+        Total Selected Students: <span id="selectedCount">0</span>
+    </div>
+</div>
 <table>
 <thead>
-<tr><th>SID</th><th>Name</th><th>Class</th><th>Father</th><th>Fee</th><th>Action</th></tr>
+<tr><th>Photo</th><th>SID</th><th>Name</th><th>Class</th><th>Father</th><th>Mobile</th><th>Fee</th><th>Action</th></tr>
 </thead>
 <tbody id="studentTable"></tbody>
 </table>
+</div>
+</div>
+
+<div id="promotionPage" class="page">
+<div class="glass">
+<h1 class="section-title">📈 Student Class Promotion</h1>
+<div class="grid-3">
+    <div>
+        <label style="color:#facc15; font-size:12px;">Enter Student ID:</label>
+        <input id="promoteSID" placeholder="e.g. SID0001" onkeyup="findPromoteStudent()" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Student Name:</label>
+        <input id="promoteName" readonly placeholder="Name Auto-Fetch" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Current Class:</label>
+        <input id="promoteCurrentClass" readonly placeholder="Current Class" style="margin-top:4px;">
+    </div>
+</div>
+<div class="grid-3" style="margin-top:20px;">
+    <div>
+        <label style="color:#facc15; font-size:12px; font-weight:bold;">🎓 Select Promotion Class:</label>
+        <select id="promoteTargetClass" style="margin-top:4px; border:1px solid #facc15;">
+            <option value="">-- Select New Class --</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+    </div>
+</div>
+<div style="margin-top:25px;">
+<button class="btn green-btn" onclick="processPromotion()">🚀 Promote Student & Sync Sheet</button>
+</div>
+</div>
+</div>
+
+<div id="tcPage" class="page">
+<div class="glass">
+<h1 class="section-title">📄 Transfer Certificate (TC) Hub</h1>
+<div class="grid-3">
+    <div>
+        <label style="color:#facc15; font-size:12px;">Enter Student ID:</label>
+        <input id="tcSID" placeholder="Enter SID" onkeyup="findTCStudent()" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Student Name:</label>
+        <input id="tcName" readonly placeholder="Student Name" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Class:</label>
+        <input id="tcClass" readonly placeholder="Class" style="margin-top:4px;">
+    </div>
+</div>
+<div style="margin-top:25px;">
+<button class="btn purple-btn" onclick="generateTCPrint()">🖨 Generate & Preview TC</button>
+</div>
 </div>
 </div>
 
@@ -398,10 +450,13 @@ margin-left:0;
 
 <div id="teacherRecordPage" class="page">
 <div class="glass">
-<h1 class="section-title">📋 Teacher Records</h1>
+<div style="display:flex; justify-content:between; align-items:center; margin-bottom:25px;">
+    <h1 class="section-title" style="margin:0;">📋 Teacher Records</h1>
+    <button class="btn blue-btn" onclick="printAllTeachers()">🖨 Print All Teachers</button>
+</div>
 <table>
 <thead>
-<tr><th>Name</th><th>Subject</th><th>Salary</th><th>Action</th></tr>
+<tr><th>Name</th><th>Mobile</th><th>Subject</th><th>Salary</th><th>Action</th></tr>
 </thead>
 <tbody id="teacherTable"></tbody>
 </table>
@@ -412,14 +467,39 @@ margin-left:0;
 <div class="glass">
 <h1 class="section-title">💰 Add Fee</h1>
 <div class="grid-3">
-<input id="searchSID" placeholder="Enter SID" onkeyup="findStudent()">
-<input id="feeStudentName" readonly placeholder="Student Name">
-<input id="feeClass" readonly placeholder="Class">
-<input id="monthlyFee" readonly placeholder="Monthly Fee">
-<input id="feeMonth" placeholder="Month">
+    <div>
+        <label style="color:#facc15; font-size:12px;">Search Student ID:</label>
+        <input id="searchSID" placeholder="Enter SID" onkeyup="findStudent()" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Student Name:</label>
+        <input id="feeStudentName" readonly placeholder="Student Name" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Class:</label>
+        <input id="feeClass" readonly placeholder="Class" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Standard Monthly Fee (Ref):</label>
+        <input id="monthlyFee" readonly placeholder="Monthly Fee" style="margin-top:4px;">
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px;">Select Fee Month:</label>
+        <select id="feeMonthSelect" style="margin-top:4px;">
+            <option value="">-- Select Month --</option>
+            <option>January</option><option>February</option><option>March</option>
+            <option>April</option><option>May</option><option>June</option>
+            <option>July</option><option>August</option><option>September</option>
+            <option>October</option><option>November</option><option>December</option>
+        </select>
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:12px; font-weight:bold;">💵 Enter Amount Paid Now:</label>
+        <input id="actualAmountPaid" type="number" placeholder="Type Amount Here" style="margin-top:4px; border:1px solid #facc15;">
+    </div>
 </div>
 <div style="margin-top:25px;">
-<button class="btn gold-btn" onclick="saveFee()">💾 Save Fee</button>
+<button class="btn gold-btn" onclick="saveFee()">💾 Save Fee & Print Receipt</button>
 </div>
 </div>
 </div>
@@ -429,7 +509,7 @@ margin-left:0;
 <h1 class="section-title">📋 Fee Records</h1>
 <table>
 <thead>
-<tr><th>SID</th><th>Name</th><th>Month</th><th>Fee</th><th>Action</th></tr>
+<tr><th>SID</th><th>Name</th><th>Class</th><th>Paid Months Breakdown</th><th>Total Amount</th><th>Action</th></tr>
 </thead>
 <tbody id="feeTable"></tbody>
 </table>
@@ -456,6 +536,27 @@ margin-left:0;
 <div id="marksheetRecordPage" class="page">
 <div class="glass">
 <h1 class="section-title">📋 Marksheet Records</h1>
+<div class="grid-4" style="margin-bottom:20px; align-items:end;">
+    <div>
+        <label style="color:#facc15; font-size:14px;">Filter By Class:</label>
+        <select id="filterMarksheetClass" onchange="renderMarksheets()" style="margin-top:5px;">
+            <option value="All">All Classes</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+    </div>
+    <div>
+        <label style="color:#facc15; font-size:14px;">Search Student (Name or SID):</label>
+        <input id="searchMarksheetInput" placeholder="Type here to search..." style="margin-top:5px;">
+    </div>
+    <div>
+        <button class="btn blue-btn" style="width:100%;" onclick="renderMarksheets()">🔍 Search</button>
+    </div>
+    <div style="font-size:16px; font-weight:bold; color:#facc15; padding:14px; text-align:right;">
+        Records Found: <span id="marksheetCountLabel">0</span>
+    </div>
+</div>
 <table>
 <thead>
 <tr><th>SID</th><th>Name</th><th>Class</th><th>Exam</th><th>Total</th><th>Action</th></tr>
@@ -484,85 +585,42 @@ margin-left:0;
 
 </div>
 
+<div id="printPopup" class="popup">
+<div class="popup-box">
+<h1 class="section-title">🖨 Print Preview</h1>
+<div id="printViewArea"></div>
+<div style="margin-top:20px; display:flex; gap:15px;">
+<button class="btn green-btn" onclick="window.print()">🖨 Print Now</button>
+<button class="btn red-btn" onclick="document.getElementById('printPopup').style.display='none'">❌ Close</button>
+</div>
+</div>
+</div>
+
 <div id="googleSheetsPopup" class="popup">
 <div class="popup-box" style="max-width: 600px;">
 <h1 class="section-title">🔗 Google Sheets Integration</h1>
-<p style="font-size:14px; color:#94a3b8; margin-bottom:20px;">Har department ke liye apna alag-alag Google Web App Script URL niche paste karein:</p>
-<div style="margin-bottom: 12px;">
-<label style="color:#facc15; font-size:14px;">🎓 Students Sheet Web App URL:</label>
-<input id="urlStudents" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
-</div>
-<div style="margin-bottom: 12px;">
-<label style="color:#facc15; font-size:14px;">👨‍🏫 Teachers Sheet Web App URL:</label>
-<input id="urlTeachers" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
-</div>
-<div style="margin-bottom: 12px;">
-<label style="color:#facc15; font-size:14px;">💰 Fees Sheet Web App URL:</label>
-<input id="urlFees" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
-</div>
-<div style="margin-bottom: 20px;">
-<label style="color:#facc15; font-size:14px;">📝 Marksheet Sheet Web App URL:</label>
-<input id="urlMarksheet" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
-</div>
-<div style="display:flex; gap:15px;">
-<button class="btn green-btn" onclick="saveAllSheetUrls()">💾 Save Links</button>
-<button class="btn red-btn" onclick="closeGoogleSheetsPopup()">❌ Close</button>
-</div>
+<div style="margin-bottom:12px;"><label>Students URL:</label><input id="urlStudents"></div>
+<div style="margin-bottom:12px;"><label>Teachers URL:</label><input id="urlTeachers"></div>
+<div style="margin-bottom:12px;"><label>Fees URL:</label><input id="urlFees"></div>
+<div style="margin-bottom:20px;"><label>Marksheet URL:</label><input id="urlMarksheet"></div>
+<div style="display:flex; gap:15px;"><button class="btn green-btn" onclick="saveAllSheetUrls()">💾 Save</button><button class="btn red-btn" onclick="closeGoogleSheetsPopup()">❌ Close</button></div>
 </div>
 </div>
 
 <div id="marksheetPopup" class="popup">
 <div class="popup-box">
 <h1 class="section-title">📝 Marksheet Management</h1>
-<div class="glass">
-<h2 style="margin-bottom:15px;">➕ Add Exam</h2>
-<div class="grid-2">
-<input id="examName" placeholder="Exam Name">
-<button class="btn gold-btn" onclick="addExam()">➕ Add Exam</button>
-</div>
-<div id="examList"></div>
-</div>
-<div class="glass">
-<h2 style="margin-bottom:15px;">📚 Add Subject</h2>
-<div class="grid-3">
-<select id="popupSubjectClass">
-<option>Select Class</option>
-<option>Nursery</option><option>LKG</option><option>UKG</option>
-<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-<option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-</select>
-<select id="subjectExam"></select>
-<input id="subjectName" placeholder="Subject Name">
-<input id="subjectTotal" type="number" placeholder="Total Marks">
-<button class="btn gold-btn" onclick="addSubject()">➕ Add Subject</button>
-</div>
-<div id="subjectList"></div>
-</div>
-<div style="margin-top:25px;">
+<div class="glass"><h2>➕ Add Exam</h2><div class="grid-2"><input id="examName" placeholder="Exam Name"><button class="btn gold-btn" onclick="addExam()">➕ Add</button></div><div id="examList"></div></div>
+<div class="glass"><h2>📚 Add Subject</h2><div class="grid-3"><select id="popupSubjectClass"><option>Class</option><option>Nursery</option><option>LKG</option><option>UKG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><select id="subjectExam"></select><input id="subjectName" placeholder="Subject Name"><input id="subjectTotal" type="number" placeholder="Total Marks"><button class="btn gold-btn" onclick="addSubject()">➕ Add</button></div><div id="subjectList"></div></div>
 <button class="btn red-btn" onclick="closeMarksheetPopup()">❌ Close</button>
-</div>
-</div>
-</div>
-
-<div id="printPopup" class="popup">
-<div class="popup-box" style="max-width: 800px; background: #1e293b;">
-<h1 class="section-title">🖨 Marksheet Print Preview</h1>
-<div id="printViewArea">
-    </div>
-<div style="margin-top:20px; display:flex; gap:15px;">
-<button class="btn green-btn" onclick="triggerPrint()">🖨 Print Now</button>
-<button class="btn red-btn" onclick="document.getElementById('printPopup').style.display='none'">❌ Close</button>
-</div>
 </div>
 </div>
 
 <script>
-
-/* LOGIN CONSTANTS */
+/* CORE DATA HOLDERS & SYSTEM INITIALIZERS */
 if(!localStorage.getItem('adminUsername')) localStorage.setItem('adminUsername','admin');
 if(!localStorage.getItem('adminPassword')) localStorage.setItem('adminPassword','1234');
 
-/* LOCAL STORAGE ARRAYS */
 let students = JSON.parse(localStorage.getItem('students')||'[]');
 let teachers = JSON.parse(localStorage.getItem('teachers')||'[]');
 let fees = JSON.parse(localStorage.getItem('fees')||'[]');
@@ -570,16 +628,13 @@ let marksheets = JSON.parse(localStorage.getItem('marksheets')||'[]');
 let exams = JSON.parse(localStorage.getItem('exams')||'[]');
 let subjects = JSON.parse(localStorage.getItem('subjects')||'[]');
 
-/* LOGIN SCREEN */
+let currentEditSID = null; // Modification tracker
+
 function adminLogin(){
-    if(loginUsername.value===localStorage.getItem('adminUsername') && loginPassword.value===localStorage.getItem('adminPassword')){
-        loginPage.style.display='none';
-    } else {
-        alert('Wrong Username Password');
-    }
+    if(loginUsername.value===localStorage.getItem('adminUsername') && loginPassword.value===localStorage.getItem('adminPassword')){ loginPage.style.display='none'; }
+    else { alert('Wrong Credentials'); }
 }
 
-/* NAVIGATION */
 function showPage(id){
     document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -590,203 +645,336 @@ function toggleMenu(id){
     menu.style.display = (menu.style.display==='block') ? 'none' : 'block';
 }
 
-/* SID GENERATION */
-function generateSID(){
-    sid.value='SID'+String(students.length+1).padStart(4,'0');
+function generateSID(){ 
+    if(!currentEditSID) {
+        sid.value='SID'+String(students.length+1).padStart(4,'0'); 
+    }
 }
 generateSID();
 
-/* ================== STUDENT CRUD ================== */
+/* FIXED: STUDENT ADMISSION AND EDIT SYSTEM */
 function saveStudent(){
     if(!studentName.value) { alert("Enter Name!"); return; }
-    let s = {
-        sid: sid.value,
-        name: studentName.value,
-        studentClass: studentClass.value,
-        father: fatherName.value,
-        mobile: mobile.value,
-        fee: yearlyFee.value || 0
-    };
-    students.push(s);
-    localStorage.setItem('students', JSON.stringify(students));
-    
-    renderStudents();
-    updateDashboardCounts();
-    sendDataToGoogleSheet('students', s);
+    let file = studentPhotoInput.files[0];
+    if(file) {
+        let reader = new FileReader();
+        reader.onloadend = function() { processStudentSave(reader.result); }
+        reader.readAsDataURL(file);
+    } else { 
+        let existingPhoto = '';
+        if(currentEditSID) {
+            let match = students.find(s => s.sid === currentEditSID);
+            if(match) existingPhoto = match.photo || '';
+        }
+        processStudentSave(existingPhoto); 
+    }
+}
 
-    alert('Admission Saved Successfully!');
-    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value='';
+function processStudentSave(photoBase64) {
+    let sData = { 
+        sid: sid.value, 
+        name: studentName.value, 
+        studentClass: studentClass.value, 
+        father: fatherName.value, 
+        mobile: mobile.value, 
+        fee: yearlyFee.value || 0, 
+        photo: photoBase64 
+    };
+
+    if(currentEditSID) {
+        let idx = students.findIndex(s => s.sid === currentEditSID);
+        if(idx !== -1) {
+            students[idx] = sData;
+            alert('Student Record Updated Successfully!');
+        }
+        cancelEdit();
+    } else {
+        students.push(sData);
+        alert('Admission Saved Successfully!');
+    }
+
+    localStorage.setItem('students', JSON.stringify(students));
+    renderStudents(); updateDashboardCounts(); sendDataToGoogleSheet('students', sData);
+
+    // Form inputs cleanup
+    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; studentPhotoInput.value='';
+    generateSID();
+}
+
+function editStudent(targetSID) {
+    let target = students.find(s => s.sid === targetSID);
+    if(!target) return;
+    
+    currentEditSID = target.sid;
+    sid.value = target.sid;
+    studentName.value = target.name;
+    studentClass.value = target.studentClass;
+    fatherName.value = target.father;
+    mobile.value = target.mobile || '';
+    yearlyFee.value = target.fee || '';
+    
+    document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+    showPage('addStudentPage');
+}
+
+function cancelEdit() {
+    currentEditSID = null;
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; studentPhotoInput.value='';
     generateSID();
 }
 
 function renderStudents(){
     studentTable.innerHTML='';
-    students.forEach((s,index)=>{
+    let cls = filterClass.value;
+    let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
+    selectedCount.innerText = filtered.length;
+
+    filtered.forEach((s)=>{
+        let imgTag = s.photo ? `<img src="${s.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '❌';
         studentTable.innerHTML+=`<tr>
-            <td>${s.sid}</td>
-            <td>${s.name}</td>
-            <td>${s.studentClass}</td>
-            <td>${s.father}</td>
-            <td>₹${s.fee}</td>
+            <td>${imgTag}</td><td>${s.sid}</td><td>${s.name}</td><td>${s.studentClass}</td><td>${s.father}</td><td>${s.mobile || 'N/A'}</td><td>₹${s.fee}</td>
             <td>
                 <div class="action-box">
-                    <button class="btn green-btn" onclick="editStudent(${index})">✏</button>
-                    <button class="btn red-btn" onclick="deleteStudent(${index})">🗑</button>
+                    <button class="btn gold-btn" style="padding: 6px 10px;" onclick="editStudent('${s.sid}')">✏️ Edit</button>
+                    <button class="btn red-btn" style="padding: 6px 10px;" onclick="deleteStudent('${s.sid}')">🗑</button>
                 </div>
             </td>
         </tr>`;
     });
 }
 
-function editStudent(index){
-    let s=students[index];
-    sid.value=s.sid;
-    studentName.value=s.name;
-    studentClass.value=s.studentClass;
-    fatherName.value=s.father;
-    mobile.value=s.mobile;
-    yearlyFee.value=s.fee;
-    students.splice(index,1);
-    localStorage.setItem('students', JSON.stringify(students));
-    renderStudents();
-    showPage('addStudentPage');
+function deleteStudent(targetSID){
+    if(confirm("Are you sure?")){
+        let idx = students.findIndex(s => s.sid === targetSID);
+        if(idx !== -1) {
+            let removed = students.splice(idx,1)[0]; 
+            localStorage.setItem('students', JSON.stringify(students));
+            renderStudents(); updateDashboardCounts(); sendDataToGoogleSheet('delete_student', removed);
+        }
+    }
 }
 
-function deleteStudent(index){
-    if(confirm("Are you sure?")){
-        let removed = students.splice(index,1)[0];
+/* PROMOTION DROPDOWN SYSTEM */
+function findPromoteStudent(){
+    let found = students.find(s => s.sid === promoteSID.value.trim().toUpperCase());
+    if(found) {
+        promoteName.value = found.name;
+        promoteCurrentClass.value = found.studentClass;
+    } else {
+        promoteName.value = '';
+        promoteCurrentClass.value = '';
+    }
+}
+
+function processPromotion() {
+    if(!promoteName.value) { alert("Pehle valid Student ID dalkar search karein!"); return; }
+    if(!promoteTargetClass.value) { alert("Kripya dropdown se promotion class select karein!"); return; }
+
+    let sidKey = promoteSID.value.trim().toUpperCase();
+    let idx = students.findIndex(s => s.sid === sidKey);
+
+    if(idx !== -1) {
+        students[idx].studentClass = promoteTargetClass.value;
         localStorage.setItem('students', JSON.stringify(students));
+        
         renderStudents();
         updateDashboardCounts();
-        sendDataToGoogleSheet('delete_student', removed);
+        sendDataToGoogleSheet('students', students[idx]);
+        
+        alert(`Badhai ho! ${students[idx].name} ko safalta-purvak Class ${promoteTargetClass.value} me promote kar diya gaya hai.`);
+        
+        promoteSID.value = ''; promoteName.value = ''; promoteCurrentClass.value = ''; promoteTargetClass.value = '';
     }
 }
 
-/* ================== TEACHER CRUD ================== */
-function saveTeacher(){
-    if(!teacherNameInput.value) { alert("Enter Teacher Name!"); return; }
-    let t = {
-        name: teacherNameInput.value,
-        mobile: teacherMobile.value,
-        subject: teacherSubject.value,
-        salary: teacherSalary.value || 0
-    };
-    teachers.push(t);
-    localStorage.setItem('teachers', JSON.stringify(teachers));
-    renderTeachers();
-    updateDashboardCounts();
-    sendDataToGoogleSheet('teachers', t);
-    alert("Teacher Record Saved!");
-    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
-}
-
-function renderTeachers(){
-    teacherTable.innerHTML='';
-    teachers.forEach((t, index)=>{
-        teacherTable.innerHTML+=`<tr>
-            <td>${t.name}</td>
-            <td>${t.subject}</td>
-            <td>₹${t.salary}</td>
-            <td><button class="btn red-btn" onclick="deleteTeacher(${index})">🗑</button></td>
-        </tr>`;
-    });
-}
-
-function deleteTeacher(index){
-    let removed = teachers.splice(index,1)[0];
-    localStorage.setItem('teachers', JSON.stringify(teachers));
-    renderTeachers();
-    updateDashboardCounts();
-    sendDataToGoogleSheet('delete_teacher', removed);
-}
-
-/* ================== FEE SYSTEM ================== */
-function findStudent(){
-    let found = students.find(s => s.sid === searchSID.value.trim());
-    if(found){
-        feeStudentName.value = found.name;
-        feeClass.value = found.studentClass;
-        monthlyFee.value = Math.round((found.fee / 12) || 0);
+/* TC HUB LOGIC WITH LIVE PREVIEW POPUP */
+function findTCStudent() {
+    let found = students.find(s => s.sid === tcSID.value.trim().toUpperCase());
+    if(found) {
+        tcName.value = found.name;
+        tcClass.value = found.studentClass;
     } else {
-        feeStudentName.value = ''; feeClass.value = ''; monthlyFee.value = '';
+        tcName.value = '';
+        tcClass.value = '';
     }
+}
+
+function generateTCPrint() {
+    if(!tcName.value) { alert("Pehle valid Student ID enter karke confirm karein!"); return; }
+    
+    let sidKey = tcSID.value.trim().toUpperCase();
+    let s = students.find(st => st.sid === sidKey);
+    let schoolNameTxt = localStorage.getItem('schoolName') || 'ROYAL SCHOOL PRO';
+
+    let tcTemplate = `
+    <div style="border: 4px double #000; padding: 30px; background: #fff; color: #000; font-family: 'Times New Roman', serif; max-width: 650px; margin: auto; position: relative;">
+        <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 15px;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #111;">${schoolNameTxt}</h1>
+            <p style="margin: 4px 0; font-size: 14px; font-style: italic; letter-spacing: 1px;">Recognized School Education Board Center</p>
+            <h2 style="margin: 10px 0 0 0; font-size: 20px; text-decoration: underline; letter-spacing: 2px;">TRANSFER CERTIFICATE (T.C.)</h2>
+        </div>
+        
+        <div style="margin-top: 30px; font-size: 16px; line-height: 2.2;">
+            <div><strong>Certificate Number:</strong> TC/REG/${Date.now().toString().slice(-5)}</div>
+            <div>This is to certify that <strong><span style="text-transform: uppercase; font-size: 17px; border-bottom: 1px dotted #000; padding: 0 8px;">${s.name}</span></strong></div>
+            <div>Student Identification ID (SID): <strong>${s.sid}</strong></div>
+            <div>Son / Daughter of Shri: <span style="border-bottom: 1px dotted #000; padding: 0 8px; font-weight: bold;">${s.father}</span></div>
+            <div>Was admitted to this institute in class <strong>${s.studentClass}</strong> with all clear official academic dues clearance.</div>
+            <div>According to the School register, his/her character is verified as <strong>Good</strong>. He/She is leaving the school due to higher studies completion.</div>
+        </div>
+
+        <div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
+            <div>Date of Issue: ${new Date().toLocaleDateString('en-IN')}</div>
+            <div style="border-top: 1px solid #000; width: 140px; text-align: center; padding-top: 5px;">Class Teacher</div>
+            <div style="border-top: 1px solid #000; width: 140px; text-align: center; padding-top: 5px;">Principal Sign & Seal</div>
+        </div>
+    </div>`;
+
+    document.getElementById('printViewArea').innerHTML = tcTemplate;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+/* FEE MANAGEMENT SAVE & VALIDATION */
+function findStudent(){
+    let found = students.find(s => s.sid === searchSID.value.trim().toUpperCase());
+    if(found){ 
+        feeStudentName.value = found.name; 
+        feeClass.value = found.studentClass; 
+        monthlyFee.value = Math.round((found.fee / 12) || 0);
+        actualAmountPaid.value = '';
+    }
+    else { feeStudentName.value = ''; feeClass.value = ''; monthlyFee.value = ''; actualAmountPaid.value = ''; }
 }
 
 function saveFee(){
     if(!feeStudentName.value) { alert("Find a valid student first!"); return; }
-    let f = {
-        sid: searchSID.value,
-        name: feeStudentName.value,
-        month: feeMonth.value || 'N/A',
-        amount: monthlyFee.value
-    };
-    fees.push(f);
+    if(!feeMonthSelect.value) { alert("Please select a month!"); return; }
+    if(!actualAmountPaid.value || parseInt(actualAmountPaid.value) <= 0) { alert("Please enter amount paid!"); return; }
+    
+    let targetSID = searchSID.value.trim().toUpperCase();
+    let selectedMonth = feeMonthSelect.value;
+    let feeAmt = parseInt(actualAmountPaid.value);
+
+    let existingIndex = fees.findIndex(f => f.sid === targetSID);
+
+    if (existingIndex !== -1) {
+        if(!fees[existingIndex].breakdownDetails) fees[existingIndex].breakdownDetails = [];
+        let monthExists = fees[existingIndex].breakdownDetails.some(b => b.monthName === selectedMonth);
+        if(monthExists) {
+            alert("This month's fee is already paid for this student!");
+            return;
+        }
+        fees[existingIndex].breakdownDetails.push({ monthName: selectedMonth, amount: feeAmt });
+        fees[existingIndex].totalAmount = parseInt(fees[existingIndex].totalAmount) + feeAmt;
+        fees[existingIndex].lastReceiptNo = 'REC-' + Date.now().toString().slice(-6);
+        fees[existingIndex].lastPaidMonth = selectedMonth;
+        fees[existingIndex].lastPaidAmount = feeAmt;
+    } else {
+        let newFeeObj = {
+            sid: targetSID,
+            name: feeStudentName.value,
+            class: feeClass.value,
+            breakdownDetails: [{ monthName: selectedMonth, amount: feeAmt }],
+            totalAmount: feeAmt,
+            lastReceiptNo: 'REC-' + Date.now().toString().slice(-6),
+            lastPaidMonth: selectedMonth,
+            lastPaidAmount: feeAmt
+        };
+        fees.push(newFeeObj);
+    }
+
     localStorage.setItem('fees', JSON.stringify(fees));
-    renderFees();
-    updateDashboardCounts();
-    sendDataToGoogleSheet('fees', f);
-    alert("Fee Paid successfully!");
-    searchSID.value=''; feeStudentName.value=''; feeClass.value=''; monthlyFee.value=''; feeMonth.value='';
+    renderFees(); updateDashboardCounts(); 
+    
+    try { sendDataToGoogleSheet('fees', fees.find(f => f.sid === targetSID)); } catch(e) { console.log(e); }
+    
+    alert("Fee Record Saved Successfully!");
+    let latestIdx = fees.findIndex(f => f.sid === targetSID);
+    viewFeeReceipt(latestIdx);
+    
+    searchSID.value=''; feeStudentName.value=''; feeClass.value=''; monthlyFee.value=''; feeMonthSelect.value=''; actualAmountPaid.value='';
 }
 
 function renderFees(){
     feeTable.innerHTML='';
-    fees.forEach((f,index)=>{
+    fees.forEach((f, index)=>{
+        let details = f.breakdownDetails || [];
+        let breakdownBadges = details.map(b => 
+            `<span style="background:#1e293b; color:#facc15; padding:4px 8px; border-radius:6px; margin-right:6px; font-size:12px; display:inline-block; margin-top:4px;">
+                ${b.monthName}:-₹${b.amount}
+            </span>`
+        ).join('');
+        
         feeTable.innerHTML+=`<tr>
-            <td>${f.sid}</td>
-            <td>${f.name}</td>
-            <td>${f.month}</td>
-            <td>₹${f.amount}</td>
-            <td><button class="btn red-btn" onclick="deleteFee(${index})">🗑</button></td>
+            <td>${f.sid}</td><td>${f.name}</td><td>${f.class || 'N/A'}</td><td>${breakdownBadges}</td>
+            <td style="font-weight:bold; color:#16a34a;">₹${f.totalAmount}/-</td>
+            <td>
+                <div class="action-box">
+                    <button class="btn blue-btn" style="padding: 6px 12px;" onclick="viewFeeReceipt(${index})">📄 Receipt</button>
+                    <button class="btn red-btn" style="padding: 6px 12px;" onclick="deleteFee(${index})">🗑</button>
+                </div>
+            </td>
         </tr>`;
     });
 }
 
 function deleteFee(index){
-    let removed = fees.splice(index,1)[0];
-    localStorage.setItem('fees', JSON.stringify(fees));
-    renderFees();
-    updateDashboardCounts();
-    sendDataToGoogleSheet('delete_fee', removed);
-}
-
-/* ================== MARKSHEET SYSTEM ================== */
-function findMarksheetStudent(){
-    let found = students.find(s => s.sid === marksheetSID.value.trim());
-    if(found){
-        markStudent.value = found.name;
-        markClass.value = found.studentClass;
-        loadSubjectMarksArea();
-    } else {
-        markStudent.value = ''; markClass.value = ''; subjectMarksArea.innerHTML='';
+    if(confirm("Are you sure?")){
+        let removed = fees.splice(index,1)[0]; localStorage.setItem('fees', JSON.stringify(fees));
+        renderFees(); updateDashboardCounts(); sendDataToGoogleSheet('delete_fee', removed);
     }
 }
 
-function loadSubjectMarksArea(){
-    let cls = markClass.value;
-    let exm = markExam.value;
-    let filtered = subjects.filter(sub => sub.subjectClass === cls && sub.exam === exm);
-    subjectMarksArea.innerHTML = '';
-    let totalMax = 0;
-    
-    filtered.forEach((sub, i) => {
-        totalMax += parseInt(sub.total || 0);
-        subjectMarksArea.innerHTML += `<div style="margin-top:10px;">
-            <label>${sub.name} (Max: ${sub.total})</label>
-            <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Enter Marks Obtained" onkeyup="calcTotalMarks()">
+function viewFeeReceipt(index) {
+    let f = fees[index];
+    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let details = f.breakdownDetails || [];
+    let historyRows = details.map(b => `${b.monthName} (₹${b.amount})`).join(', ');
+
+    let receiptTemplate = `
+        <div style="border:2px dashed #000; padding:20px; background:#fff; color:black; font-family:Arial; max-width:550px; margin:auto;">
+            <h2 style="text-align:center; margin:0; text-transform:uppercase; color:#1e3a8a;">${schName}</h2>
+            <p style="text-align:center; font-weight:bold; font-size:12px;">OFFICIAL FEE RECEIPT</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px; font-size:14px;">
+                <div><strong>Receipt No:</strong> ${f.lastReceiptNo}</div>
+                <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</div>
+                <div><strong>SID:</strong> ${f.sid}</div>
+                <div><strong>Student Name:</strong> ${f.name}</div>
+            </div>
+            <table style="width:100%; margin-top:15px; font-size:14px;">
+                <tr style="background:#f1f5f9; font-weight:bold;"><td style="padding:8px;">Month Particulars</td><td style="text-align:right; padding:8px;">Amount</td></tr>
+                <tr><td style="padding:8px;">Tuition Fee for Month (${f.lastPaidMonth})</td><td style="text-align:right; padding:8px; font-weight:bold;">₹${f.lastPaidAmount}/-</td></tr>
+                <tr style="font-size:12px; color:#555;"><td style="padding:8px;">All Paid Log: ${historyRows}</td><td style="text-align:right; padding:8px;">Total: ₹${f.totalAmount}</td></tr>
+            </table>
         </div>`;
+    document.getElementById('printViewArea').innerHTML = receiptTemplate;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+/* MARKSHEET SYSTEM WITH TRY/CATCH WRAPPERS */
+function findMarksheetStudent(){
+    let found = students.find(s => s.sid === marksheetSID.value.trim().toUpperCase());
+    if(found){ markStudent.value = found.name; markClass.value = found.studentClass; loadSubjectMarksArea(); }
+    else { markStudent.value = ''; markClass.value = ''; subjectMarksArea.innerHTML=''; }
+}
+
+function loadSubjectMarksArea(){
+    let cls = markClass.value; let exm = markExam.value;
+    let filtered = subjects.filter(sub => sub.subjectClass === cls && sub.exam === exm);
+    subjectMarksArea.innerHTML = ''; let totalMax = 0;
+    filtered.forEach((sub) => {
+        totalMax += parseInt(sub.total || 0);
+        subjectMarksArea.innerHTML += `<div style="margin-top:10px;"><label>${sub.name} (Max: ${sub.total})</label>
+        <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Obtained" onkeyup="calcTotalMarks()"></div>`;
     });
     markTotal.value = '0 / ' + totalMax;
 }
 
 function calcTotalMarks(){
     let inputs = document.querySelectorAll('.sub-mark-input');
-    let totalObtained = 0;
-    let totalMax = 0;
-    inputs.forEach(inp => {
-        totalObtained += parseInt(inp.value || 0);
-        totalMax += parseInt(inp.getAttribute('data-max') || 0);
-    });
+    let totalObtained = 0; let totalMax = 0;
+    inputs.forEach(inp => { totalObtained += parseInt(inp.value || 0); totalMax += parseInt(inp.getAttribute('data-max') || 0); });
     markTotal.value = totalObtained + " / " + totalMax;
 }
 
@@ -796,35 +984,59 @@ function saveMarksheet(){
     let subMarks = {};
     inputs.forEach(inp => { subMarks[inp.getAttribute('data-name')] = inp.value || 0; });
     
-    let m = {
-        sid: marksheetSID.value,
-        name: markStudent.value,
-        studentClass: markClass.value,
-        exam: markExam.value,
-        total: markTotal.value,
-        marks: subMarks
+    let m = { 
+        sid: marksheetSID.value.trim().toUpperCase(), 
+        name: markStudent.value, 
+        studentClass: markClass.value, 
+        exam: markExam.value, 
+        total: markTotal.value, 
+        marks: subMarks 
     };
-    marksheets.push(m);
+    
+    marksheets.push(m); 
     localStorage.setItem('marksheets', JSON.stringify(marksheets));
-    renderMarksheets();
-    sendDataToGoogleSheet('marksheets', m);
-    alert("Marksheet Saved!");
+    renderMarksheets(); 
+    
+    try { sendDataToGoogleSheet('marksheets', m); } catch(e){ console.log(e); }
+    
+    alert("Marksheet Saved Locally & Sent to Cloud Stack!");
     marksheetSID.value=''; markStudent.value=''; markClass.value=''; subjectMarksArea.innerHTML=''; markTotal.value='';
 }
 
+/* RENDERING MARKSHEET WITH CLASS FILTER & NEW SEARCH FUNCTIONALITY */
 function renderMarksheets(){
     marksheetTable.innerHTML='';
-    marksheets.forEach((m,index)=>{
+    let cls = filterMarksheetClass.value;
+    let searchTxt = searchMarksheetInput.value.trim().toUpperCase();
+    
+    let filtered = marksheets;
+    
+    // 1. Class wise filter
+    if(cls !== 'All') {
+        filtered = filtered.filter(m => m.studentClass === cls);
+    }
+    
+    // 2. Search Box filter
+    if(searchTxt !== '') {
+        filtered = filtered.filter(m => m.sid.toUpperCase().includes(searchTxt) || m.name.toUpperCase().includes(searchTxt));
+    }
+    
+    marksheetCountLabel.innerText = filtered.length;
+
+    filtered.forEach((m, index)=>{
+        // Original index trace for proper data operations
+        let actualIndex = marksheets.findIndex(org => org.sid === m.sid && org.exam === m.exam);
+        
         marksheetTable.innerHTML+=`<tr>
             <td>${m.sid}</td>
             <td>${m.name}</td>
-            <td>${m.studentClass}</td>
+            <td>${m.studentClass || 'N/A'}</td>
             <td>${m.exam}</td>
             <td>${m.total}</td>
             <td>
                 <div class="action-box">
-                    <button class="btn blue-btn" onclick="viewPrintMarksheet(${index})">🖨 Print</button>
-                    <button class="btn red-btn" onclick="deleteMarksheet(${index})">🗑</button>
+                    <button class="btn green-btn" style="padding: 6px 12px;" onclick="printSingleMarksheet(${actualIndex})">🖨️ Print</button>
+                    <button class="btn red-btn" style="padding: 6px 12px;" onclick="deleteMarksheet(${actualIndex})">🗑</button>
                 </div>
             </td>
         </tr>`;
@@ -832,117 +1044,173 @@ function renderMarksheets(){
 }
 
 function deleteMarksheet(index){
-    let removed = marksheets.splice(index,1)[0];
-    localStorage.setItem('marksheets', JSON.stringify(marksheets));
-    renderMarksheets();
-    sendDataToGoogleSheet('delete_marksheet', removed);
+    if(confirm("Are you sure you want to delete this marksheet?")){
+        let removed = marksheets.splice(index,1)[0]; 
+        localStorage.setItem('marksheets', JSON.stringify(marksheets));
+        renderMarksheets(); 
+        sendDataToGoogleSheet('delete_marksheet', removed);
+    }
 }
 
-/* ================== PRINT & A4 REPORT CARD GENERATION ================== */
-function viewPrintMarksheet(index) {
+/* INDIVIDUAL MARKSHEET REPORT PRINT FUNCTION FROM ROW ACTION */
+function printSingleMarksheet(index) {
     let m = marksheets[index];
+    if(!m) return;
+    
     let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let schLogo = localStorage.getItem('schoolLogo') || '';
     
-    let logoHtml = schLogo ? `<img src="${schLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">` : '';
+    // Building dynamic subjects and marks breakdown rows
+    let subjectRows = '';
+    let marksObj = m.marks || {};
     
-    // Dynamic Table Rows for 5 or any number of papers
-    let rowsHtml = '';
-    let grandTotalObtained = 0;
-    let grandTotalMax = 0;
-    
-    for (let subName in m.marks) {
-        // Max marks dhundhne ke liye subjects array check karenge
-        let matchSub = subjects.find(s => s.name === subName && s.subjectClass === m.studentClass && s.exam === m.exam);
-        let maxM = matchSub ? parseInt(matchSub.total) : 100;
-        let obtM = parseInt(m.marks[subName] || 0);
+    for (let subName in marksObj) {
+        // Trying to find maximum marks configured for this subject dynamically
+        let matchSub = subjects.find(s => s.subjectClass === m.studentClass && s.exam === m.exam && s.name === subName);
+        let maxM = matchSub ? matchSub.total : '100';
         
-        grandTotalObtained += obtM;
-        grandTotalMax += maxM;
-        
-        let percentage = ((obtM / maxM) * 100).toFixed(1);
-        let status = percentage >= 33 ? '<span style="color:green; font-weight:bold;">Pass</span>' : '<span style="color:red; font-weight:bold;">Fail</span>';
-        
-        rowsHtml += `<tr>
-            <td style="padding:10px; font-weight:bold;">${subName.toUpperCase()}</td>
-            <td style="text-align:center; padding:10px;">${maxM}</td>
-            <td style="text-align:center; padding:10px; font-weight:bold;">${obtM}</td>
-            <td style="text-align:center; padding:10px;">${percentage}%</td>
-            <td style="text-align:center; padding:10px;">${status}</td>
-        </tr>`;
+        subjectRows += `
+            <tr>
+                <td style="border: 1px solid #000; padding: 10px; font-weight: bold; text-transform: uppercase;">${subName}</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: center;">${maxM}</td>
+                <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${marksObj[subName]}</td>
+            </tr>`;
     }
-    
-    let finalPercentage = ((grandTotalObtained / grandTotalMax) * 100).toFixed(1);
-    let finalResult = finalPercentage >= 33 ? 'PASSED' : 'DETAINED';
-    
-    // Report Card Structure
-    let htmlContent = `
-        <div style="border: 4px double #000; padding: 20px; background: #fff; font-family: Arial, sans-serif;">
-            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 15px;">
-                ${logoHtml}
-                <div style="text-align: center; flex-grow: 1; margin-right: ${schLogo ? '70px' : '0px'};">
-                    <h1 style="font-size: 26px; font-weight: bold; margin: 0; color: #1e3a8a;">${schName.toUpperCase()}</h1>
-                    <p style="margin: 4px 0 0 0; font-size: 14px; color: #555; font-weight: bold; letter-spacing: 1px;">OFFICIAL REPORT CARD</p>
-                </div>
+
+    let reportCardTemplate = `
+        <div style="font-family: Arial, sans-serif; color: black; background: white; padding: 20px; border: 5px double #000; max-width: 650px; margin: auto;">
+            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+                <h1 style="margin: 0; font-size: 26px; text-transform: uppercase; color: #1e3a8a;">${schName}</h1>
+                <p style="margin: 4px 0; font-size: 13px; font-style: italic;">Progress Report Card</p>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; font-size: 15px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">
-                <div><strong>Student Name :</strong> <span style="text-transform: uppercase;">${m.name}</span></div>
-                <div><strong>Student ID (SID) :</strong> ${m.sid}</div>
-                <div><strong>Class :</strong> ${m.studentClass}</div>
-                <div><strong>Examination :</strong> ${m.exam.toUpperCase()}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; font-size: 14px; border: 1px solid #000; padding: 10px; background: #f8fafc;">
+                <div><strong>Student Name:</strong> <span style="text-transform: uppercase;">${m.name}</span></div>
+                <div><strong>Student ID (SID):</strong> ${m.sid}</div>
+                <div><strong>Class:</strong> ${m.studentClass}</div>
+                <div><strong>Exam Type:</strong> ${m.exam}</div>
             </div>
             
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15px;">
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; color: black; font-size: 14px;">
                 <thead>
-                    <tr style="background: #f1f5f9;">
-                        <th style="border: 1px solid #94a3b8; padding: 12px; text-align: left;">SUBJECT NAME</th>
-                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 150px;">MAX MARKS</th>
-                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 150px;">MARKS OBTAINED</th>
-                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 120px;">PERCENTAGE</th>
-                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 100px;">STATUS</th>
+                    <tr style="background: #e2e8f0;">
+                        <th style="border: 1px solid #000; padding: 10px; text-align: left; color: black;">SUBJECT NAME</th>
+                        <th style="border: 1px solid #000; padding: 10px; text-align: center; color: black; width: 120px;">MAX MARKS</th>
+                        <th style="border: 1px solid #000; padding: 10px; text-align: center; color: black; width: 150px;">OBTAINED MARKS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${rowsHtml}
-                    <tr style="background: #f8fafc; font-weight: bold; border-top: 2px solid #000;">
-                        <td style="border: 1px solid #94a3b8; padding: 12px;">GRAND TOTAL</td>
-                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center;">${grandTotalMax}</td>
-                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center; font-size:16px; color:#1e3a8a;">${grandTotalObtained}</td>
-                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center;">${finalPercentage}%</td>
-                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center; color: ${finalPercentage >= 33 ? 'green' : 'red'};">${finalResult}</td>
-                    </tr>
+                    ${subjectRows ? subjectRows : '<tr><td colspan="3" style="text-align:center; padding:10px;">No subject breakdown available</td></tr>'}
                 </tbody>
+                <tfoot>
+                    <tr style="background: #f1f5f9; font-weight: bold; font-size: 15px;">
+                        <td style="border: 1px solid #000; padding: 10px;">AGGREGATE TOTAL RESULT</td>
+                        <td colspan="2" style="border: 1px solid #000; padding: 10px; text-align: center; color: #16a34a; font-size: 16px;">${m.total}</td>
+                    </tr>
+                </tfoot>
             </table>
             
-            <div style="margin-top: 60px; display: flex; justify-content: space-between; padding: 0 20px;">
-                <div style="text-align: center; border-top: 1px solid #000; width: 180px; padding-top: 5px; font-size: 14px; font-weight: bold;">Class Teacher</div>
-                <div style="text-align: center; border-top: 1px solid #000; width: 180px; padding-top: 5px; font-size: 14px; font-weight: bold;">Principal Signature</div>
+            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
+                <div style="border-top: 1px solid #000; width: 150px; text-align: center; padding-top: 5px;">Class Teacher</div>
+                <div style="border-top: 1px solid #000; width: 150px; text-align: center; padding-top: 5px;">Principal Sign</div>
             </div>
-        </div>
-    `;
-    
-    document.getElementById('printViewArea').innerHTML = htmlContent;
+        </div>`;
+        
+    document.getElementById('printViewArea').innerHTML = reportCardTemplate;
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-function triggerPrint() {
-    let printContent = document.getElementById('printViewArea').innerHTML;
-    let originalContent = document.body.innerHTML;
+/* CLASS-WISE STUDENT PRINT FUNCTION */
+function printStudentClassWise() {
+    let cls = filterClass.value;
+    let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
+    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
     
-    // Sirf report card area ko print karne ke liye body content temporary swap karein
-    document.body.innerHTML = printContent;
-    window.print();
-    
-    // Print hone ke baad website ko wapas normal state me laane ke liye reload karein
-    location.reload();
+    let tableRows = '';
+    filtered.forEach((s, i) => {
+        tableRows += `<tr>
+            <td style="border:1px solid #000; padding:8px; text-align:center;">${i+1}</td>
+            <td style="border:1px solid #000; padding:8px;">${s.sid}</td>
+            <td style="border:1px solid #000; padding:8px; text-transform:uppercase;">${s.name}</td>
+            <td style="border:1px solid #000; padding:8px;">${s.studentClass}</td>
+            <td style="border:1px solid #000; padding:8px;">${s.father}</td>
+            <td style="border:1px solid #000; padding:8px;">${s.mobile || ''}</td>
+        </tr>`;
+    });
+
+    let printTemplate = `
+        <div style="font-family:Arial; padding:10px; color:black;">
+            <h1 style="text-align:center; text-transform:uppercase; margin-bottom:5px;">${schName}</h1>
+            <h3 style="text-align:center; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;">STUDENT REPORT - CLASS: ${cls.toUpperCase()}</h3>
+            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                <thead>
+                    <tr style="background:#e2e8f0;">
+                        <th style="border:1px solid #000; padding:8px; width:50px;">SR.</th>
+                        <th style="border:1px solid #000; padding:8px;">SID</th>
+                        <th style="border:1px solid #000; padding:8px;">STUDENT NAME</th>
+                        <th style="border:1px solid #000; padding:8px;">CLASS</th>
+                        <th style="border:1px solid #000; padding:8px;">FATHER NAME</th>
+                        <th style="border:1px solid #000; padding:8px;">MOBILE</th>
+                    </tr>
+                </thead>
+                <tbody>${tableRows}</tbody>
+            </table>
+        </div>`;
+    document.getElementById('printViewArea').innerHTML = printTemplate;
+    document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* ================== POPUP MANAGEMENT ================== */
+/* TEACHER MODULES */
+function saveTeacher(){
+    if(!teacherNameInput.value) { alert("Enter Name!"); return; }
+    let t = { name: teacherNameInput.value, mobile: teacherMobile.value, subject: teacherSubject.value, salary: teacherSalary.value || 0 };
+    teachers.push(t); localStorage.setItem('teachers', JSON.stringify(teachers));
+    renderTeachers(); updateDashboardCounts(); sendDataToGoogleSheet('teachers', t);
+    alert("Teacher Record Saved!");
+    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
+}
+
+function renderTeachers(){
+    teacherTable.innerHTML='';
+    teachers.forEach((t, index)=>{
+        teacherTable.innerHTML+=`<tr><td>${t.name}</td><td>${t.mobile || 'N/A'}</td><td>${t.subject}</td><td>₹${t.salary}</td>
+        <td><button class="btn red-btn" onclick="deleteTeacher(${index})">🗑</button></td></tr>`;
+    });
+}
+
+function deleteTeacher(index){
+    let removed = teachers.splice(index,1)[0]; localStorage.setItem('teachers', JSON.stringify(teachers));
+    renderTeachers(); updateDashboardCounts(); sendDataToGoogleSheet('delete_teacher', removed);
+}
+
+function printAllTeachers() {
+    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let rows = '';
+    teachers.forEach((t, i) => {
+        rows += `<tr>
+            <td style="border:1px solid #000; padding:8px; text-align:center;">${i+1}</td>
+            <td style="border:1px solid #000; padding:8px; font-weight:bold;">${t.name.toUpperCase()}</td>
+            <td style="border:1px solid #000; padding:8px;">${t.mobile || ''}</td>
+            <td style="border:1px solid #000; padding:8px;">${t.subject}</td>
+            <td style="border:1px solid #000; padding:8px;">₹${t.salary}</td>
+        </tr>`;
+    });
+
+    let printTemplate = `
+        <div style="font-family:Arial; padding:10px; color:black;">
+            <h1 style="text-align:center; text-transform:uppercase; margin-bottom:5px;">${schName}</h1>
+            <h3 style="text-align:center; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;">COMPLETE STAFF LIST</h3>
+            <table style="width:100%; border-collapse:collapse;">
+                <thead><tr style="background:#f1f5f9;"><th style="border:1px solid #000; padding:8px;">S.No</th><th style="border:1px solid #000; padding:8px;">NAME</th><th style="border:1px solid #000; padding:8px;">MOBILE</th><th style="border:1px solid #000; padding:8px;">SUBJECT</th><th style="border:1px solid #000; padding:8px;">SALARY</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+    document.getElementById('printViewArea').innerHTML = printTemplate;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+/* POPUPS MANAGEMENT & SHEETS LINKER */
 function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
 function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
-
-/* GOOGLE SHEETS POPUP OPERATIONS */
 function openGoogleSheetsPopup() {
     googleSheetsPopup.style.display = 'flex';
     urlStudents.value = localStorage.getItem('url_students') || '';
@@ -950,128 +1218,86 @@ function openGoogleSheetsPopup() {
     urlFees.value = localStorage.getItem('url_fees') || '';
     urlMarksheet.value = localStorage.getItem('url_marksheets') || '';
 }
-
-function closeGoogleSheetsPopup() {
-    googleSheetsPopup.style.display = 'none';
-}
+function closeGoogleSheetsPopup() { googleSheetsPopup.style.display = 'none'; }
 
 function saveAllSheetUrls() {
     localStorage.setItem('url_students', urlStudents.value.trim());
     localStorage.setItem('url_teachers', urlTeachers.value.trim());
     localStorage.setItem('url_fees', urlFees.value.trim());
     localStorage.setItem('url_marksheets', urlMarksheet.value.trim());
-    alert("Sabhi Sheet Links kamyabi se save ho gaye hain!");
-    closeGoogleSheetsPopup();
+    alert("Urls Saved Successfully!"); closeGoogleSheetsPopup();
 }
 
 function addExam(){
-    if(!examName.value) return;
-    exams.push(examName.value);
-    localStorage.setItem('exams', JSON.stringify(exams));
-    examName.value='';
-    renderExamsAndSubjects();
+    if(!examName.value) return; exams.push(examName.value);
+    localStorage.setItem('exams', JSON.stringify(exams)); examName.value=''; renderExamsAndSubjects();
 }
 
 function addSubject(){
     if(!subjectName.value) return;
-    let s = {
-        subjectClass: popupSubjectClass.value,
-        exam: subjectExam.value,
-        name: subjectName.value,
-        total: subjectTotal.value || 100
-    };
-    subjects.push(s);
-    localStorage.setItem('subjects', JSON.stringify(subjects));
-    subjectName.value=''; subjectTotal.value='';
-    renderExamsAndSubjects();
+    let s = { subjectClass: popupSubjectClass.value, exam: subjectExam.value, name: subjectName.value, total: subjectTotal.value || 100 };
+    subjects.push(s); localStorage.setItem('subjects', JSON.stringify(subjects));
+    subjectName.value=''; subjectTotal.value=''; renderExamsAndSubjects();
 }
 
 function renderExamsAndSubjects(){
     examList.innerHTML = "<strong>Exams:</strong> " + exams.join(', ');
-    subjectList.innerHTML = '';
-    subjects.forEach(s => {
-        subjectList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} Marks)</div>`;
-    });
+    subjectList.innerHTML = ''; subjects.forEach(s => { subjectList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} M)</div>`; });
     updateExamDropdowns();
 }
 
 function updateExamDropdowns(){
     markExam.innerHTML = ''; subjectExam.innerHTML = '';
-    exams.forEach(ex => {
-        markExam.innerHTML += `<option>${ex}</option>`;
-        subjectExam.innerHTML += `<option>${ex}</option>`;
-    });
+    exams.forEach(ex => { markExam.innerHTML += `<option>${ex}</option>`; subjectExam.innerHTML += `<option>${ex}</option>`; });
 }
 
-/* ================== APP SETTINGS ================== */
 function saveSettings(){
     if(schoolNameInput.value) localStorage.setItem('schoolName', schoolNameInput.value);
     if(newUsername.value) localStorage.setItem('adminUsername', newUsername.value);
     if(newPassword.value) localStorage.setItem('adminPassword', newPassword.value);
-    
     let file = schoolLogoInput.files[0];
     if(file){
         let reader = new FileReader();
-        reader.onloadend = function() {
-            localStorage.setItem('schoolLogo', reader.result);
-            schoolLogo.src = reader.result;
-        }
+        reader.onloadend = function() { localStorage.setItem('schoolLogo', reader.result); schoolLogo.src = reader.result; }
         reader.readAsDataURL(file);
     }
     if(schoolNameInput.value) schoolName.innerText = schoolNameInput.value;
     alert("Settings Saved!");
 }
 
-/* DASHBOARD UTILS */
 function updateDashboardCounts(){
-    studentCount.innerText = students.length;
-    teacherCount.innerText = teachers.length;
-    let totalF = fees.reduce((sum, f) => sum + parseInt(f.amount || 0), 0);
-    feeCount.innerText = "₹" + totalF;
+    studentCount.innerText = students.length; teacherCount.innerText = teachers.length;
+    let totalF = fees.reduce((sum, f) => sum + parseInt(f.totalAmount || 0), 0); feeCount.innerText = "₹" + totalF;
 }
 
-/* ========================================================
-   ROUTING DATA TO TARGET SHEET (DYNAMIC REDIRECT SYSTEM)
-   ======================================================== */
+/* ROBUST SEND FUNCTION: ABSENCE OF URL WON'T BREAK CRITICAL FLOW */
 function sendDataToGoogleSheet(type, dataPayload) {
     let url = '';
-    
     if(type.indexOf('student') !== -1) url = localStorage.getItem('url_students');
     else if(type.indexOf('teacher') !== -1) url = localStorage.getItem('url_teachers');
     else if(type.indexOf('fee') !== -1) url = localStorage.getItem('url_fees');
     else if(type.indexOf('mark') !== -1) url = localStorage.getItem('url_marksheets');
-
-    if(!url) return;
-
-    let formData = new FormData();
-    formData.append('sheetType', type);
+    
+    if(!url || url.trim() === '') {
+        console.warn("Google Sheet WebApp URL missing for type: " + type + ". Data saved on local machine storage engine.");
+        return; 
+    }
+    
+    let formData = new FormData(); 
+    formData.append('sheetType', type); 
     formData.append('data', JSON.stringify(dataPayload));
-
-    fetch(url, {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors'
-    })
-    .then(() => console.log('Data dynamic target sheet me bhej diya gaya h:', type))
-    .catch(err => console.error('Sync error:', err));
+    
+    fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
+    .then(() => console.log("Cloud server synced metadata."))
+    .catch(err => console.error("Network cloud delivery failed: ", err));
 }
 
-/* WINDOW LOAD INITIALIZER */
 window.onload = function(){
-    renderStudents();
-    renderTeachers();
-    renderFees();
-    renderMarksheets();
-    updateDashboardCounts();
-    updateExamDropdowns();
-
-    let name = localStorage.getItem('schoolName');
-    let logo = localStorage.getItem('schoolLogo');
-    
+    renderStudents(); renderTeachers(); renderFees(); renderMarksheets(); updateDashboardCounts(); updateExamDropdowns();
+    let name = localStorage.getItem('schoolName'); let logo = localStorage.getItem('schoolLogo');
     if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
     if(logo) schoolLogo.src = logo;
 };
-
 </script>
 </body>
 </html>
