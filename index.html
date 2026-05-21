@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Royal School ERP</title>
 
+<meta name="google-site-verification" content="YAHAN_APNA_PURANA_CODE_PASTE_KAREIN" />
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -805,23 +807,51 @@ onclick="openMarksheetPopup()"
 📝 Marksheet Management
 </button>
 
-</div>
-
-</div>
-
-<div class="glass" style="margin-top: 30px; border: 2px solid #2563eb;">
-<h2 style="font-size:22px; color:#facc15; margin-bottom:10px;">🤖 Google Drive Integration</h2>
-<p style="font-size:14px; color:#94a3b8; margin-bottom:15px;">Ek baar link karein, aapka saara data automatic sheet me backup hota rahega.</p>
-
-<button id="googleAuthBtn" class="btn blue-btn" style="display: flex; align-items: center; gap: 10px;" onclick="handleAuthClick()">
-<svg style="width:20px; height:20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12.24 10.285V13.4h6.887c-.275 1.565-1.88 4.604-6.887 4.604-4.33 0-7.866-3.577-7.866-8s3.536-8 7.866-8c2.46 0 4.105 1.025 5.047 1.926l2.427-2.334C17.955 2.192 15.34 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.478 0 10.793-4.537 10.793-10.986 0-.746-.08-1.32-.176-1.886H12.24z"/></svg>
-Sign In & Link Google Drive
+<button
+class="btn green-btn"
+onclick="openGoogleSheetsPopup()"
+>
+🔗 Link Google Sheets URL
 </button>
-<p id="syncStatusText" style="margin-top: 12px; font-size:14px; color:#10b981; display:none; font-weight: bold;">✓ Linked! 4 Sheets Created Automatically on Cloud.</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
+
+<div id="googleSheetsPopup" class="popup">
+<div class="popup-box" style="max-width: 600px;">
+<h1 class="section-title">🔗 Google Sheets Integration</h1>
+<p style="font-size:14px; color:#94a3b8; margin-bottom:20px;">Har department ke liye apna alag-alag Google Web App Script URL niche paste karein:</p>
+
+<div style="margin-bottom: 12px;">
+<label style="color:#facc15; font-size:14px;">🎓 Students Sheet Web App URL:</label>
+<input id="urlStudents" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
+</div>
+
+<div style="margin-bottom: 12px;">
+<label style="color:#facc15; font-size:14px;">👨‍🏫 Teachers Sheet Web App URL:</label>
+<input id="urlTeachers" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
+</div>
+
+<div style="margin-bottom: 12px;">
+<label style="color:#facc15; font-size:14px;">💰 Fees Sheet Web App URL:</label>
+<input id="urlFees" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
+</div>
+
+<div style="margin-bottom: 20px;">
+<label style="color:#facc15; font-size:14px;">📝 Marksheet Sheet Web App URL:</label>
+<input id="urlMarksheet" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
+</div>
+
+<div style="display:flex; gap:15px;">
+<button class="btn green-btn" onclick="saveAllSheetUrls()">💾 Save Links</button>
+<button class="btn red-btn" onclick="closeGoogleSheetsPopup()">❌ Close</button>
+</div>
+</div>
 </div>
 
 <div id="marksheetPopup" class="popup">
@@ -969,7 +999,7 @@ function generateSID(){
 }
 generateSID();
 
-/* ================== FIXED STUDENT CRUD ================== */
+/* ================== STUDENT CRUD ================== */
 function saveStudent(){
     if(!studentName.value) { alert("Enter Name!"); return; }
     let s = {
@@ -985,7 +1015,7 @@ function saveStudent(){
     
     renderStudents();
     updateDashboardCounts();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('students', s);
 
     alert('Admission Saved Successfully!');
     studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value='';
@@ -1027,15 +1057,15 @@ function editStudent(index){
 
 function deleteStudent(index){
     if(confirm("Are you sure?")){
-        students.splice(index,1);
+        let removed = students.splice(index,1)[0];
         localStorage.setItem('students', JSON.stringify(students));
         renderStudents();
         updateDashboardCounts();
-        syncAllDataToGoogleDrive();
+        sendDataToGoogleSheet('delete_student', removed);
     }
 }
 
-/* ================== FIXED TEACHER CRUD ================== */
+/* ================== TEACHER CRUD ================== */
 function saveTeacher(){
     if(!teacherNameInput.value) { alert("Enter Teacher Name!"); return; }
     let t = {
@@ -1048,7 +1078,7 @@ function saveTeacher(){
     localStorage.setItem('teachers', JSON.stringify(teachers));
     renderTeachers();
     updateDashboardCounts();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('teachers', t);
     alert("Teacher Record Saved!");
     teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
 }
@@ -1066,14 +1096,14 @@ function renderTeachers(){
 }
 
 function deleteTeacher(index){
-    teachers.splice(index,1);
+    let removed = teachers.splice(index,1)[0];
     localStorage.setItem('teachers', JSON.stringify(teachers));
     renderTeachers();
     updateDashboardCounts();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('delete_teacher', removed);
 }
 
-/* ================== FIXED FEE SYSTEM ================== */
+/* ================== FEE SYSTEM ================== */
 function findStudent(){
     let found = students.find(s => s.sid === searchSID.value.trim());
     if(found){
@@ -1097,7 +1127,7 @@ function saveFee(){
     localStorage.setItem('fees', JSON.stringify(fees));
     renderFees();
     updateDashboardCounts();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('fees', f);
     alert("Fee Paid successfully!");
     searchSID.value=''; feeStudentName.value=''; feeClass.value=''; monthlyFee.value=''; feeMonth.value='';
 }
@@ -1116,14 +1146,14 @@ function renderFees(){
 }
 
 function deleteFee(index){
-    fees.splice(index,1);
+    let removed = fees.splice(index,1)[0];
     localStorage.setItem('fees', JSON.stringify(fees));
     renderFees();
     updateDashboardCounts();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('delete_fee', removed);
 }
 
-/* ================== FIXED MARKSHEET SYSTEM ================== */
+/* ================== MARKSHEET SYSTEM ================== */
 function findMarksheetStudent(){
     let found = students.find(s => s.sid === marksheetSID.value.trim());
     if(found){
@@ -1180,7 +1210,7 @@ function saveMarksheet(){
     marksheets.push(m);
     localStorage.setItem('marksheets', JSON.stringify(marksheets));
     renderMarksheets();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('marksheets', m);
     alert("Marksheet Saved!");
     marksheetSID.value=''; markStudent.value=''; markClass.value=''; subjectMarksArea.innerHTML=''; markTotal.value='';
 }
@@ -1200,15 +1230,37 @@ function renderMarksheets(){
 }
 
 function deleteMarksheet(index){
-    marksheets.splice(index,1);
+    let removed = marksheets.splice(index,1)[0];
     localStorage.setItem('marksheets', JSON.stringify(marksheets));
     renderMarksheets();
-    syncAllDataToGoogleDrive();
+    sendDataToGoogleSheet('delete_marksheet', removed);
 }
 
-/* ================== FIXED POPUP MANAGEMENT ================== */
+/* ================== POPUP MANAGEMENT ================== */
 function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
 function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
+
+/* GOOGLE SHEETS POPUP OPERATIONS */
+function openGoogleSheetsPopup() {
+    googleSheetsPopup.style.display = 'flex';
+    urlStudents.value = localStorage.getItem('url_students') || '';
+    urlTeachers.value = localStorage.getItem('url_teachers') || '';
+    urlFees.value = localStorage.getItem('url_fees') || '';
+    urlMarksheet.value = localStorage.getItem('url_marksheets') || '';
+}
+
+function closeGoogleSheetsPopup() {
+    googleSheetsPopup.style.display = 'none';
+}
+
+function saveAllSheetUrls() {
+    localStorage.setItem('url_students', urlStudents.value.trim());
+    localStorage.setItem('url_teachers', urlTeachers.value.trim());
+    localStorage.setItem('url_fees', urlFees.value.trim());
+    localStorage.setItem('url_marksheets', urlMarksheet.value.trim());
+    alert("Sabhi Sheet Links kamyabi se save ho gaye hain!");
+    closeGoogleSheetsPopup();
+}
 
 function addExam(){
     if(!examName.value) return;
@@ -1277,77 +1329,31 @@ function updateDashboardCounts(){
 }
 
 /* ========================================================
-   ONE-CLICK DIRECT GOOGLE DRIVE SYNC SYSTEM
+   ROUTING DATA TO TARGET SHEET (DYNAMIC REDIRECT SYSTEM)
    ======================================================== */
-const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'; 
-const API_KEY = 'YOUR_GOOGLE_API_KEY';
-const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
+function sendDataToGoogleSheet(type, dataPayload) {
+    let url = '';
+    
+    // Type ke basis par sahi sheet ka URL uthana
+    if(type.indexOf('student') !== -1) url = localStorage.getItem('url_students');
+    else if(type.indexOf('teacher') !== -1) url = localStorage.getItem('url_teachers');
+    else if(type.indexOf('fee') !== -1) url = localStorage.getItem('url_fees');
+    else if(type.indexOf('mark') !== -1) url = localStorage.getItem('url_marksheets');
 
-let tokenClient, gapiInited = false, gsiInited = false;
-let accessToken = localStorage.getItem('g_access_token') || null;
+    if(!url) return; // Agar specific URL nahi dala hai toh sirf locally chalega
 
-function gapiLoaded() { gapi.load('client', intializeGapiClient); }
-async function intializeGapiClient() {
-    await gapi.client.init({ apiKey: API_KEY, discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest'] });
-    gapiInited = true; checkInitialization();
+    let formData = new FormData();
+    formData.append('sheetType', type);
+    formData.append('data', JSON.stringify(dataPayload));
+
+    fetch(url, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+    })
+    .then(() => console.log('Data dynamic target sheet me bhej diya gaya h:', type))
+    .catch(err => console.error('Sync error:', err));
 }
-function gsiLoaded() {
-    tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES, callback: (resp) => { if (resp.error) return; accessToken = resp.access_token; localStorage.setItem('g_access_token', accessToken); onAuthSuccess(); } });
-    gsiInited = true; checkInitialization();
-}
-function checkInitialization(){ if(gapiInited && gsiInited && accessToken) { gapi.client.setToken({access_token: accessToken}); showSyncedUI(); } }
-function handleAuthClick() { if (!accessToken) { tokenClient.requestAccessToken({prompt: 'consent'}); } else { onAuthSuccess(); } }
-
-async function onAuthSuccess() {
-    showSyncedUI();
-    try {
-        let folderId = localStorage.getItem('g_folder_id');
-        if (!folderId) {
-            let folderMeta = { name: 'Royal School ERP Data', mimeType: 'application/vnd.google-apps.folder' };
-            let folderRes = await gapi.client.drive.files.create({ resource: folderMeta, fields: 'id' });
-            folderId = folderRes.result.id; localStorage.setItem('g_folder_id', folderId);
-
-            let sheets = ['🎓 Students', '👨‍🏫 Teachers', '💰 Fees', '📝 Marksheet'];
-            for(let title of sheets) {
-                let sheetMeta = { name: title, mimeType: 'application/vnd.google-apps.spreadsheet', parents: [folderId] };
-                let res = await gapi.client.drive.files.create({ resource: sheetMeta, fields: 'id' });
-                localStorage.setItem(`sheet_${title}`, res.result.id);
-            }
-        }
-        syncAllDataToGoogleDrive();
-    } catch (err) { console.error(err); }
-}
-
-function showSyncedUI() {
-    document.getElementById('syncStatusText').style.display = 'block';
-    document.getElementById('googleAuthBtn').innerText = "⚡ Connected to Drive";
-    document.getElementById('googleAuthBtn').className = "btn green-btn";
-}
-
-async function syncAllDataToGoogleDrive() {
-    if (!accessToken) return;
-    try {
-        let dataset = { '🎓 Students': students, '👨‍🏫 Teachers': teachers, '💰 Fees': fees, '📝 Marksheet': marksheets };
-        for (let title in dataset) {
-            let sheetId = localStorage.getItem(`sheet_${title}`);
-            if (!sheetId) continue;
-            let list = dataset[title];
-            let rows = [];
-            if(list.length > 0) {
-                let headers = Object.keys(list[0]);
-                rows.push(headers);
-                list.forEach(item => { rows.push(headers.map(h => typeof item[h] === 'object' ? JSON.stringify(item[h]) : item[h] || '')); });
-            } else { rows = [["No Data Available"]]; }
-
-            await gapi.client.sheets.spreadsheets.values.clear({ spreadsheetId: sheetId, range: 'Sheet1!A:Z' });
-            await gapi.client.sheets.spreadsheets.values.update({ spreadsheetId: sheetId, range: 'Sheet1!A1', valueInputOption: 'USER_ENTERED', resource: { values: rows } });
-        }
-    } catch (e) { console.log("Cloud sync delayed...", e); }
-}
-
-// Dynamic Scripts Injection for Google API
-const script1 = document.createElement('script'); script1.src = "https://apis.google.com/js/api.js"; script1.onload = gapiLoaded; document.body.appendChild(script1);
-const script2 = document.createElement('script'); script2.src = "https://accounts.google.com/gsi/client"; script2.onload = gsiLoaded; document.body.appendChild(script2);
 
 /* WINDOW LOAD INITIALIZER */
 window.onload = function(){
@@ -1357,10 +1363,10 @@ window.onload = function(){
     renderMarksheets();
     updateDashboardCounts();
     updateExamDropdowns();
-    checkInitialization();
 
     let name = localStorage.getItem('schoolName');
     let logo = localStorage.getItem('schoolLogo');
+    
     if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
     if(logo) schoolLogo.src = logo;
 };
