@@ -267,557 +267,219 @@ margin-left:0;
 
 }
 
+/* PRINT AREA OVERLAY STYLES */
+#printViewArea {
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 10px;
+}
+#printViewArea table {
+    width: 100%;
+    margin-top: 15px;
+}
+#printViewArea th {
+    background: #e2e8f0;
+    color: black;
+    border: 1px solid #cbd5e1;
+}
+#printViewArea td {
+    background: white;
+    color: black;
+    border: 1px solid #cbd5e1;
+}
+
 </style>
 </head>
 
 <body>
 
 <div id="loginPage">
-
 <div class="login-box">
-
-<h1 class="login-title">
-👑 ADMIN LOGIN
-</h1>
-
+<h1 class="login-title">👑 ADMIN LOGIN</h1>
 <input id="loginUsername" placeholder="Username">
-
-<input
-id="loginPassword"
-type="password"
-placeholder="Password"
-style="margin-top:15px;"
->
-
-<button
-class="btn gold-btn"
-style="width:100%;margin-top:20px;"
-onclick="adminLogin()"
->
-🔐 Login
-</button>
-
+<input id="loginPassword" type="password" placeholder="Password" style="margin-top:15px;">
+<button class="btn gold-btn" style="width:100%;margin-top:20px;" onclick="adminLogin()">🔐 Login</button>
 </div>
-
 </div>
 
 <div class="sidebar">
-
 <div class="logo-box">
-
 <img id="schoolLogo">
-
-<h1 id="schoolName">
-ROYAL SCHOOL ERP
-</h1>
-
+<h1 id="schoolName">ROYAL SCHOOL ERP</h1>
 </div>
-
-<button class="menu-btn" onclick="showPage('dashboardPage')">
-🏠 Dashboard
-</button>
-
-<button class="menu-btn" onclick="toggleMenu('studentMenu')">
-🎓 Students ▼
-</button>
-
+<button class="menu-btn" onclick="showPage('dashboardPage')">🏠 Dashboard</button>
+<button class="menu-btn" onclick="toggleMenu('studentMenu')">🎓 Students ▼</button>
 <div id="studentMenu" class="dropdown">
-
-<button class="menu-btn" onclick="showPage('addStudentPage')">
-➕ Admission
-</button>
-
-<button class="menu-btn" onclick="showPage('studentRecordPage')">
-📋 Student Records
-</button>
-
+<button class="menu-btn" onclick="showPage('addStudentPage')">➕ Admission</button>
+<button class="menu-btn" onclick="showPage('studentRecordPage')">📋 Student Records</button>
 </div>
-
-<button class="menu-btn" onclick="toggleMenu('teacherMenu')">
-👨‍🏫 Teachers ▼
-</button>
-
+<button class="menu-btn" onclick="toggleMenu('teacherMenu')">👨‍🏫 Teachers ▼</button>
 <div id="teacherMenu" class="dropdown">
-
-<button class="menu-btn" onclick="showPage('addTeacherPage')">
-➕ Add Teacher
-</button>
-
-<button class="menu-btn" onclick="showPage('teacherRecordPage')">
-📋 Teacher Records
-</button>
-
+<button class="menu-btn" onclick="showPage('addTeacherPage')">➕ Add Teacher</button>
+<button class="menu-btn" onclick="showPage('teacherRecordPage')">📋 Teacher Records</button>
 </div>
-
-<button class="menu-btn" onclick="toggleMenu('feeMenu')">
-💰 Fees ▼
-</button>
-
+<button class="menu-btn" onclick="toggleMenu('feeMenu')">💰 Fees ▼</button>
 <div id="feeMenu" class="dropdown">
-
-<button class="menu-btn" onclick="showPage('addFeePage')">
-➕ Add Fee
-</button>
-
-<button class="menu-btn" onclick="showPage('feeRecordPage')">
-📋 Fee Records
-</button>
-
+<button class="menu-btn" onclick="showPage('addFeePage')">➕ Add Fee</button>
+<button class="menu-btn" onclick="showPage('feeRecordPage')">📋 Fee Records</button>
 </div>
-
-<button class="menu-btn" onclick="toggleMenu('marksMenu')">
-📝 Marksheet ▼
-</button>
-
+<button class="menu-btn" onclick="toggleMenu('marksMenu')">📝 Marksheet ▼</button>
 <div id="marksMenu" class="dropdown">
-
-<button class="menu-btn" onclick="showPage('addMarksheetPage')">
-➕ Add Marksheet
-</button>
-
-<button class="menu-btn" onclick="showPage('marksheetRecordPage')">
-📋 Marksheet Records
-</button>
-
+<button class="menu-btn" onclick="showPage('addMarksheetPage')">➕ Add Marksheet</button>
+<button class="menu-btn" onclick="showPage('marksheetRecordPage')">📋 Marksheet Records</button>
 </div>
-
-<button class="menu-btn" onclick="showPage('settingsPage')">
-⚙ Settings
-</button>
-
+<button class="menu-btn" onclick="showPage('settingsPage')">⚙ Settings</button>
 </div>
 
 <div class="main">
 
 <div id="dashboardPage" class="page active">
-
 <div class="grid-3">
-
-<div class="glass">
-<h2>Total Students</h2>
-<h1 id="studentCount">0</h1>
+<div class="glass"><h2>Total Students</h2><h1 id="studentCount">0</h1></div>
+<div class="glass"><h2>Total Teachers</h2><h1 id="teacherCount">0</h1></div>
+<div class="glass"><h2>Total Fee</h2><h1 id="feeCount">₹0</h1></div>
 </div>
-
-<div class="glass">
-<h2>Total Teachers</h2>
-<h1 id="teacherCount">0</h1>
-</div>
-
-<div class="glass">
-<h2>Total Fee</h2>
-<h1 id="feeCount">₹0</h1>
-</div>
-
-</div>
-
 </div>
 
 <div id="addStudentPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-🎓 Student Admission
-</h1>
-
+<h1 class="section-title">🎓 Student Admission</h1>
 <div class="grid-3">
-
 <input id="sid" readonly>
-
 <input id="studentName" placeholder="Student Name">
-
 <select id="studentClass">
-
 <option>Select Class</option>
-
-<option>Nursery</option>
-<option>LKG</option>
-<option>UKG</option>
-
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-
-<option>6</option>
-<option>7</option>
-<option>8</option>
-<option>9</option>
-<option>10</option>
-
+<option>Nursery</option><option>LKG</option><option>UKG</option>
+<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+<option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
 </select>
-
 <input id="fatherName" placeholder="Father Name">
-
 <input id="mobile" placeholder="Mobile Number">
-
 <input id="yearlyFee" type="number" placeholder="Yearly Fee">
-
 <input id="address" placeholder="Address">
-
 <input id="dob" type="date">
-
 <select id="gender">
-
-<option>Gender</option>
-<option>Male</option>
-<option>Female</option>
-
+<option>Gender</option><option>Male</option><option>Female</option>
 </select>
-
 </div>
-
 <div style="margin-top:25px;">
-
-<button
-class="btn gold-btn"
-onclick="saveStudent()"
->
-💾 Save Admission
-</button>
-
+<button class="btn gold-btn" onclick="saveStudent()">💾 Save Admission</button>
 </div>
-
 </div>
-
 </div>
 
 <div id="studentRecordPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-📋 Student Records
-</h1>
-
+<h1 class="section-title">📋 Student Records</h1>
 <table>
-
 <thead>
-
-<tr>
-
-<th>SID</th>
-<th>Name</th>
-<th>Class</th>
-<th>Father</th>
-<th>Fee</th>
-<th>Action</th>
-
-</tr>
-
+<tr><th>SID</th><th>Name</th><th>Class</th><th>Father</th><th>Fee</th><th>Action</th></tr>
 </thead>
-
 <tbody id="studentTable"></tbody>
-
 </table>
-
 </div>
-
 </div>
 
 <div id="addTeacherPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-👨‍🏫 Add Teacher
-</h1>
-
+<h1 class="section-title">👨‍🏫 Add Teacher</h1>
 <div class="grid-3">
-
 <input id="teacherNameInput" placeholder="Teacher Name">
-
 <input id="teacherMobile" placeholder="Mobile Number">
-
 <input id="teacherSubject" placeholder="Subject">
-
 <input id="teacherSalary" type="number" placeholder="Salary">
-
 </div>
-
 <div style="margin-top:25px;">
-
-<button
-class="btn gold-btn"
-onclick="saveTeacher()"
->
-💾 Save Teacher
-</button>
-
+<button class="btn gold-btn" onclick="saveTeacher()">💾 Save Teacher</button>
 </div>
-
 </div>
-
 </div>
 
 <div id="teacherRecordPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-📋 Teacher Records
-</h1>
-
+<h1 class="section-title">📋 Teacher Records</h1>
 <table>
-
 <thead>
-
-<tr>
-
-<th>Name</th>
-<th>Subject</th>
-<th>Salary</th>
-<th>Action</th>
-
-</tr>
-
+<tr><th>Name</th><th>Subject</th><th>Salary</th><th>Action</th></tr>
 </thead>
-
 <tbody id="teacherTable"></tbody>
-
 </table>
-
 </div>
-
 </div>
 
 <div id="addFeePage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-💰 Add Fee
-</h1>
-
+<h1 class="section-title">💰 Add Fee</h1>
 <div class="grid-3">
-
-<input
-id="searchSID"
-placeholder="Enter SID"
-onkeyup="findStudent()"
->
-
-<input
-id="feeStudentName"
-readonly
-placeholder="Student Name"
->
-
-<input
-id="feeClass"
-readonly
-placeholder="Class"
->
-
-<input
-id="monthlyFee"
-readonly
-placeholder="Monthly Fee"
->
-
-<input
-id="feeMonth"
-placeholder="Month"
->
-
+<input id="searchSID" placeholder="Enter SID" onkeyup="findStudent()">
+<input id="feeStudentName" readonly placeholder="Student Name">
+<input id="feeClass" readonly placeholder="Class">
+<input id="monthlyFee" readonly placeholder="Monthly Fee">
+<input id="feeMonth" placeholder="Month">
 </div>
-
 <div style="margin-top:25px;">
-
-<button
-class="btn gold-btn"
-onclick="saveFee()"
->
-💾 Save Fee
-</button>
-
+<button class="btn gold-btn" onclick="saveFee()">💾 Save Fee</button>
 </div>
-
 </div>
-
 </div>
 
 <div id="feeRecordPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-📋 Fee Records
-</h1>
-
+<h1 class="section-title">📋 Fee Records</h1>
 <table>
-
 <thead>
-
-<tr>
-
-<th>SID</th>
-<th>Name</th>
-<th>Month</th>
-<th>Fee</th>
-<th>Action</th>
-
-</tr>
-
+<tr><th>SID</th><th>Name</th><th>Month</th><th>Fee</th><th>Action</th></tr>
 </thead>
-
 <tbody id="feeTable"></tbody>
-
 </table>
-
 </div>
-
 </div>
 
 <div id="addMarksheetPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-📝 Add Marksheet
-</h1>
-
+<h1 class="section-title">📝 Add Marksheet</h1>
 <div class="grid-3">
-
-<input
-id="marksheetSID"
-placeholder="Enter SID"
-onkeyup="findMarksheetStudent()"
->
-
-<input
-id="markStudent"
-readonly
-placeholder="Student Name"
->
-
-<input
-id="markClass"
-readonly
-placeholder="Class"
->
-
+<input id="marksheetSID" placeholder="Enter SID" onkeyup="findMarksheetStudent()">
+<input id="markStudent" readonly placeholder="Student Name">
+<input id="markClass" readonly placeholder="Class">
 <select id="markExam" onchange="loadSubjectMarksArea()"></select>
-
-<input
-id="markTotal"
-readonly
-placeholder="Total Marks"
->
-
+<input id="markTotal" readonly placeholder="Total Marks">
 </div>
-
-<div
-id="subjectMarksArea"
-style="margin-top:25px;"
-></div>
-
+<div id="subjectMarksArea" style="margin-top:25px;"></div>
 <div style="margin-top:25px;">
-
-<button
-class="btn gold-btn"
-onclick="saveMarksheet()"
->
-💾 Save Marksheet
-</button>
-
+<button class="btn gold-btn" onclick="saveMarksheet()">💾 Save Marksheet</button>
 </div>
-
 </div>
-
 </div>
 
 <div id="marksheetRecordPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-📋 Marksheet Records
-</h1>
-
+<h1 class="section-title">📋 Marksheet Records</h1>
 <table>
-
 <thead>
-
-<tr>
-
-<th>SID</th>
-<th>Name</th>
-<th>Class</th>
-<th>Exam</th>
-<th>Total</th>
-<th>Action</th>
-
-</tr>
-
+<tr><th>SID</th><th>Name</th><th>Class</th><th>Exam</th><th>Total</th><th>Action</th></tr>
 </thead>
-
 <tbody id="marksheetTable"></tbody>
-
 </table>
-
 </div>
-
 </div>
 
 <div id="settingsPage" class="page">
-
 <div class="glass">
-
-<h1 class="section-title">
-⚙ Settings
-</h1>
-
+<h1 class="section-title">⚙ Settings</h1>
 <div class="grid-3">
-
 <input id="newUsername" placeholder="New Username">
-
-<input
-id="newPassword"
-type="password"
-placeholder="New Password"
->
-
-<input
-id="schoolNameInput"
-placeholder="School Name"
->
-
-<input
-type="file"
-id="schoolLogoInput"
->
-
+<input id="newPassword" type="password" placeholder="New Password">
+<input id="schoolNameInput" placeholder="School Name">
+<input type="file" id="schoolLogoInput">
 </div>
-
 <div style="margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;">
-
-<button
-class="btn gold-btn"
-onclick="saveSettings()"
->
-💾 Save Settings
-</button>
-
-<button
-class="btn blue-btn"
-onclick="openMarksheetPopup()"
->
-📝 Marksheet Management
-</button>
-
-<button
-class="btn green-btn"
-onclick="openGoogleSheetsPopup()"
->
-🔗 Link Google Sheets URL
-</button>
-
+<button class="btn gold-btn" onclick="saveSettings()">💾 Save Settings</button>
+<button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Management</button>
+<button class="btn green-btn" onclick="openGoogleSheetsPopup()">🔗 Link Google Sheets URL</button>
 </div>
-
 </div>
-
 </div>
 
 </div>
@@ -826,27 +488,22 @@ onclick="openGoogleSheetsPopup()"
 <div class="popup-box" style="max-width: 600px;">
 <h1 class="section-title">🔗 Google Sheets Integration</h1>
 <p style="font-size:14px; color:#94a3b8; margin-bottom:20px;">Har department ke liye apna alag-alag Google Web App Script URL niche paste karein:</p>
-
 <div style="margin-bottom: 12px;">
 <label style="color:#facc15; font-size:14px;">🎓 Students Sheet Web App URL:</label>
 <input id="urlStudents" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
 </div>
-
 <div style="margin-bottom: 12px;">
 <label style="color:#facc15; font-size:14px;">👨‍🏫 Teachers Sheet Web App URL:</label>
 <input id="urlTeachers" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
 </div>
-
 <div style="margin-bottom: 12px;">
 <label style="color:#facc15; font-size:14px;">💰 Fees Sheet Web App URL:</label>
 <input id="urlFees" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
 </div>
-
 <div style="margin-bottom: 20px;">
 <label style="color:#facc15; font-size:14px;">📝 Marksheet Sheet Web App URL:</label>
 <input id="urlMarksheet" placeholder="https://script.google.com/.../exec" style="margin-top:5px;">
 </div>
-
 <div style="display:flex; gap:15px;">
 <button class="btn green-btn" onclick="saveAllSheetUrls()">💾 Save Links</button>
 <button class="btn red-btn" onclick="closeGoogleSheetsPopup()">❌ Close</button>
@@ -855,108 +512,48 @@ onclick="openGoogleSheetsPopup()"
 </div>
 
 <div id="marksheetPopup" class="popup">
-
 <div class="popup-box">
-
-<h1 class="section-title">
-📝 Marksheet Management
-</h1>
-
+<h1 class="section-title">📝 Marksheet Management</h1>
 <div class="glass">
-
-<h2 style="margin-bottom:15px;">
-➕ Add Exam
-</h2>
-
+<h2 style="margin-bottom:15px;">➕ Add Exam</h2>
 <div class="grid-2">
-
-<input
-id="examName"
-placeholder="Exam Name"
->
-
-<button
-class="btn gold-btn"
-onclick="addExam()"
->
-➕ Add Exam
-</button>
-
+<input id="examName" placeholder="Exam Name">
+<button class="btn gold-btn" onclick="addExam()">➕ Add Exam</button>
 </div>
-
 <div id="examList"></div>
-
 </div>
-
 <div class="glass">
-
-<h2 style="margin-bottom:15px;">
-📚 Add Subject
-</h2>
-
+<h2 style="margin-bottom:15px;">📚 Add Subject</h2>
 <div class="grid-3">
-
 <select id="popupSubjectClass">
-
 <option>Select Class</option>
-
-<option>Nursery</option>
-<option>LKG</option>
-<option>UKG</option>
-
-<option>1</option>
-<option>2</option>
-<option>3</option>
-<option>4</option>
-<option>5</option>
-
-<option>6</option>
-<option>7</option>
-<option>8</option>
-<option>9</option>
-<option>10</option>
-
+<option>Nursery</option><option>LKG</option><option>UKG</option>
+<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+<option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
 </select>
-
 <select id="subjectExam"></select>
-
-<input
-id="subjectName"
-placeholder="Subject Name"
->
-
-<input
-id="subjectTotal"
-type="number"
-placeholder="Total Marks"
->
-
-<button
-class="btn gold-btn"
-onclick="addSubject()"
->
-➕ Add Subject
-</button>
-
+<input id="subjectName" placeholder="Subject Name">
+<input id="subjectTotal" type="number" placeholder="Total Marks">
+<button class="btn gold-btn" onclick="addSubject()">➕ Add Subject</button>
 </div>
-
 <div id="subjectList"></div>
-
 </div>
-
 <div style="margin-top:25px;">
-
-<button
-class="btn red-btn"
-onclick="closeMarksheetPopup()"
->
-❌ Close
-</button>
-
+<button class="btn red-btn" onclick="closeMarksheetPopup()">❌ Close</button>
+</div>
+</div>
 </div>
 
+<div id="printPopup" class="popup">
+<div class="popup-box" style="max-width: 800px; background: #1e293b;">
+<h1 class="section-title">🖨 Marksheet Print Preview</h1>
+<div id="printViewArea">
+    </div>
+<div style="margin-top:20px; display:flex; gap:15px;">
+<button class="btn green-btn" onclick="triggerPrint()">🖨 Print Now</button>
+<button class="btn red-btn" onclick="document.getElementById('printPopup').style.display='none'">❌ Close</button>
 </div>
-
+</div>
 </div>
 
 <script>
@@ -1224,7 +821,12 @@ function renderMarksheets(){
             <td>${m.studentClass}</td>
             <td>${m.exam}</td>
             <td>${m.total}</td>
-            <td><button class="btn red-btn" onclick="deleteMarksheet(${index})">🗑</button></td>
+            <td>
+                <div class="action-box">
+                    <button class="btn blue-btn" onclick="viewPrintMarksheet(${index})">🖨 Print</button>
+                    <button class="btn red-btn" onclick="deleteMarksheet(${index})">🗑</button>
+                </div>
+            </td>
         </tr>`;
     });
 }
@@ -1234,6 +836,106 @@ function deleteMarksheet(index){
     localStorage.setItem('marksheets', JSON.stringify(marksheets));
     renderMarksheets();
     sendDataToGoogleSheet('delete_marksheet', removed);
+}
+
+/* ================== PRINT & A4 REPORT CARD GENERATION ================== */
+function viewPrintMarksheet(index) {
+    let m = marksheets[index];
+    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let schLogo = localStorage.getItem('schoolLogo') || '';
+    
+    let logoHtml = schLogo ? `<img src="${schLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">` : '';
+    
+    // Dynamic Table Rows for 5 or any number of papers
+    let rowsHtml = '';
+    let grandTotalObtained = 0;
+    let grandTotalMax = 0;
+    
+    for (let subName in m.marks) {
+        // Max marks dhundhne ke liye subjects array check karenge
+        let matchSub = subjects.find(s => s.name === subName && s.subjectClass === m.studentClass && s.exam === m.exam);
+        let maxM = matchSub ? parseInt(matchSub.total) : 100;
+        let obtM = parseInt(m.marks[subName] || 0);
+        
+        grandTotalObtained += obtM;
+        grandTotalMax += maxM;
+        
+        let percentage = ((obtM / maxM) * 100).toFixed(1);
+        let status = percentage >= 33 ? '<span style="color:green; font-weight:bold;">Pass</span>' : '<span style="color:red; font-weight:bold;">Fail</span>';
+        
+        rowsHtml += `<tr>
+            <td style="padding:10px; font-weight:bold;">${subName.toUpperCase()}</td>
+            <td style="text-align:center; padding:10px;">${maxM}</td>
+            <td style="text-align:center; padding:10px; font-weight:bold;">${obtM}</td>
+            <td style="text-align:center; padding:10px;">${percentage}%</td>
+            <td style="text-align:center; padding:10px;">${status}</td>
+        </tr>`;
+    }
+    
+    let finalPercentage = ((grandTotalObtained / grandTotalMax) * 100).toFixed(1);
+    let finalResult = finalPercentage >= 33 ? 'PASSED' : 'DETAINED';
+    
+    // Report Card Structure
+    let htmlContent = `
+        <div style="border: 4px double #000; padding: 20px; background: #fff; font-family: Arial, sans-serif;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid #000; padding-bottom: 15px;">
+                ${logoHtml}
+                <div style="text-align: center; flex-grow: 1; margin-right: ${schLogo ? '70px' : '0px'};">
+                    <h1 style="font-size: 26px; font-weight: bold; margin: 0; color: #1e3a8a;">${schName.toUpperCase()}</h1>
+                    <p style="margin: 4px 0 0 0; font-size: 14px; color: #555; font-weight: bold; letter-spacing: 1px;">OFFICIAL REPORT CARD</p>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; font-size: 15px; border-bottom: 1px solid #ccc; padding-bottom: 15px;">
+                <div><strong>Student Name :</strong> <span style="text-transform: uppercase;">${m.name}</span></div>
+                <div><strong>Student ID (SID) :</strong> ${m.sid}</div>
+                <div><strong>Class :</strong> ${m.studentClass}</div>
+                <div><strong>Examination :</strong> ${m.exam.toUpperCase()}</div>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 15px;">
+                <thead>
+                    <tr style="background: #f1f5f9;">
+                        <th style="border: 1px solid #94a3b8; padding: 12px; text-align: left;">SUBJECT NAME</th>
+                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 150px;">MAX MARKS</th>
+                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 150px;">MARKS OBTAINED</th>
+                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 120px;">PERCENTAGE</th>
+                        <th style="border: 1px solid #94a3b8; padding: 12px; width: 100px;">STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHtml}
+                    <tr style="background: #f8fafc; font-weight: bold; border-top: 2px solid #000;">
+                        <td style="border: 1px solid #94a3b8; padding: 12px;">GRAND TOTAL</td>
+                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center;">${grandTotalMax}</td>
+                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center; font-size:16px; color:#1e3a8a;">${grandTotalObtained}</td>
+                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center;">${finalPercentage}%</td>
+                        <td style="border: 1px solid #94a3b8; padding: 12px; text-align: center; color: ${finalPercentage >= 33 ? 'green' : 'red'};">${finalResult}</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 60px; display: flex; justify-content: space-between; padding: 0 20px;">
+                <div style="text-align: center; border-top: 1px solid #000; width: 180px; padding-top: 5px; font-size: 14px; font-weight: bold;">Class Teacher</div>
+                <div style="text-align: center; border-top: 1px solid #000; width: 180px; padding-top: 5px; font-size: 14px; font-weight: bold;">Principal Signature</div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('printViewArea').innerHTML = htmlContent;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function triggerPrint() {
+    let printContent = document.getElementById('printViewArea').innerHTML;
+    let originalContent = document.body.innerHTML;
+    
+    // Sirf report card area ko print karne ke liye body content temporary swap karein
+    document.body.innerHTML = printContent;
+    window.print();
+    
+    // Print hone ke baad website ko wapas normal state me laane ke liye reload karein
+    location.reload();
 }
 
 /* ================== POPUP MANAGEMENT ================== */
@@ -1334,13 +1036,12 @@ function updateDashboardCounts(){
 function sendDataToGoogleSheet(type, dataPayload) {
     let url = '';
     
-    // Type ke basis par sahi sheet ka URL uthana
     if(type.indexOf('student') !== -1) url = localStorage.getItem('url_students');
     else if(type.indexOf('teacher') !== -1) url = localStorage.getItem('url_teachers');
     else if(type.indexOf('fee') !== -1) url = localStorage.getItem('url_fees');
     else if(type.indexOf('mark') !== -1) url = localStorage.getItem('url_marksheets');
 
-    if(!url) return; // Agar specific URL nahi dala hai toh sirf locally chalega
+    if(!url) return;
 
     let formData = new FormData();
     formData.append('sheetType', type);
