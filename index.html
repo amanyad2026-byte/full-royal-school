@@ -18,12 +18,13 @@ font-family:Arial, sans-serif;
 }
 
 body{
-background:#071028;
+background:#071028; 
 color:white;
 overflow-x:hidden;
+transition: background 0.5s ease;
 }
 
-/* LOGIN */
+/* LOGIN SCREEN */
 #loginPage{
 position:fixed;
 top:0;
@@ -53,7 +54,7 @@ margin-bottom:25px;
 color:#facc15;
 }
 
-/* SIDEBAR */
+/* SIDEBAR LAYOUT */
 .sidebar{
 width:280px;
 height:100vh;
@@ -64,6 +65,7 @@ background:linear-gradient(to bottom,#020617,#0f172a);
 padding:20px;
 border-right:2px solid #facc15;
 overflow-y:auto;
+transition: background 0.5s ease;
 }
 
 .logo-box{
@@ -104,7 +106,7 @@ font-size:16px;
 }
 
 .menu-btn:hover{
-background:#1e293b;
+background:rgba(255, 255, 255, 0.1);
 }
 
 .dropdown{
@@ -112,7 +114,7 @@ display:none;
 margin-left:15px;
 }
 
-/* MAIN */
+/* MAIN CONTENT AREA */
 .main{
 margin-left:280px;
 padding:30px;
@@ -126,7 +128,7 @@ display:none;
 display:block;
 }
 
-/* GLASS */
+/* GLASSMORPHISM UI ELEMENTS */
 .glass{
 background:rgba(255,255,255,0.05);
 border-radius:25px;
@@ -198,14 +200,14 @@ margin-top:20px;
 }
 
 th{
-background:#1e293b;
+background:rgba(255, 255, 255, 0.1);
 padding:14px;
 color:#facc15;
 text-align: left;
 }
 
 td{
-background:#0f172a;
+background:rgba(0, 0, 0, 0.2);
 padding:14px;
 border-bottom:1px solid rgba(255,255,255,0.05);
 }
@@ -240,7 +242,7 @@ border-radius:25px;
 border:2px solid #facc15;
 }
 
-/* PRINT PREVIEW OVERLAY STYLE */
+/* PRINT MEDIA CONFIGURATION */
 #printViewArea {
     background: white;
     color: black;
@@ -276,9 +278,9 @@ border:2px solid #facc15;
 </div>
 </div>
 
-<div class="sidebar">
+<div class="sidebar" id="mainSidebar">
 <div class="logo-box">
-<img id="schoolLogo">
+<img id="schoolLogo" src="" alt="School Logo" onerror="this.style.display='none'">
 <h1 id="schoolName">ROYAL SCHOOL ERP</h1>
 </div>
 <button class="menu-btn" onclick="showPage('dashboardPage')">🏠 Dashboard</button>
@@ -313,7 +315,7 @@ border:2px solid #facc15;
 <div class="grid-3">
 <div class="glass"><h2>Total Students</h2><h1 id="studentCount">0</h1></div>
 <div class="glass"><h2>Total Teachers</h2><h1 id="teacherCount">0</h1></div>
-<div class="glass"><h2>Total Fee</h2><h1 id="feeCount">₹0</h1></div>
+<div class="glass"><h2>Total Fee Collection</h2><h1 id="feeCount">₹0</h1></div>
 </div>
 </div>
 
@@ -321,7 +323,7 @@ border:2px solid #facc15;
 <div class="glass">
 <h1 class="section-title">🎓 Student Admission / Modification</h1>
 <div class="grid-3">
-<input id="sid" readonly>
+<input id="sid" readonly placeholder="SID Auto-Generated">
 <input id="studentName" placeholder="Student Name">
 <select id="studentClass">
 <option value="">Select Class</option>
@@ -335,7 +337,7 @@ border:2px solid #facc15;
 <input id="address" placeholder="Address">
 <input id="dob" type="date">
 <select id="gender">
-<option>Gender</option><option>Male</option><option>Female</option>
+<option value="">Gender</option><option>Male</option><option>Female</option>
 </select>
 <div>
   <label style="font-size:12px; color:#facc15; display:block; margin-bottom:4px;">🧑‍🎓 Upload Student Photo:</label>
@@ -450,7 +452,7 @@ border:2px solid #facc15;
 
 <div id="teacherRecordPage" class="page">
 <div class="glass">
-<div style="display:flex; justify-content:between; align-items:center; margin-bottom:25px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
     <h1 class="section-title" style="margin:0;">📋 Teacher Records</h1>
     <button class="btn blue-btn" onclick="printAllTeachers()">🖨 Print All Teachers</button>
 </div>
@@ -579,6 +581,7 @@ border:2px solid #facc15;
 <button class="btn gold-btn" onclick="saveSettings()">💾 Save Settings</button>
 <button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Management</button>
 <button class="btn green-btn" onclick="openGoogleSheetsPopup()">🔗 Link Google Sheets URL</button>
+<button class="btn purple-btn" onclick="openThemePopup()">🎨 Theme Customizer</button>
 </div>
 </div>
 </div>
@@ -610,14 +613,34 @@ border:2px solid #facc15;
 <div id="marksheetPopup" class="popup">
 <div class="popup-box">
 <h1 class="section-title">📝 Marksheet Management</h1>
-<div class="glass"><h2>➕ Add Exam</h2><div class="grid-2"><input id="examName" placeholder="Exam Name"><button class="btn gold-btn" onclick="addExam()">➕ Add</button></div><div id="examList"></div></div>
-<div class="glass"><h2>📚 Add Subject</h2><div class="grid-3"><select id="popupSubjectClass"><option>Class</option><option>Nursery</option><option>LKG</option><option>UKG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><select id="subjectExam"></select><input id="subjectName" placeholder="Subject Name"><input id="subjectTotal" type="number" placeholder="Total Marks"><button class="btn gold-btn" onclick="addSubject()">➕ Add</button></div><div id="subjectList"></div></div>
+<div class="glass"><h2>➕ Add Exam</h2><div class="grid-2"><input id="examName" placeholder="Exam Name"><button class="btn gold-btn" onclick="addExam()">➕ Add</button></div><div id="examList" style="margin-top:10px;"></div></div>
+<div class="glass"><h2>📚 Add Subject</h2><div class="grid-3"><select id="popupSubjectClass"><option value="">Class</option><option>Nursery</option><option>LKG</option><option>UKG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><select id="subjectExam"></select><input id="subjectName" placeholder="Subject Name"><input id="subjectTotal" type="number" placeholder="Total Marks"><button class="btn gold-btn" onclick="addSubject()">➕ Add</button></div><div id="subjectList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div></div>
 <button class="btn red-btn" onclick="closeMarksheetPopup()">❌ Close</button>
 </div>
 </div>
 
+<div id="themePopup" class="popup">
+<div class="popup-box" style="max-width: 650px;">
+<h1 class="section-title">🎨 Premium Theme Customizer</h1>
+<p style="margin-bottom: 20px; color:#cbd5e1;">Select any online free premium dynamic gradient style below to instantly update your School Dashboard.</p>
+<div class="grid-2" style="gap: 15px;">
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #020617, #071028);" onclick="applyTheme('midnight')">🌌 Midnight Dark (Default)</button>
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #1e1b4b, #311042);" onclick="applyTheme('royalGold')">👑 Royal Premium Violet</button>
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #064e3b, #022c22);" onclick="applyTheme('emerald')">🌲 Emerald Forest Green</button>
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #701a75, #4a044e);" onclick="applyTheme('ruby')">🍷 Rich Ruby Wine</button>
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #1c1917, #44403c);" onclick="applyTheme('charcoal')">🪙 Corporate Charcoal</button>
+    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #0f172a, #1e3a8a);" onclick="applyTheme('ocean')">🌊 Deep Ocean Breeze</button>
+</div>
+<div style="margin-top: 25px; text-align: right;">
+    <button class="btn red-btn" onclick="closeThemePopup()">❌ Close</button>
+</div>
+</div>
+</div>
+
 <script>
-/* CORE DATA HOLDERS & SYSTEM INITIALIZERS */
+/* ==========================================
+   CORE DATA HOLDERS & SYSTEM INITIALIZERS
+   ========================================== */
 if(!localStorage.getItem('adminUsername')) localStorage.setItem('adminUsername','admin');
 if(!localStorage.getItem('adminPassword')) localStorage.setItem('adminPassword','1234');
 
@@ -628,34 +651,74 @@ let marksheets = JSON.parse(localStorage.getItem('marksheets')||'[]');
 let exams = JSON.parse(localStorage.getItem('exams')||'[]');
 let subjects = JSON.parse(localStorage.getItem('subjects')||'[]');
 
-let currentEditSID = null; // Modification tracker
+let currentEditSID = null;
 
+const themesConfig = {
+    midnight: { body: 'linear-gradient(to bottom, #020617, #071028)', sidebar: 'linear-gradient(to bottom, #020617, #0f172a)' },
+    royalGold: { body: 'linear-gradient(to bottom, #1e1b4b, #2e1065)', sidebar: 'linear-gradient(to bottom, #0f172a, #1e1b4b)' },
+    emerald: { body: 'linear-gradient(to bottom, #064e3b, #022c22)', sidebar: 'linear-gradient(to bottom, #022c22, #064e3b)' },
+    ruby: { body: 'linear-gradient(to bottom, #701a75, #4a044e)', sidebar: 'linear-gradient(to bottom, #4a044e, #2a0033)' },
+    charcoal: { body: 'linear-gradient(to bottom, #1c1917, #292524)', sidebar: 'linear-gradient(to bottom, #1c1917, #44403c)' },
+    ocean: { body: 'linear-gradient(to bottom, #0f172a, #0f2b5c)', sidebar: 'linear-gradient(to bottom, #020617, #1e3a8a)' }
+};
+
+/* ==========================================
+   THEME, ACCESS & UI CONTROLS
+   ========================================== */
 function adminLogin(){
-    if(loginUsername.value===localStorage.getItem('adminUsername') && loginPassword.value===localStorage.getItem('adminPassword')){ loginPage.style.display='none'; }
-    else { alert('Wrong Credentials'); }
+    let uInput = document.getElementById('loginUsername').value;
+    let pInput = document.getElementById('loginPassword').value;
+    if(uInput === localStorage.getItem('adminUsername') && pInput === localStorage.getItem('adminPassword')){ 
+        document.getElementById('loginPage').style.display='none'; 
+    } else { 
+        alert('Wrong Credentials! Please try again.'); 
+    }
 }
 
 function showPage(id){
-    document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    let targetPage = document.getElementById(id);
+    if(targetPage) targetPage.classList.add('active');
 }
 
 function toggleMenu(id){
-    let menu=document.getElementById(id);
-    menu.style.display = (menu.style.display==='block') ? 'none' : 'block';
-}
-
-function generateSID(){ 
-    if(!currentEditSID) {
-        sid.value='SID'+String(students.length+1).padStart(4,'0'); 
+    let menu = document.getElementById(id);
+    if(menu) {
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 }
-generateSID();
 
-/* FIXED: STUDENT ADMISSION AND EDIT SYSTEM */
+function openThemePopup() { document.getElementById('themePopup').style.display = 'flex'; }
+function closeThemePopup() { document.getElementById('themePopup').style.display = 'none'; }
+
+function applyTheme(themeKey) {
+    let config = themesConfig[themeKey] || themesConfig.midnight;
+    document.body.style.background = config.body;
+    document.getElementById('mainSidebar').style.background = config.sidebar;
+    localStorage.setItem('currentSchoolTheme', themeKey);
+}
+
+function loadSavedTheme() {
+    let savedTheme = localStorage.getItem('currentSchoolTheme') || 'midnight';
+    applyTheme(savedTheme);
+}
+
+/* ==========================================
+   STUDENT ADMISSION AND DIRECTORY FLOWS
+   ========================================== */
+function generateSID(){ 
+    if(!currentEditSID) {
+        document.getElementById('sid').value = 'SID' + String(students.length + 1).padStart(4, '0'); 
+    }
+}
+
 function saveStudent(){
-    if(!studentName.value) { alert("Enter Name!"); return; }
-    let file = studentPhotoInput.files[0];
+    let nameInp = document.getElementById('studentName').value;
+    if(!nameInp.trim()) { alert("Enter Student Name!"); return; }
+    
+    let photoInput = document.getElementById('studentPhotoInput');
+    let file = photoInput ? photoInput.files[0] : null;
+    
     if(file) {
         let reader = new FileReader();
         reader.onloadend = function() { processStudentSave(reader.result); }
@@ -672,12 +735,12 @@ function saveStudent(){
 
 function processStudentSave(photoBase64) {
     let sData = { 
-        sid: sid.value, 
-        name: studentName.value, 
-        studentClass: studentClass.value, 
-        father: fatherName.value, 
-        mobile: mobile.value, 
-        fee: yearlyFee.value || 0, 
+        sid: document.getElementById('sid').value, 
+        name: document.getElementById('studentName').value, 
+        studentClass: document.getElementById('studentClass').value, 
+        father: document.getElementById('fatherName').value, 
+        mobile: document.getElementById('mobile').value, 
+        fee: document.getElementById('yearlyFee').value || 0, 
         photo: photoBase64 
     };
 
@@ -694,10 +757,19 @@ function processStudentSave(photoBase64) {
     }
 
     localStorage.setItem('students', JSON.stringify(students));
-    renderStudents(); updateDashboardCounts(); sendDataToGoogleSheet('students', sData);
+    renderStudents(); 
+    updateDashboardCounts(); 
+    sendDataToGoogleSheet('students', sData);
 
-    // Form inputs cleanup
-    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; studentPhotoInput.value='';
+    // Form Reset
+    document.getElementById('studentName').value=''; 
+    document.getElementById('fatherName').value=''; 
+    document.getElementById('mobile').value=''; 
+    document.getElementById('yearlyFee').value=''; 
+    document.getElementById('address').value=''; 
+    document.getElementById('dob').value=''; 
+    if(document.getElementById('studentPhotoInput')) document.getElementById('studentPhotoInput').value='';
+    document.getElementById('gender').value='';
     generateSID();
 }
 
@@ -706,12 +778,12 @@ function editStudent(targetSID) {
     if(!target) return;
     
     currentEditSID = target.sid;
-    sid.value = target.sid;
-    studentName.value = target.name;
-    studentClass.value = target.studentClass;
-    fatherName.value = target.father;
-    mobile.value = target.mobile || '';
-    yearlyFee.value = target.fee || '';
+    document.getElementById('sid').value = target.sid;
+    document.getElementById('studentName').value = target.name;
+    document.getElementById('studentClass').value = target.studentClass;
+    document.getElementById('fatherName').value = target.father;
+    document.getElementById('mobile').value = target.mobile || '';
+    document.getElementById('yearlyFee').value = target.fee || '';
     
     document.getElementById('cancelEditBtn').style.display = 'inline-flex';
     showPage('addStudentPage');
@@ -720,19 +792,29 @@ function editStudent(targetSID) {
 function cancelEdit() {
     currentEditSID = null;
     document.getElementById('cancelEditBtn').style.display = 'none';
-    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; studentPhotoInput.value='';
+    document.getElementById('studentName').value=''; 
+    document.getElementById('fatherName').value=''; 
+    document.getElementById('mobile').value=''; 
+    document.getElementById('yearlyFee').value=''; 
+    document.getElementById('address').value=''; 
+    document.getElementById('dob').value=''; 
+    if(document.getElementById('studentPhotoInput')) document.getElementById('studentPhotoInput').value='';
+    document.getElementById('gender').value='';
     generateSID();
 }
 
 function renderStudents(){
-    studentTable.innerHTML='';
-    let cls = filterClass.value;
+    let container = document.getElementById('studentTable');
+    if(!container) return;
+    container.innerHTML='';
+    
+    let cls = document.getElementById('filterClass').value;
     let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
-    selectedCount.innerText = filtered.length;
+    document.getElementById('selectedCount').innerText = filtered.length;
 
     filtered.forEach((s)=>{
         let imgTag = s.photo ? `<img src="${s.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '❌';
-        studentTable.innerHTML+=`<tr>
+        container.innerHTML+=`<tr>
             <td>${imgTag}</td><td>${s.sid}</td><td>${s.name}</td><td>${s.studentClass}</td><td>${s.father}</td><td>${s.mobile || 'N/A'}</td><td>₹${s.fee}</td>
             <td>
                 <div class="action-box">
@@ -750,60 +832,69 @@ function deleteStudent(targetSID){
         if(idx !== -1) {
             let removed = students.splice(idx,1)[0]; 
             localStorage.setItem('students', JSON.stringify(students));
-            renderStudents(); updateDashboardCounts(); sendDataToGoogleSheet('delete_student', removed);
+            renderStudents(); 
+            updateDashboardCounts(); 
+            sendDataToGoogleSheet('delete_student', removed);
         }
     }
 }
 
-/* PROMOTION DROPDOWN SYSTEM */
+/* ==========================================
+   PROMOTION & TC HUB OPERATIONS
+   ========================================== */
 function findPromoteStudent(){
-    let found = students.find(s => s.sid === promoteSID.value.trim().toUpperCase());
+    let val = document.getElementById('promoteSID').value.trim().toUpperCase();
+    let found = students.find(s => s.sid === val);
     if(found) {
-        promoteName.value = found.name;
-        promoteCurrentClass.value = found.studentClass;
+        document.getElementById('promoteName').value = found.name;
+        document.getElementById('promoteCurrentClass').value = found.studentClass;
     } else {
-        promoteName.value = '';
-        promoteCurrentClass.value = '';
+        document.getElementById('promoteName').value = '';
+        document.getElementById('promoteCurrentClass').value = '';
     }
 }
 
 function processPromotion() {
-    if(!promoteName.value) { alert("Pehle valid Student ID dalkar search karein!"); return; }
-    if(!promoteTargetClass.value) { alert("Kripya dropdown se promotion class select karein!"); return; }
+    if(!document.getElementById('promoteName').value) { alert("Pehle valid Student ID dalkar search karein!"); return; }
+    let targetClass = document.getElementById('promoteTargetClass').value;
+    if(!targetClass) { alert("Kripya dropdown se promotion class select karein!"); return; }
 
-    let sidKey = promoteSID.value.trim().toUpperCase();
+    let sidKey = document.getElementById('promoteSID').value.trim().toUpperCase();
     let idx = students.findIndex(s => s.sid === sidKey);
 
     if(idx !== -1) {
-        students[idx].studentClass = promoteTargetClass.value;
+        students[idx].studentClass = targetClass;
         localStorage.setItem('students', JSON.stringify(students));
         
         renderStudents();
         updateDashboardCounts();
         sendDataToGoogleSheet('students', students[idx]);
         
-        alert(`Badhai ho! ${students[idx].name} ko safalta-purvak Class ${promoteTargetClass.value} me promote kar diya gaya hai.`);
+        alert(`Badhai ho! ${students[idx].name} ko safalta-purvak Class ${targetClass} me promote kar diya gaya hai.`);
         
-        promoteSID.value = ''; promoteName.value = ''; promoteCurrentClass.value = ''; promoteTargetClass.value = '';
+        document.getElementById('promoteSID').value = ''; 
+        document.getElementById('promoteName').value = ''; 
+        document.getElementById('promoteCurrentClass').value = ''; 
+        document.getElementById('promoteTargetClass').value = '';
     }
 }
 
-/* TC HUB LOGIC WITH LIVE PREVIEW POPUP */
 function findTCStudent() {
-    let found = students.find(s => s.sid === tcSID.value.trim().toUpperCase());
+    let val = document.getElementById('tcSID').value.trim().toUpperCase();
+    let found = students.find(s => s.sid === val);
     if(found) {
-        tcName.value = found.name;
-        tcClass.value = found.studentClass;
+        document.getElementById('tcName').value = found.name;
+        document.getElementById('tcClass').value = found.studentClass;
     } else {
-        tcName.value = '';
-        tcClass.value = '';
+        document.getElementById('tcName').value = '';
+        document.getElementById('tcClass').value = '';
     }
 }
 
 function generateTCPrint() {
-    if(!tcName.value) { alert("Pehle valid Student ID enter karke confirm karein!"); return; }
+    if(!document.getElementById('tcName').value) { alert("Pehle valid Student ID enter karke confirm karein!"); return; }
     
-    let sidKey = tcSID.value.trim().toUpperCase();
+    let sidKey = document.getElementById('tcSID').value.trim().toUpperCase();
     let s = students.find(st => st.sid === sidKey);
     let schoolNameTxt = localStorage.getItem('schoolName') || 'ROYAL SCHOOL PRO';
 
@@ -835,78 +926,94 @@ function generateTCPrint() {
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* FEE MANAGEMENT SAVE & VALIDATION */
+/* ==========================================
+   FEE LEDGER MANAGEMENT & BILLING
+   ========================================== */
 function findStudent(){
-    let found = students.find(s => s.sid === searchSID.value.trim().toUpperCase());
+    let searchVal = document.getElementById('searchSID').value.trim().toUpperCase();
+    let found = students.find(s => s.sid === searchVal);
     if(found){ 
-        feeStudentName.value = found.name; 
-        feeClass.value = found.studentClass; 
-        monthlyFee.value = Math.round((found.fee / 12) || 0);
-        actualAmountPaid.value = '';
+        document.getElementById('feeStudentName').value = found.name; 
+        document.getElementById('feeClass').value = found.studentClass; 
+        document.getElementById('monthlyFee').value = Math.round((found.fee / 12) || 0);
+        document.getElementById('actualAmountPaid').value = '';
+    } else { 
+        document.getElementById('feeStudentName').value = ''; 
+        document.getElementById('feeClass').value = ''; 
+        document.getElementById('monthlyFee').value = ''; 
+        document.getElementById('actualAmountPaid').value = ''; 
     }
-    else { feeStudentName.value = ''; feeClass.value = ''; monthlyFee.value = ''; actualAmountPaid.value = ''; }
 }
 
 function saveFee(){
-    if(!feeStudentName.value) { alert("Find a valid student first!"); return; }
-    if(!feeMonthSelect.value) { alert("Please select a month!"); return; }
-    if(!actualAmountPaid.value || parseInt(actualAmountPaid.value) <= 0) { alert("Please enter amount paid!"); return; }
+    if(!document.getElementById('feeStudentName').value) { alert("Find a valid student first!"); return; }
+    let monthSelect = document.getElementById('feeMonthSelect').value;
+    if(!monthSelect) { alert("Please select a month!"); return; }
     
-    let targetSID = searchSID.value.trim().toUpperCase();
-    let selectedMonth = feeMonthSelect.value;
-    let feeAmt = parseInt(actualAmountPaid.value);
-
+    let paidAmt = parseInt(document.getElementById('actualAmountPaid').value);
+    if(!paidAmt || paidAmt <= 0) { alert("Please enter amount paid!"); return; }
+    
+    let targetSID = document.getElementById('searchSID').value.trim().toUpperCase();
     let existingIndex = fees.findIndex(f => f.sid === targetSID);
 
     if (existingIndex !== -1) {
         if(!fees[existingIndex].breakdownDetails) fees[existingIndex].breakdownDetails = [];
-        let monthExists = fees[existingIndex].breakdownDetails.some(b => b.monthName === selectedMonth);
+        let monthExists = fees[existingIndex].breakdownDetails.some(b => b.monthName === monthSelect);
         if(monthExists) {
             alert("This month's fee is already paid for this student!");
             return;
         }
-        fees[existingIndex].breakdownDetails.push({ monthName: selectedMonth, amount: feeAmt });
-        fees[existingIndex].totalAmount = parseInt(fees[existingIndex].totalAmount) + feeAmt;
+        fees[existingIndex].breakdownDetails.push({ monthName: monthSelect, amount: paidAmt });
+        fees[existingIndex].totalAmount = parseInt(fees[existingIndex].totalAmount) + paidAmt;
         fees[existingIndex].lastReceiptNo = 'REC-' + Date.now().toString().slice(-6);
-        fees[existingIndex].lastPaidMonth = selectedMonth;
-        fees[existingIndex].lastPaidAmount = feeAmt;
+        fees[existingIndex].lastPaidMonth = monthSelect;
+        fees[existingIndex].lastPaidAmount = paidAmt;
     } else {
         let newFeeObj = {
             sid: targetSID,
-            name: feeStudentName.value,
-            class: feeClass.value,
-            breakdownDetails: [{ monthName: selectedMonth, amount: feeAmt }],
-            totalAmount: feeAmt,
+            name: document.getElementById('feeStudentName').value,
+            class: document.getElementById('feeClass').value,
+            breakdownDetails: [{ monthName: monthSelect, amount: paidAmt }],
+            totalAmount: paidAmt,
             lastReceiptNo: 'REC-' + Date.now().toString().slice(-6),
-            lastPaidMonth: selectedMonth,
-            lastPaidAmount: feeAmt
+            lastPaidMonth: monthSelect,
+            lastPaidAmount: paidAmt
         };
         fees.push(newFeeObj);
     }
 
     localStorage.setItem('fees', JSON.stringify(fees));
-    renderFees(); updateDashboardCounts(); 
+    renderFees(); 
+    updateDashboardCounts(); 
     
-    try { sendDataToGoogleSheet('fees', fees.find(f => f.sid === targetSID)); } catch(e) { console.log(e); }
+    try { sendDataToGoogleSheet('fees', fees.find(f => f.sid === targetSID)); } catch(e) { console.error(e); }
     
     alert("Fee Record Saved Successfully!");
     let latestIdx = fees.findIndex(f => f.sid === targetSID);
     viewFeeReceipt(latestIdx);
     
-    searchSID.value=''; feeStudentName.value=''; feeClass.value=''; monthlyFee.value=''; feeMonthSelect.value=''; actualAmountPaid.value='';
+    document.getElementById('searchSID').value=''; 
+    document.getElementById('feeStudentName').value=''; 
+    document.getElementById('feeClass').value=''; 
+    document.getElementById('monthlyFee').value=''; 
+    document.getElementById('feeMonthSelect').value=''; 
+    document.getElementById('actualAmountPaid').value='';
 }
 
 function renderFees(){
-    feeTable.innerHTML='';
+    let container = document.getElementById('feeTable');
+    if(!container) return;
+    container.innerHTML='';
+    
     fees.forEach((f, index)=>{
         let details = f.breakdownDetails || [];
         let breakdownBadges = details.map(b => 
-            `<span style="background:#1e293b; color:#facc15; padding:4px 8px; border-radius:6px; margin-right:6px; font-size:12px; display:inline-block; margin-top:4px;">
+            `<span style="background:rgba(255, 255, 255, 0.1); color:#facc15; padding:4px 8px; border-radius:6px; margin-right:6px; font-size:12px; display:inline-block; margin-top:4px;">
                 ${b.monthName}:-₹${b.amount}
             </span>`
         ).join('');
         
-        feeTable.innerHTML+=`<tr>
+        container.innerHTML+=`<tr>
             <td>${f.sid}</td><td>${f.name}</td><td>${f.class || 'N/A'}</td><td>${breakdownBadges}</td>
             <td style="font-weight:bold; color:#16a34a;">₹${f.totalAmount}/-</td>
             <td>
@@ -921,8 +1028,11 @@ function renderFees(){
 
 function deleteFee(index){
     if(confirm("Are you sure?")){
-        let removed = fees.splice(index,1)[0]; localStorage.setItem('fees', JSON.stringify(fees));
-        renderFees(); updateDashboardCounts(); sendDataToGoogleSheet('delete_fee', removed);
+        let removed = fees.splice(index,1)[0]; 
+        localStorage.setItem('fees', JSON.stringify(fees));
+        renderFees(); 
+        updateDashboardCounts(); 
+        sendDataToGoogleSheet('delete_fee', removed);
     }
 }
 
@@ -952,44 +1062,63 @@ function viewFeeReceipt(index) {
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* MARKSHEET SYSTEM WITH TRY/CATCH WRAPPERS */
+/* ==========================================
+   MARKSHEET EVALUATION CONTROL MODULES
+   ========================================== */
 function findMarksheetStudent(){
-    let found = students.find(s => s.sid === marksheetSID.value.trim().toUpperCase());
-    if(found){ markStudent.value = found.name; markClass.value = found.studentClass; loadSubjectMarksArea(); }
-    else { markStudent.value = ''; markClass.value = ''; subjectMarksArea.innerHTML=''; }
+    let searchVal = document.getElementById('marksheetSID').value.trim().toUpperCase();
+    let found = students.find(s => s.sid === searchVal);
+    if(found){ 
+        document.getElementById('markStudent').value = found.name; 
+        document.getElementById('markClass').value = found.studentClass; 
+        loadSubjectMarksArea(); 
+    } else { 
+        document.getElementById('markStudent').value = ''; 
+        document.getElementById('markClass').value = ''; 
+        document.getElementById('subjectMarksArea').innerHTML=''; 
+    }
 }
 
 function loadSubjectMarksArea(){
-    let cls = markClass.value; let exm = markExam.value;
+    let cls = document.getElementById('markClass').value; 
+    let exm = document.getElementById('markExam').value;
+    let targetArea = document.getElementById('subjectMarksArea');
+    
     let filtered = subjects.filter(sub => sub.subjectClass === cls && sub.exam === exm);
-    subjectMarksArea.innerHTML = ''; let totalMax = 0;
+    targetArea.innerHTML = ''; 
+    let totalMax = 0;
+    
     filtered.forEach((sub) => {
         totalMax += parseInt(sub.total || 0);
-        subjectMarksArea.innerHTML += `<div style="margin-top:10px;"><label>${sub.name} (Max: ${sub.total})</label>
-        <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Obtained" onkeyup="calcTotalMarks()"></div>`;
+        targetArea.innerHTML += `<div style="margin-top:10px;"><label>${sub.name} (Max: ${sub.total})</label>
+        <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Obtained Marks" onkeyup="calcTotalMarks()"></div>`;
     });
-    markTotal.value = '0 / ' + totalMax;
+    document.getElementById('markTotal').value = '0 / ' + totalMax;
 }
 
 function calcTotalMarks(){
     let inputs = document.querySelectorAll('.sub-mark-input');
-    let totalObtained = 0; let totalMax = 0;
-    inputs.forEach(inp => { totalObtained += parseInt(inp.value || 0); totalMax += parseInt(inp.getAttribute('data-max') || 0); });
-    markTotal.value = totalObtained + " / " + totalMax;
+    let totalObtained = 0; 
+    let totalMax = 0;
+    inputs.forEach(inp => { 
+        totalObtained += parseInt(inp.value || 0); 
+        totalMax += parseInt(inp.getAttribute('data-max') || 0); 
+    });
+    document.getElementById('markTotal').value = totalObtained + " / " + totalMax;
 }
 
 function saveMarksheet(){
-    if(!markStudent.value) { alert("Select student first!"); return; }
+    if(!document.getElementById('markStudent').value) { alert("Select student first!"); return; }
     let inputs = document.querySelectorAll('.sub-mark-input');
     let subMarks = {};
     inputs.forEach(inp => { subMarks[inp.getAttribute('data-name')] = inp.value || 0; });
     
     let m = { 
-        sid: marksheetSID.value.trim().toUpperCase(), 
-        name: markStudent.value, 
-        studentClass: markClass.value, 
-        exam: markExam.value, 
-        total: markTotal.value, 
+        sid: document.getElementById('marksheetSID').value.trim().toUpperCase(), 
+        name: document.getElementById('markStudent').value, 
+        studentClass: document.getElementById('markClass').value, 
+        exam: document.getElementById('markExam').value, 
+        total: document.getElementById('markTotal').value, 
         marks: subMarks 
     };
     
@@ -997,42 +1126,36 @@ function saveMarksheet(){
     localStorage.setItem('marksheets', JSON.stringify(marksheets));
     renderMarksheets(); 
     
-    try { sendDataToGoogleSheet('marksheets', m); } catch(e){ console.log(e); }
+    try { sendDataToGoogleSheet('marksheets', m); } catch(e){ console.error(e); }
     
     alert("Marksheet Saved Locally & Sent to Cloud Stack!");
-    marksheetSID.value=''; markStudent.value=''; markClass.value=''; subjectMarksArea.innerHTML=''; markTotal.value='';
+    document.getElementById('marksheetSID').value=''; 
+    document.getElementById('markStudent').value=''; 
+    document.getElementById('markClass').value=''; 
+    document.getElementById('subjectMarksArea').innerHTML=''; 
+    document.getElementById('markTotal').value='';
 }
 
-/* RENDERING MARKSHEET WITH CLASS FILTER & NEW SEARCH FUNCTIONALITY */
 function renderMarksheets(){
-    marksheetTable.innerHTML='';
-    let cls = filterMarksheetClass.value;
-    let searchTxt = searchMarksheetInput.value.trim().toUpperCase();
+    let container = document.getElementById('marksheetTable');
+    if(!container) return;
+    container.innerHTML='';
     
+    let cls = document.getElementById('filterMarksheetClass').value;
+    let searchTxt = document.getElementById('searchMarksheetInput').value.trim().toUpperCase();
     let filtered = marksheets;
     
-    // 1. Class wise filter
-    if(cls !== 'All') {
-        filtered = filtered.filter(m => m.studentClass === cls);
-    }
-    
-    // 2. Search Box filter
+    if(cls !== 'All') { filtered = filtered.filter(m => m.studentClass === cls); }
     if(searchTxt !== '') {
         filtered = filtered.filter(m => m.sid.toUpperCase().includes(searchTxt) || m.name.toUpperCase().includes(searchTxt));
     }
     
-    marksheetCountLabel.innerText = filtered.length;
+    document.getElementById('marksheetCountLabel').innerText = filtered.length;
 
-    filtered.forEach((m, index)=>{
-        // Original index trace for proper data operations
+    filtered.forEach((m)=>{
         let actualIndex = marksheets.findIndex(org => org.sid === m.sid && org.exam === m.exam);
-        
-        marksheetTable.innerHTML+=`<tr>
-            <td>${m.sid}</td>
-            <td>${m.name}</td>
-            <td>${m.studentClass || 'N/A'}</td>
-            <td>${m.exam}</td>
-            <td>${m.total}</td>
+        container.innerHTML+=`<tr>
+            <td>${m.sid}</td><td>${m.name}</td><td>${m.studentClass || 'N/A'}</td><td>${m.exam}</td><td>${m.total}</td>
             <td>
                 <div class="action-box">
                     <button class="btn green-btn" style="padding: 6px 12px;" onclick="printSingleMarksheet(${actualIndex})">🖨️ Print</button>
@@ -1052,19 +1175,15 @@ function deleteMarksheet(index){
     }
 }
 
-/* INDIVIDUAL MARKSHEET REPORT PRINT FUNCTION FROM ROW ACTION */
 function printSingleMarksheet(index) {
     let m = marksheets[index];
     if(!m) return;
     
     let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    
-    // Building dynamic subjects and marks breakdown rows
     let subjectRows = '';
     let marksObj = m.marks || {};
     
     for (let subName in marksObj) {
-        // Trying to find maximum marks configured for this subject dynamically
         let matchSub = subjects.find(s => s.subjectClass === m.studentClass && s.exam === m.exam && s.name === subName);
         let maxM = matchSub ? matchSub.total : '100';
         
@@ -1119,9 +1238,8 @@ function printSingleMarksheet(index) {
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* CLASS-WISE STUDENT PRINT FUNCTION */
 function printStudentClassWise() {
-    let cls = filterClass.value;
+    let cls = document.getElementById('filterClass').value;
     let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
     let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
     
@@ -1159,27 +1277,52 @@ function printStudentClassWise() {
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* TEACHER MODULES */
+/* ==========================================
+   TEACHER RECORD SCHEDULING
+   ========================================== */
 function saveTeacher(){
-    if(!teacherNameInput.value) { alert("Enter Name!"); return; }
-    let t = { name: teacherNameInput.value, mobile: teacherMobile.value, subject: teacherSubject.value, salary: teacherSalary.value || 0 };
-    teachers.push(t); localStorage.setItem('teachers', JSON.stringify(teachers));
-    renderTeachers(); updateDashboardCounts(); sendDataToGoogleSheet('teachers', t);
+    let tName = document.getElementById('teacherNameInput').value;
+    if(!tName.trim()) { alert("Enter Teacher Name!"); return; }
+    
+    let t = { 
+        name: tName, 
+        mobile: document.getElementById('teacherMobile').value, 
+        subject: document.getElementById('teacherSubject').value, 
+        salary: document.getElementById('teacherSalary').value || 0 
+    };
+    teachers.push(t); 
+    localStorage.setItem('teachers', JSON.stringify(teachers));
+    
+    renderTeachers(); 
+    updateDashboardCounts(); 
+    sendDataToGoogleSheet('teachers', t);
+    
     alert("Teacher Record Saved!");
-    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
+    document.getElementById('teacherNameInput').value=''; 
+    document.getElementById('teacherMobile').value=''; 
+    document.getElementById('teacherSubject').value=''; 
+    document.getElementById('teacherSalary').value='';
 }
 
 function renderTeachers(){
-    teacherTable.innerHTML='';
+    let container = document.getElementById('teacherTable');
+    if(!container) return;
+    container.innerHTML='';
+    
     teachers.forEach((t, index)=>{
-        teacherTable.innerHTML+=`<tr><td>${t.name}</td><td>${t.mobile || 'N/A'}</td><td>${t.subject}</td><td>₹${t.salary}</td>
+        container.innerHTML+=`<tr><td>${t.name}</td><td>${t.mobile || 'N/A'}</td><td>${t.subject}</td><td>₹${t.salary}</td>
         <td><button class="btn red-btn" onclick="deleteTeacher(${index})">🗑</button></td></tr>`;
     });
 }
 
 function deleteTeacher(index){
-    let removed = teachers.splice(index,1)[0]; localStorage.setItem('teachers', JSON.stringify(teachers));
-    renderTeachers(); updateDashboardCounts(); sendDataToGoogleSheet('delete_teacher', removed);
+    if(confirm("Are you sure?")){
+        let removed = teachers.splice(index,1)[0]; 
+        localStorage.setItem('teachers', JSON.stringify(teachers));
+        renderTeachers(); 
+        updateDashboardCounts(); 
+        sendDataToGoogleSheet('delete_teacher', removed);
+    }
 }
 
 function printAllTeachers() {
@@ -1208,69 +1351,109 @@ function printAllTeachers() {
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* POPUPS MANAGEMENT & SHEETS LINKER */
-function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
-function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
+/* ==========================================
+   BACKUP SETTINGS & INTERACTION DIALOGS
+   ========================================== */
+function openMarksheetPopup(){ document.getElementById('marksheetPopup').style.display='flex'; renderExamsAndSubjects(); }
+function closeMarksheetPopup(){ document.getElementById('marksheetPopup').style.display='none'; updateExamDropdowns(); }
+
 function openGoogleSheetsPopup() {
-    googleSheetsPopup.style.display = 'flex';
-    urlStudents.value = localStorage.getItem('url_students') || '';
-    urlTeachers.value = localStorage.getItem('url_teachers') || '';
-    urlFees.value = localStorage.getItem('url_fees') || '';
-    urlMarksheet.value = localStorage.getItem('url_marksheets') || '';
+    document.getElementById('googleSheetsPopup').style.display = 'flex';
+    document.getElementById('urlStudents').value = localStorage.getItem('url_students') || '';
+    document.getElementById('urlTeachers').value = localStorage.getItem('url_teachers') || '';
+    document.getElementById('urlFees').value = localStorage.getItem('url_fees') || '';
+    document.getElementById('urlMarksheet').value = localStorage.getItem('url_marksheets') || '';
 }
-function closeGoogleSheetsPopup() { googleSheetsPopup.style.display = 'none'; }
+function closeGoogleSheetsPopup() { document.getElementById('googleSheetsPopup').style.display = 'none'; }
 
 function saveAllSheetUrls() {
-    localStorage.setItem('url_students', urlStudents.value.trim());
-    localStorage.setItem('url_teachers', urlTeachers.value.trim());
-    localStorage.setItem('url_fees', urlFees.value.trim());
-    localStorage.setItem('url_marksheets', urlMarksheet.value.trim());
-    alert("Urls Saved Successfully!"); closeGoogleSheetsPopup();
+    localStorage.setItem('url_students', document.getElementById('urlStudents').value.trim());
+    localStorage.setItem('url_teachers', document.getElementById('urlTeachers').value.trim());
+    localStorage.setItem('url_fees', document.getElementById('urlFees').value.trim());
+    localStorage.setItem('url_marksheets', document.getElementById('urlMarksheet').value.trim());
+    alert("Urls Saved Successfully!"); 
+    closeGoogleSheetsPopup();
 }
 
 function addExam(){
-    if(!examName.value) return; exams.push(examName.value);
-    localStorage.setItem('exams', JSON.stringify(exams)); examName.value=''; renderExamsAndSubjects();
+    let exName = document.getElementById('examName').value;
+    if(!exName.trim()) return; 
+    exams.push(exName.trim());
+    localStorage.setItem('exams', JSON.stringify(exams)); 
+    document.getElementById('examName').value=''; 
+    renderExamsAndSubjects();
 }
 
 function addSubject(){
-    if(!subjectName.value) return;
-    let s = { subjectClass: popupSubjectClass.value, exam: subjectExam.value, name: subjectName.value, total: subjectTotal.value || 100 };
-    subjects.push(s); localStorage.setItem('subjects', JSON.stringify(subjects));
-    subjectName.value=''; subjectTotal.value=''; renderExamsAndSubjects();
+    let subName = document.getElementById('subjectName').value;
+    if(!subName.trim()) return;
+    let s = { 
+        subjectClass: document.getElementById('popupSubjectClass').value, 
+        exam: document.getElementById('subjectExam').value, 
+        name: subName.trim(), 
+        total: document.getElementById('subjectTotal').value || 100 
+    };
+    subjects.push(s); 
+    localStorage.setItem('subjects', JSON.stringify(subjects));
+    document.getElementById('subjectName').value=''; 
+    document.getElementById('subjectTotal').value=''; 
+    renderExamsAndSubjects();
 }
 
 function renderExamsAndSubjects(){
-    examList.innerHTML = "<strong>Exams:</strong> " + exams.join(', ');
-    subjectList.innerHTML = ''; subjects.forEach(s => { subjectList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} M)</div>`; });
+    document.getElementById('examList').innerHTML = "<strong>Exams:</strong> " + exams.join(', ');
+    let sList = document.getElementById('subjectList');
+    sList.innerHTML = ''; 
+    subjects.forEach(s => { 
+        sList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} M)</div>`; 
+    });
     updateExamDropdowns();
 }
 
 function updateExamDropdowns(){
-    markExam.innerHTML = ''; subjectExam.innerHTML = '';
-    exams.forEach(ex => { markExam.innerHTML += `<option>${ex}</option>`; subjectExam.innerHTML += `<option>${ex}</option>`; });
+    let markExamSelect = document.getElementById('markExam');
+    let subjectExamSelect = document.getElementById('subjectExam');
+    markExamSelect.innerHTML = ''; 
+    subjectExamSelect.innerHTML = '';
+    exams.forEach(ex => { 
+        markExamSelect.innerHTML += `<option>${ex}</option>`; 
+        subjectExamSelect.innerHTML += `<option>${ex}</option>`; 
+    });
 }
 
 function saveSettings(){
-    if(schoolNameInput.value) localStorage.setItem('schoolName', schoolNameInput.value);
-    if(newUsername.value) localStorage.setItem('adminUsername', newUsername.value);
-    if(newPassword.value) localStorage.setItem('adminPassword', newPassword.value);
-    let file = schoolLogoInput.files[0];
+    let schNameInp = document.getElementById('schoolNameInput').value;
+    let newU = document.getElementById('newUsername').value;
+    let newP = document.getElementById('newPassword').value;
+    let fileInput = document.getElementById('schoolLogoInput');
+    
+    if(schNameInp.trim()) localStorage.setItem('schoolName', schNameInp);
+    if(newU.trim()) localStorage.setItem('adminUsername', newU);
+    if(newP.trim()) localStorage.setItem('adminPassword', newP);
+    
+    let file = fileInput ? fileInput.files[0] : null;
     if(file){
         let reader = new FileReader();
-        reader.onloadend = function() { localStorage.setItem('schoolLogo', reader.result); schoolLogo.src = reader.result; }
+        reader.onloadend = function() { 
+            localStorage.setItem('schoolLogo', reader.result); 
+            document.getElementById('schoolLogo').src = reader.result; 
+        }
         reader.readAsDataURL(file);
     }
-    if(schoolNameInput.value) schoolName.innerText = schoolNameInput.value;
+    if(schNameInp.trim()) document.getElementById('schoolName').innerText = schNameInp;
     alert("Settings Saved!");
 }
 
 function updateDashboardCounts(){
-    studentCount.innerText = students.length; teacherCount.innerText = teachers.length;
-    let totalF = fees.reduce((sum, f) => sum + parseInt(f.totalAmount || 0), 0); feeCount.innerText = "₹" + totalF;
+    document.getElementById('studentCount').innerText = students.length; 
+    document.getElementById('teacherCount').innerText = teachers.length;
+    let totalF = fees.reduce((sum, f) => sum + parseInt(f.totalAmount || 0), 0); 
+    document.getElementById('feeCount').innerText = "₹" + totalF;
 }
 
-/* ROBUST SEND FUNCTION: ABSENCE OF URL WON'T BREAK CRITICAL FLOW */
+/* ==========================================
+   GOOGLE SHEETS INTEGRATION CONTROLLER
+   ========================================== */
 function sendDataToGoogleSheet(type, dataPayload) {
     let url = '';
     if(type.indexOf('student') !== -1) url = localStorage.getItem('url_students');
@@ -1279,7 +1462,7 @@ function sendDataToGoogleSheet(type, dataPayload) {
     else if(type.indexOf('mark') !== -1) url = localStorage.getItem('url_marksheets');
     
     if(!url || url.trim() === '') {
-        console.warn("Google Sheet WebApp URL missing for type: " + type + ". Data saved on local machine storage engine.");
+        console.warn("Google Sheet WebApp URL missing for type: " + type + ". Data saved on local storage engine.");
         return; 
     }
     
@@ -1288,15 +1471,32 @@ function sendDataToGoogleSheet(type, dataPayload) {
     formData.append('data', JSON.stringify(dataPayload));
     
     fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
-    .then(() => console.log("Cloud server synced metadata."))
+    .then(() => console.log("Cloud server synced successfully."))
     .catch(err => console.error("Network cloud delivery failed: ", err));
 }
 
+/* ==========================================
+   SYSTEM BOOT INITIALIZATION
+   ========================================== */
 window.onload = function(){
-    renderStudents(); renderTeachers(); renderFees(); renderMarksheets(); updateDashboardCounts(); updateExamDropdowns();
-    let name = localStorage.getItem('schoolName'); let logo = localStorage.getItem('schoolLogo');
-    if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
-    if(logo) schoolLogo.src = logo;
+    loadSavedTheme();
+    renderStudents(); 
+    renderTeachers(); 
+    renderFees(); 
+    renderMarksheets(); 
+    updateDashboardCounts(); 
+    updateExamDropdowns();
+    generateSID();
+    
+    let savedName = localStorage.getItem('schoolName'); 
+    let savedLogo = localStorage.getItem('schoolLogo');
+    if(savedName) { 
+        document.getElementById('schoolName').innerText = savedName; 
+        document.getElementById('schoolNameInput').value = savedName; 
+    }
+    if(savedLogo) {
+        document.getElementById('schoolLogo').src = savedLogo;
+    }
 };
 </script>
 </body>
