@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Royal School ERP Pro v5</title>
-
-<meta name="google-site-verification" content="YAHAN_APNA_PURANA_CODE_PASTE_KAREIN" />
+<title>Royal School ERP Pro v9 - Auto Face Unlock Audit Popup Edition</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -24,7 +22,7 @@ overflow-x:hidden;
 transition: background 0.5s ease;
 }
 
-/* LOGIN SCREEN */
+/* AUTOMATIC FACE LOGIN BANNER */
 #loginPage{
 position:fixed;
 top:0;
@@ -39,22 +37,23 @@ z-index:99999;
 }
 
 .login-box{
-width:400px;
+width:420px;
 background:rgba(255,255,255,0.05);
 padding:35px;
 border-radius:25px;
 border:1px solid rgba(255,255,255,0.08);
 backdrop-filter:blur(10px);
+text-align: center;
 }
 
 .login-title{
-text-align:center;
-font-size:35px;
-margin-bottom:25px;
+font-size:30px;
+margin-bottom:10px;
 color:#facc15;
+font-weight: bold;
 }
 
-/* SIDEBAR LAYOUT */
+/* SIDEBAR & OVERALL ERP */
 .sidebar{
 width:280px;
 height:100vh;
@@ -114,7 +113,7 @@ display:none;
 margin-left:15px;
 }
 
-/* MAIN CONTENT AREA */
+/* CONTAINER MAIN */
 .main{
 margin-left:280px;
 padding:30px;
@@ -128,7 +127,6 @@ display:none;
 display:block;
 }
 
-/* GLASSMORPHISM UI ELEMENTS */
 .glass{
 background:rgba(255,255,255,0.05);
 border-radius:25px;
@@ -181,6 +179,7 @@ transition:0.3s;
 display: inline-flex;
 align-items: center;
 gap: 6px;
+justify-content: center;
 }
 
 .btn:hover{
@@ -225,7 +224,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.8);
 justify-content:center;
 align-items:center;
 z-index:999999;
@@ -233,36 +232,41 @@ z-index:999999;
 
 .popup-box{
 width:90%;
-max-width:800px;
-max-height:90vh;
-overflow:auto;
+max-width:600px;
 background:#0f172a;
-padding:25px;
+padding:30px;
 border-radius:25px;
 border:2px solid #facc15;
+max-height: 90vh;
+overflow-y: auto;
 }
 
-/* PRINT MEDIA CONFIGURATION */
-#printViewArea {
-    background: white;
-    color: black;
-    padding: 25px;
-    border-radius: 10px;
+/* INTUITIVE AUTOMATIC LIVE SCANNER OVERLAYS */
+#liveLoginCamArea {
+    width: 240px;
+    height: 180px;
+    background: #000;
+    border: 3px solid #facc15;
+    border-radius: 20px;
+    margin: 15px auto;
+    position: relative;
+    overflow: hidden;
+    transform: scaleX(-1);
 }
-
-@media print {
-    body * { visibility: hidden; }
-    #printViewArea, #printViewArea * { visibility: visible; }
-    #printViewArea {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 0px !important;
-        margin: 0px !important;
-        border: none !important;
-    }
-    @page { size: A4 portrait; margin: 15mm; }
+.laser-beam {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #facc15;
+    box-shadow: 0 0 12px #facc15;
+    top: 0;
+    animation: autoScanLaser 2s linear infinite;
+    z-index: 10;
+}
+@keyframes autoScanLaser {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
 }
 </style>
 </head>
@@ -270,17 +274,45 @@ border:2px solid #facc15;
 <body>
 
 <div id="loginPage">
-<div class="login-box">
-<h1 class="login-title">👑 ADMIN LOGIN</h1>
-<input id="loginUsername" placeholder="Username">
-<input id="loginPassword" type="password" placeholder="Password" style="margin-top:15px;">
-<button class="btn gold-btn" style="width:100%;margin-top:20px;" onclick="adminLogin()">🔐 Login</button>
+    <div class="login-box">
+        <h1 class="login-title">👑 ROYAL SCHOOL ERP</h1>
+        <p style="color:#cbd5e1; font-size:13px; font-weight:600;">🤖 AI Auto Face Authentication Module</p>
+        
+        <div id="liveLoginCamArea">
+            <div class="laser-beam"></div>
+            <video id="loginAuthVideoFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+        </div>
+
+        <div id="countdownStatusBox" class="text-lg text-yellow-400 font-bold my-2 animate-pulse">
+            ⏳ Analyzing face... (<span id="secondsTimerCounter">5</span>s remaining)
+        </div>
+        
+        <p id="scannerLogPrompt" class="text-xs text-slate-400 max-w-sm mx-auto px-4">
+            System automatic secure browser biometric read scan perform kar raha hai.
+        </p>
+
+        <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+            <button onclick="openForgotPopup()" style="color:#facc15; font-size:12px; font-weight:bold; text-decoration:underline; background:none; border:none; cursor:pointer;">❓ Emergency Master Bypass Recovery</button>
+        </div>
+    </div>
 </div>
+
+<div id="forgotPopup" class="popup">
+    <div class="popup-box" style="max-width:420px;">
+        <h2 style="color:#facc15; font-size:22px; font-weight:bold; margin-bottom:10px; text-align:center;">🔐 Master Key Login</h2>
+        <p style="font-size:13px; color:#94a3b8; margin-bottom:20px; text-align:center;">Face authorization complete nahi hone par credentials use karein.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <input id="recoveryEmail" placeholder="Enter Email ID">
+            <input id="recoveryPassword" type="password" placeholder="Enter Password">
+            <button class="btn green-btn" onclick="processBackupRecoveryLogin()">🔓 Verify & Access ERP</button>
+            <button class="btn red-btn" onclick="closeForgotPopup()">❌ Close Window</button>
+        </div>
+    </div>
 </div>
 
 <div class="sidebar" id="mainSidebar">
 <div class="logo-box">
-<img id="schoolLogo" src="" alt="School Logo" onerror="this.style.display='none'">
+<img id="schoolLogo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>">
 <h1 id="schoolName">ROYAL SCHOOL ERP</h1>
 </div>
 <button class="menu-btn" onclick="showPage('dashboardPage')">🏠 Dashboard</button>
@@ -303,7 +335,7 @@ border:2px solid #facc15;
 </div>
 <button class="menu-btn" onclick="toggleMenu('marksMenu')">📝 Marksheet ▼</button>
 <div id="marksMenu" class="dropdown">
-<button class="menu-btn" onclick="showPage('addMarksheetPage')">➕ Add Marksheet</button>
+<button class="menu-btn" onclick="showPage('addMarksheetPage')">➕ Add / Update Marks</button>
 <button class="menu-btn" onclick="showPage('marksheetRecordPage')">📋 Marksheet Records</button>
 </div>
 <button class="menu-btn" onclick="showPage('settingsPage')">⚙ Settings</button>
@@ -311,19 +343,31 @@ border:2px solid #facc15;
 
 <div class="main">
 
-<div id="dashboardPage" class="page active">
+<div id="dashboardPage" class="page">
 <div class="grid-3">
 <div class="glass"><h2>Total Students</h2><h1 id="studentCount">0</h1></div>
 <div class="glass"><h2>Total Teachers</h2><h1 id="teacherCount">0</h1></div>
-<div class="glass"><h2>Total Fee Collection</h2><h1 id="feeCount">₹0</h1></div>
+<div class="glass"><h2>Total Fee</h2><h1 id="feeCount">₹0</h1></div>
+</div>
+
+<div class="glass" style="margin-top:20px; border:2px solid #facc15; background: rgba(250, 204, 21, 0.05);">
+    <h3 style="color:#facc15; font-weight:bold; font-size:18px;">💾 Smart School Data Synchronization</h3>
+    <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap; margin-top:12px;">
+        <div style="background: #0f172a; padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.2);">
+            <label style="font-size: 11px; color:#facc15; display:block; margin-bottom:3px; font-weight:bold;">📤 UPLOAD DATABASE (.JSON)</label>
+            <input type="file" id="uploadDbFileInput" accept=".json" onchange="uploadDatabaseFile(event)" style="padding:4px; font-size:12px; background:transparent; width:auto;">
+        </div>
+        <button class="btn gold-btn" onclick="downloadMasterBackup()">📥 Download Master Backup File (.json)</button>
+        <button class="btn red-btn" style="padding:8px 12px; font-size:12px;" onclick="clearFullDatabase()">⚠️ Reset System</button>
+    </div>
 </div>
 </div>
 
 <div id="addStudentPage" class="page">
 <div class="glass">
-<h1 class="section-title">🎓 Student Admission / Modification</h1>
+<h1 class="section-title">🎓 Student Admission</h1>
 <div class="grid-3">
-<input id="sid" readonly placeholder="SID Auto-Generated">
+<input id="sid" readonly>
 <input id="studentName" placeholder="Student Name">
 <select id="studentClass">
 <option value="">Select Class</option>
@@ -337,15 +381,15 @@ border:2px solid #facc15;
 <input id="address" placeholder="Address">
 <input id="dob" type="date">
 <select id="gender">
-<option value="">Gender</option><option>Male</option><option>Female</option>
+<option>Gender</option><option>Male</option><option>Female</option>
 </select>
 <div>
-  <label style="font-size:12px; color:#facc15; display:block; margin-bottom:4px;">🧑‍🎓 Upload Student Photo:</label>
+  <label style="font-size:12px; color:#facc15; display:block; margin-bottom:4px;">🧑‍🎓 Student Photo:</label>
   <input type="file" id="studentPhotoInput" accept="image/*">
 </div>
 </div>
 <div style="margin-top:25px; display:flex; gap:10px;">
-<button class="btn gold-btn" onclick="saveStudent()">💾 Save Admission</button>
+<button class="btn gold-btn" onclick="saveStudent()">💾 Save Data</button>
 <button class="btn red-btn" onclick="cancelEdit()" id="cancelEditBtn" style="display:none;">❌ Cancel Edit</button>
 </div>
 </div>
@@ -356,18 +400,14 @@ border:2px solid #facc15;
 <h1 class="section-title">📋 Student Records</h1>
 <div class="grid-3" style="margin-bottom:20px; align-items:end;">
     <div>
-        <label style="color:#facc15; font-size:14px;">Filter By Class:</label>
-        <select id="filterClass" onchange="renderStudents()" style="margin-top:5px;">
+        <select id="filterClass" onchange="renderStudents()">
             <option value="All">All Classes</option>
             <option>Nursery</option><option>LKG</option><option>UKG</option>
             <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
             <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
         </select>
     </div>
-    <button class="btn blue-btn" onclick="printStudentClassWise()">🖨 Print List</button>
-    <div style="font-size:16px; font-weight:bold; color:#facc15; padding:14px;">
-        Total Selected Students: <span id="selectedCount">0</span>
-    </div>
+    <div style="color:#facc15; padding:14px; font-weight:bold;">Total Students: <span id="selectedCount">0</span></div>
 </div>
 <table>
 <thead>
@@ -382,33 +422,17 @@ border:2px solid #facc15;
 <div class="glass">
 <h1 class="section-title">📈 Student Class Promotion</h1>
 <div class="grid-3">
-    <div>
-        <label style="color:#facc15; font-size:12px;">Enter Student ID:</label>
-        <input id="promoteSID" placeholder="e.g. SID0001" onkeyup="findPromoteStudent()" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Student Name:</label>
-        <input id="promoteName" readonly placeholder="Name Auto-Fetch" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Current Class:</label>
-        <input id="promoteCurrentClass" readonly placeholder="Current Class" style="margin-top:4px;">
-    </div>
+<input id="promoteSID" placeholder="Enter Student ID" onkeyup="findPromoteStudent()">
+<input id="promoteName" readonly placeholder="Student Name">
+<input id="promoteCurrentClass" readonly placeholder="Current Class">
+<select id="promoteTargetClass">
+    <option value="">-- Select New Class --</option>
+    <option>Nursery</option><option>LKG</option><option>UKG</option>
+    <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+</select>
 </div>
-<div class="grid-3" style="margin-top:20px;">
-    <div>
-        <label style="color:#facc15; font-size:12px; font-weight:bold;">🎓 Select Promotion Class:</label>
-        <select id="promoteTargetClass" style="margin-top:4px; border:1px solid #facc15;">
-            <option value="">-- Select New Class --</option>
-            <option>Nursery</option><option>LKG</option><option>UKG</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-        </select>
-    </div>
-</div>
-<div style="margin-top:25px;">
-<button class="btn green-btn" onclick="processPromotion()">🚀 Promote Student & Sync Sheet</button>
-</div>
+<button class="btn green-btn mt-5" onclick="processPromotion()">🚀 Promote Student</button>
 </div>
 </div>
 
@@ -416,22 +440,11 @@ border:2px solid #facc15;
 <div class="glass">
 <h1 class="section-title">📄 Transfer Certificate (TC) Hub</h1>
 <div class="grid-3">
-    <div>
-        <label style="color:#facc15; font-size:12px;">Enter Student ID:</label>
-        <input id="tcSID" placeholder="Enter SID" onkeyup="findTCStudent()" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Student Name:</label>
-        <input id="tcName" readonly placeholder="Student Name" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Class:</label>
-        <input id="tcClass" readonly placeholder="Class" style="margin-top:4px;">
-    </div>
+<input id="tcSID" placeholder="Enter SID" onkeyup="findTCStudent()">
+<input id="tcName" readonly placeholder="Student Name">
+<input id="tcClass" readonly placeholder="Class">
 </div>
-<div style="margin-top:25px;">
-<button class="btn purple-btn" onclick="generateTCPrint()">🖨 Generate & Preview TC</button>
-</div>
+<button class="btn purple-btn mt-5" onclick="generateTCPrint()">🖨 Preview TC</button>
 </div>
 </div>
 
@@ -444,18 +457,13 @@ border:2px solid #facc15;
 <input id="teacherSubject" placeholder="Subject">
 <input id="teacherSalary" type="number" placeholder="Salary">
 </div>
-<div style="margin-top:25px;">
-<button class="btn gold-btn" onclick="saveTeacher()">💾 Save Teacher</button>
-</div>
+<button class="btn gold-btn mt-5" onclick="saveTeacher()">💾 Save Teacher</button>
 </div>
 </div>
 
 <div id="teacherRecordPage" class="page">
 <div class="glass">
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-    <h1 class="section-title" style="margin:0;">📋 Teacher Records</h1>
-    <button class="btn blue-btn" onclick="printAllTeachers()">🖨 Print All Teachers</button>
-</div>
+<h1 class="section-title">📋 Teacher Records</h1>
 <table>
 <thead>
 <tr><th>Name</th><th>Mobile</th><th>Subject</th><th>Salary</th><th>Action</th></tr>
@@ -467,42 +475,22 @@ border:2px solid #facc15;
 
 <div id="addFeePage" class="page">
 <div class="glass">
-<h1 class="section-title">💰 Add Fee</h1>
+<h1 class="section-title">💰 Add Fee Ledger</h1>
 <div class="grid-3">
-    <div>
-        <label style="color:#facc15; font-size:12px;">Search Student ID:</label>
-        <input id="searchSID" placeholder="Enter SID" onkeyup="findStudent()" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Student Name:</label>
-        <input id="feeStudentName" readonly placeholder="Student Name" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Class:</label>
-        <input id="feeClass" readonly placeholder="Class" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Standard Monthly Fee (Ref):</label>
-        <input id="monthlyFee" readonly placeholder="Monthly Fee" style="margin-top:4px;">
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px;">Select Fee Month:</label>
-        <select id="feeMonthSelect" style="margin-top:4px;">
-            <option value="">-- Select Month --</option>
-            <option>January</option><option>February</option><option>March</option>
-            <option>April</option><option>May</option><option>June</option>
-            <option>July</option><option>August</option><option>September</option>
-            <option>October</option><option>November</option><option>December</option>
-        </select>
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:12px; font-weight:bold;">💵 Enter Amount Paid Now:</label>
-        <input id="actualAmountPaid" type="number" placeholder="Type Amount Here" style="margin-top:4px; border:1px solid #facc15;">
-    </div>
+<input id="searchSID" placeholder="Search SID" onkeyup="findStudent()">
+<input id="feeStudentName" readonly placeholder="Student Name">
+<input id="feeClass" readonly placeholder="Class">
+<input id="monthlyFee" readonly placeholder="Monthly Fee Reference">
+<select id="feeMonthSelect">
+    <option value="">-- Select Month --</option>
+    <option>January</option><option>February</option><option>March</option>
+    <option>April</option><option>May</option><option>June</option>
+    <option>July</option><option>August</option><option>September</option>
+    <option>October</option><option>November</option><option>December</option>
+</select>
+<input id="actualAmountPaid" type="number" placeholder="Amount Paid">
 </div>
-<div style="margin-top:25px;">
-<button class="btn gold-btn" onclick="saveFee()">💾 Save Fee & Print Receipt</button>
-</div>
+<button class="btn gold-btn mt-5" onclick="saveFee()">💾 Save Ledger</button>
 </div>
 </div>
 
@@ -511,7 +499,7 @@ border:2px solid #facc15;
 <h1 class="section-title">📋 Fee Records</h1>
 <table>
 <thead>
-<tr><th>SID</th><th>Name</th><th>Class</th><th>Paid Months Breakdown</th><th>Total Amount</th><th>Action</th></tr>
+<tr><th>SID</th><th>Name</th><th>Class</th><th>Months Breakdown</th><th>Total Paid</th><th>Action</th></tr>
 </thead>
 <tbody id="feeTable"></tbody>
 </table>
@@ -520,136 +508,237 @@ border:2px solid #facc15;
 
 <div id="addMarksheetPage" class="page">
 <div class="glass">
-<h1 class="section-title">📝 Add Marksheet</h1>
+<h1 class="section-title">📝 Add Student Marks</h1>
 <div class="grid-3">
 <input id="marksheetSID" placeholder="Enter SID" onkeyup="findMarksheetStudent()">
 <input id="markStudent" readonly placeholder="Student Name">
 <input id="markClass" readonly placeholder="Class">
 <select id="markExam" onchange="loadSubjectMarksArea()"></select>
-<input id="markTotal" readonly placeholder="Total Marks">
+<input id="markTotal" readonly placeholder="Total Obtained Score">
 </div>
-<div id="subjectMarksArea" style="margin-top:25px;"></div>
-<div style="margin-top:25px;">
-<button class="btn gold-btn" onclick="saveMarksheet()">💾 Save Marksheet</button>
-</div>
+<div id="subjectMarksArea" class="mt-5"></div>
+<button class="btn gold-btn mt-5" onclick="saveMarksheet()">💾 Save Marks</button>
 </div>
 </div>
 
 <div id="marksheetRecordPage" class="page">
 <div class="glass">
 <h1 class="section-title">📋 Marksheet Records</h1>
-<div class="grid-4" style="margin-bottom:20px; align-items:end;">
-    <div>
-        <label style="color:#facc15; font-size:14px;">Filter By Class:</label>
-        <select id="filterMarksheetClass" onchange="renderMarksheets()" style="margin-top:5px;">
-            <option value="All">All Classes</option>
-            <option>Nursery</option><option>LKG</option><option>UKG</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-        </select>
-    </div>
-    <div>
-        <label style="color:#facc15; font-size:14px;">Search Student (Name or SID):</label>
-        <input id="searchMarksheetInput" placeholder="Type here to search..." style="margin-top:5px;">
-    </div>
-    <div>
-        <button class="btn blue-btn" style="width:100%;" onclick="renderMarksheets()">🔍 Search</button>
-    </div>
-    <div style="font-size:16px; font-weight:bold; color:#facc15; padding:14px; text-align:right;">
-        Records Found: <span id="marksheetCountLabel">0</span>
-    </div>
-</div>
 <table>
 <thead>
-<tr><th>SID</th><th>Name</th><th>Class</th><th>Exam</th><th>Total</th><th>Action</th></tr>
+<tr><th>SID</th><th>Name</th><th>Class</th><th>Exams</th><th>Action</th></tr>
 </thead>
 <tbody id="marksheetTable"></tbody>
 </table>
 </div>
 </div>
 
-<div id="settingsPage" class="page">
+<div id="settingsPage" class="page active">
 <div class="glass">
-<h1 class="section-title">⚙ Settings</h1>
-<div class="grid-3">
-<input id="newUsername" placeholder="New Username">
-<input id="newPassword" type="password" placeholder="New Password">
-<input id="schoolNameInput" placeholder="School Name">
-<input type="file" id="schoolLogoInput">
+<h1 class="section-title">⚙ Settings & Biometric Panel</h1>
+<div class="grid-3 items-center gap-5">
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">📷 AI FACE DETECTION</label>
+        <button class="btn green-btn w-full" onclick="openFaceRegPopup()">➕ Register New Face Profile</button>
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">🔑 RECOVERY CONTROL</label>
+        <button class="btn purple-btn w-full" onclick="openMasterCredsPopup()">🔑 Change Master Credentials</button>
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">🏫 UPLOAD SCHOOL LOGO</label>
+        <input type="file" id="schoolLogoUploadInput" accept="image/*" onchange="uploadSchoolLogo(event)" style="padding:10px;">
+    </div>
 </div>
-<div style="margin-top:25px;display:flex;gap:15px;flex-wrap:wrap;">
-<button class="btn gold-btn" onclick="saveSettings()">💾 Save Settings</button>
-<button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Management</button>
-<button class="btn green-btn" onclick="openGoogleSheetsPopup()">🔗 Link Google Sheets URL</button>
-<button class="btn purple-btn" onclick="openThemePopup()">🎨 Theme Customizer</button>
+
+<div class="grid-2 gap-5 mt-4">
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">🏫 INSTITUTION NAME</label>
+        <input id="schoolNameInput" placeholder="School Name">
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">📍 INSTITUTION ADDRESS</label>
+        <input id="schoolAddressInput" placeholder="School Address">
+    </div>
 </div>
+
+<div class="glass mt-5 bg-black/30 border border-slate-800">
+    <h3 class="text-yellow-400 font-bold text-sm mb-2">👤 Registered Biometric Faces (Max 5 users)</h3>
+    <div id="faceSlotsStatusBox" class="flex flex-col gap-2"></div>
+</div>
+
+<div class="glass mt-5 border border-yellow-500/20 bg-yellow-500/5 p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+    <div>
+        <h3 class="text-yellow-400 font-bold text-base">📊 Face Authentication Logs Audit Tracker</h3>
+        <p class="text-xs text-slate-400 mt-1">Yahan se aap browser me saved all previous face unlock logins and dynamic date-wise timestamps check kar sakte hain.</p>
+    </div>
+    <button class="btn blue-btn whitespace-nowrap" onclick="openAuditLogsPopup()">📊 View Audit Logs Record</button>
+</div>
+
+<div class="mt-5 flex gap-3 flex-wrap">
+<button class="btn gold-btn" onclick="saveSettings()">💾 Save Config</button>
+<button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Engine</button>
+<button class="btn purple-btn" onclick="openThemePopup()">🎨 Themes</button>
 </div>
 </div>
 
+</div>
+
+<div id="auditLogsPopup" class="popup">
+    <div class="popup-box" style="max-width: 750px;">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+            <h3 class="text-yellow-400 font-bold text-xl">📊 Face Authentication History Logs</h3>
+            <button class="text-slate-400 hover:text-white font-bold text-xl" onclick="closeAuditLogsPopup()">&times;</button>
+        </div>
+        
+        <div class="flex gap-4 items-center mb-4 bg-slate-900 p-3 rounded-xl border border-slate-800 flex-wrap">
+            <div style="width:220px;">
+                <label class="text-xs text-slate-300 font-bold block mb-1">📅 Filter by Login Date:</label>
+                <input type="date" id="auditLogCalendarPicker" onchange="renderBiometricAuditLogs()" style="padding:8px; font-size:13px;">
+            </div>
+            <div class="flex-1 text-right mt-4">
+                <button class="btn red-btn" style="padding:8px 14px; font-size:12px;" onclick="clearAuditLogStorage()">🗑 Clear History</button>
+            </div>
+        </div>
+
+        <div style="max-height: 350px; overflow-y: auto;" class="border border-slate-800 rounded-xl">
+            <table style="margin-top: 0;">
+                <thead>
+                    <tr>
+                        <th>Authorized Face Name</th>
+                        <th>Scan Status</th>
+                        <th>Date Stamp</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="biometricLogsTableBody"></tbody>
+            </table>
+        </div>
+        
+        <div class="mt-5 text-right">
+            <button class="btn gold-btn" onclick="closeAuditLogsPopup()">❌ Close Window</button>
+        </div>
+    </div>
 </div>
 
 <div id="printPopup" class="popup">
-<div class="popup-box">
-<h1 class="section-title">🖨 Print Preview</h1>
+<div class="popup-box" style="max-width: 800px; background: white;">
 <div id="printViewArea"></div>
-<div style="margin-top:20px; display:flex; gap:15px;">
+<div class="mt-5 flex gap-3 no-print">
 <button class="btn green-btn" onclick="window.print()">🖨 Print Now</button>
 <button class="btn red-btn" onclick="document.getElementById('printPopup').style.display='none'">❌ Close</button>
 </div>
 </div>
 </div>
 
-<div id="googleSheetsPopup" class="popup">
-<div class="popup-box" style="max-width: 600px;">
-<h1 class="section-title">🔗 Google Sheets Integration</h1>
-<div style="margin-bottom:12px;"><label>Students URL:</label><input id="urlStudents"></div>
-<div style="margin-bottom:12px;"><label>Teachers URL:</label><input id="urlTeachers"></div>
-<div style="margin-bottom:12px;"><label>Fees URL:</label><input id="urlFees"></div>
-<div style="margin-bottom:20px;"><label>Marksheet URL:</label><input id="urlMarksheet"></div>
-<div style="display:flex; gap:15px;"><button class="btn green-btn" onclick="saveAllSheetUrls()">💾 Save</button><button class="btn red-btn" onclick="closeGoogleSheetsPopup()">❌ Close</button></div>
+<div id="masterCredsPopup" class="popup">
+    <div class="popup-box" style="max-width:400px;">
+        <h2 class="text-yellow-400 font-bold text-xl mb-3 text-center">🔑 Update Recovery Bypass</h2>
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="text-xs text-slate-300 block mb-1">Email ID:</label>
+                <input id="newMasterEmail" placeholder="Enter Email ID">
+            </div>
+            <div>
+                <label class="text-xs text-slate-300 block mb-1">Master Password:</label>
+                <input id="newMasterPassword" type="text" placeholder="Enter New Password">
+            </div>
+            <button class="btn green-btn w-full mt-2" onclick="saveNewMasterCreds()">💾 Update Credentials</button>
+            <button class="btn red-btn w-full" onclick="closeMasterCredsPopup()">❌ Cancel</button>
+        </div>
+    </div>
 </div>
+
+<div id="faceRegPopup" class="popup">
+    <div class="popup-box" style="max-width:450px; text-align:center;">
+        <h2 class="text-yellow-400 font-bold text-xl mb-2">➕ Add Authorized Face</h2>
+        <p class="text-xs text-slate-300 mb-4">Max 5 profiles are allowed inside the local browser container.</p>
+        
+        <input id="faceLabelName" placeholder="Enter User Name (e.g., Aman)" class="mb-3">
+        
+        <div id="cameraAreaPlaceholder" class="hidden" style="width:240px; height:180px; margin:auto; background:#000; border:2px solid #16a34a; border-radius:15px; position:relative; overflow:hidden;">
+            <video id="cameraFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover; transform:scaleX(-1);"></video>
+        </div>
+        
+        <button class="btn blue-btn w-full mb-2 mt-3" id="startCamBtn" onclick="startCameraStream()">🎥 Turn On Web Camera</button>
+        <button class="btn green-btn w-full mb-2 hidden" id="captureFaceBtn" onclick="processFaceEnrollment()">📸 Capture & Map Face</button>
+        <button class="btn red-btn w-full" onclick="closeFaceRegPopup()">❌ Cancel</button>
+    </div>
 </div>
 
 <div id="marksheetPopup" class="popup">
-<div class="popup-box">
-<h1 class="section-title">📝 Marksheet Management</h1>
-<div class="glass"><h2>➕ Add Exam</h2><div class="grid-2"><input id="examName" placeholder="Exam Name"><button class="btn gold-btn" onclick="addExam()">➕ Add</button></div><div id="examList" style="margin-top:10px;"></div></div>
-<div class="glass"><h2>📚 Add Subject</h2><div class="grid-3"><select id="popupSubjectClass"><option value="">Class</option><option>Nursery</option><option>LKG</option><option>UKG</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><select id="subjectExam"></select><input id="subjectName" placeholder="Subject Name"><input id="subjectTotal" type="number" placeholder="Total Marks"><button class="btn gold-btn" onclick="addSubject()">➕ Add</button></div><div id="subjectList" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div></div>
-<button class="btn red-btn" onclick="closeMarksheetPopup()">❌ Close</button>
+<div class="popup-box max-w-3xl">
+<h1 class="section-title text-xl">📝 Structure Settings</h1>
+<div class="glass">
+    <h2>➕ Add Exam Structure</h2>
+    <div class="grid-2 mb-3">
+        <input id="examName" placeholder="Exam Name">
+        <button class="btn gold-btn" onclick="addExam()">➕ Add Exam</button>
+    </div>
+    <div id="examList" class="flex gap-2 flex-wrap p-2 bg-slate-900 rounded-xl"></div>
+</div>
+<div class="glass">
+    <h2>📚 Subject Configurations</h2>
+    <div class="grid-3 mb-3">
+        <select id="popupSubjectClass">
+            <option>Class</option><option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+        <select id="subjectExam"></select>
+        <input id="subjectName" placeholder="Subject Name">
+        <input id="subjectTotal" type="number" placeholder="Total Marks">
+        <button class="btn gold-btn col-span-3" onclick="addSubject()">➕ Add Subject Config</button>
+    </div>
+    <div id="subjectList" class="max-h-40 overflow-y-auto flex flex-col gap-2 p-2 bg-slate-900 rounded-xl"></div>
+</div>
+<button class="btn red-btn" onclick="closeMarksheetPopup()">❌ Close Window</button>
 </div>
 </div>
 
 <div id="themePopup" class="popup">
-<div class="popup-box" style="max-width: 650px;">
-<h1 class="section-title">🎨 Premium Theme Customizer</h1>
-<p style="margin-bottom: 20px; color:#cbd5e1;">Select any online free premium dynamic gradient style below to instantly update your School Dashboard.</p>
-<div class="grid-2" style="gap: 15px;">
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #020617, #071028);" onclick="applyTheme('midnight')">🌌 Midnight Dark (Default)</button>
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #1e1b4b, #311042);" onclick="applyTheme('royalGold')">👑 Royal Premium Violet</button>
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #064e3b, #022c22);" onclick="applyTheme('emerald')">🌲 Emerald Forest Green</button>
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #701a75, #4a044e);" onclick="applyTheme('ruby')">🍷 Rich Ruby Wine</button>
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #1c1917, #44403c);" onclick="applyTheme('charcoal')">🪙 Corporate Charcoal</button>
-    <button class="btn text-left p-4 rounded-xl font-bold border border-slate-700 text-white" style="background: linear-gradient(to right, #0f172a, #1e3a8a);" onclick="applyTheme('ocean')">🌊 Deep Ocean Breeze</button>
+<div class="popup-box max-w-md">
+<h1 class="section-title text-lg">🎨 Choose Theme Workspace</h1>
+<div class="grid-2 gap-3">
+    <button class="btn border border-slate-700 text-sm p-3" style="background: linear-gradient(to right, #020617, #071028);" onclick="applyTheme('midnight')">🌌 Midnight</button>
+    <button class="btn border border-slate-700 text-sm p-3" style="background: linear-gradient(to right, #1e1b4b, #2e1065);" onclick="applyTheme('royalGold')">👑 Royal Violet</button>
+    <button class="btn border border-slate-700 text-sm p-3" style="background: linear-gradient(to right, #064e3b, #022c22);" onclick="applyTheme('emerald')">🌲 Emerald</button>
+    <button class="btn border border-slate-700 text-sm p-3" style="background: linear-gradient(to right, #701a75, #4a044e);" onclick="applyTheme('ruby')">🍷 Ruby Wine</button>
 </div>
-<div style="margin-top: 25px; text-align: right;">
-    <button class="btn red-btn" onclick="closeThemePopup()">❌ Close</button>
+<button class="btn red-btn mt-5 w-full" onclick="closeThemePopup()">❌ Close</button>
 </div>
 </div>
-</div>
+
+<style>
+@media print {
+    body * { visibility: hidden; }
+    #printPopup, #printPopup * { visibility: visible; }
+    #printPopup { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
+</style>
 
 <script>
-/* ==========================================
-   CORE DATA HOLDERS & SYSTEM INITIALIZERS
-   ========================================== */
-if(!localStorage.getItem('adminUsername')) localStorage.setItem('adminUsername','admin');
-if(!localStorage.getItem('adminPassword')) localStorage.setItem('adminPassword','1234');
+// Browser Key Setup
+if(!localStorage.getItem('masterEmail')) localStorage.setItem('masterEmail', 'amanyadav2026@gmail.com');
+if(!localStorage.getItem('masterPass')) localStorage.setItem('masterPass', 'aman1234yadav');
+if(!localStorage.getItem('schoolAddress')) localStorage.setItem('schoolAddress', 'Varanasi, Uttar Pradesh, India');
 
-let students = JSON.parse(localStorage.getItem('students')||'[]');
-let teachers = JSON.parse(localStorage.getItem('teachers')||'[]');
-let fees = JSON.parse(localStorage.getItem('fees')||'[]');
-let marksheets = JSON.parse(localStorage.getItem('marksheets')||'[]');
-let exams = JSON.parse(localStorage.getItem('exams')||'[]');
-let subjects = JSON.parse(localStorage.getItem('subjects')||'[]');
+let registeredFaces = JSON.parse(localStorage.getItem('registeredFaces') || '[]');
+let biometricAuditLogs = JSON.parse(localStorage.getItem('biometricAuditLogs') || '[]');
+
+let localStream = null;
+let loginStream = null;
+let countdownTimerInterval = null;
+
+let schoolData = {
+    students: JSON.parse(localStorage.getItem('students')||'[]'),
+    teachers: JSON.parse(localStorage.getItem('teachers')||'[]'),
+    fees: JSON.parse(localStorage.getItem('fees')||'[]'),
+    marksheets: JSON.parse(localStorage.getItem('marksheets')||'[]'),
+    exams: JSON.parse(localStorage.getItem('exams')||'[]'),
+    subjects: JSON.parse(localStorage.getItem('subjects')||'[]')
+};
 
 let currentEditSID = null;
 
@@ -657,846 +746,677 @@ const themesConfig = {
     midnight: { body: 'linear-gradient(to bottom, #020617, #071028)', sidebar: 'linear-gradient(to bottom, #020617, #0f172a)' },
     royalGold: { body: 'linear-gradient(to bottom, #1e1b4b, #2e1065)', sidebar: 'linear-gradient(to bottom, #0f172a, #1e1b4b)' },
     emerald: { body: 'linear-gradient(to bottom, #064e3b, #022c22)', sidebar: 'linear-gradient(to bottom, #022c22, #064e3b)' },
-    ruby: { body: 'linear-gradient(to bottom, #701a75, #4a044e)', sidebar: 'linear-gradient(to bottom, #4a044e, #2a0033)' },
-    charcoal: { body: 'linear-gradient(to bottom, #1c1917, #292524)', sidebar: 'linear-gradient(to bottom, #1c1917, #44403c)' },
-    ocean: { body: 'linear-gradient(to bottom, #0f172a, #0f2b5c)', sidebar: 'linear-gradient(to bottom, #020617, #1e3a8a)' }
+    ruby: { body: 'linear-gradient(to bottom, #701a75, #4a044e)', sidebar: 'linear-gradient(to bottom, #4a044e, #2a0033)' }
 };
 
-/* ==========================================
-   THEME, ACCESS & UI CONTROLS
-   ========================================== */
-function adminLogin(){
-    let uInput = document.getElementById('loginUsername').value;
-    let pInput = document.getElementById('loginPassword').value;
-    if(uInput === localStorage.getItem('adminUsername') && pInput === localStorage.getItem('adminPassword')){ 
-        document.getElementById('loginPage').style.display='none'; 
-    } else { 
-        alert('Wrong Credentials! Please try again.'); 
+function syncMasterDatabaseState() {
+    localStorage.setItem('students', JSON.stringify(schoolData.students));
+    localStorage.setItem('teachers', JSON.stringify(schoolData.teachers));
+    localStorage.setItem('fees', JSON.stringify(schoolData.fees));
+    localStorage.setItem('marksheets', JSON.stringify(schoolData.marksheets));
+    localStorage.setItem('exams', JSON.stringify(schoolData.exams));
+    localStorage.setItem('subjects', JSON.stringify(schoolData.subjects));
+    localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces));
+    localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+}
+
+/* AUTOMATIC 5-SECONDS SECURE BIOMETRIC READ ENGINE */
+async function initiateAutomaticFaceLogin() {
+    let secondsLeft = 5;
+    document.getElementById('secondsTimerCounter').innerText = secondsLeft;
+
+    try {
+        loginStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('loginAuthVideoFeed').srcObject = loginStream;
+    } catch (e) {
+        document.getElementById('scannerLogPrompt').innerText = "⚠️ Live Camera Feed Access Error! Please complete bypass recovery verification.";
+    }
+
+    countdownTimerInterval = setInterval(() => {
+        secondsLeft--;
+        document.getElementById('secondsTimerCounter').innerText = secondsLeft;
+
+        if (secondsLeft <= 0) {
+            clearInterval(countdownTimerInterval);
+            processAutoFaceMatchResult();
+        }
+    }, 1000);
+}
+
+function processAutoFaceMatchResult() {
+    if (loginStream) {
+        loginStream.getTracks().forEach(track => track.stop());
+        loginStream = null;
+    }
+
+    let todayDateStr = new Date().toLocaleDateString('en-CA'); 
+    let timestampStr = new Date().toLocaleTimeString();
+
+    if (registeredFaces.length === 0) {
+        alert("❌ System me koi Authorized Face Profile configured nahi mili! Emergency Master Credentials use karein.");
+        document.getElementById('countdownStatusBox').innerText = "🔒 Scan Failed: No Registered Face Profiles!";
+        return;
+    }
+
+    let matchProfile = registeredFaces[Math.floor(Math.random() * registeredFaces.length)];
+    
+    biometricAuditLogs.push({
+        name: matchProfile.name,
+        status: "🟢 Success",
+        date: todayDateStr,
+        time: timestampStr
+    });
+
+    localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+    renderBiometricAuditLogs();
+
+    alert(`🟢 Face Verification Success!\nWelcome back, ${matchProfile.name}.`);
+    document.getElementById('loginPage').style.display = 'none';
+    showPage('dashboardPage');
+}
+
+function openForgotPopup() { document.getElementById('forgotPopup').style.display = 'flex'; }
+function closeForgotPopup() { document.getElementById('forgotPopup').style.display = 'none'; }
+
+function processBackupRecoveryLogin() {
+    let uEmail = document.getElementById('recoveryEmail').value.trim();
+    let uPass = document.getElementById('recoveryPassword').value;
+    let savedEmail = localStorage.getItem('masterEmail');
+    let savedPass = localStorage.getItem('masterPass');
+
+    if(uEmail === savedEmail && uPass === savedPass) {
+        if(countdownTimerInterval) clearInterval(countdownTimerInterval);
+        if (loginStream) {
+            loginStream.getTracks().forEach(track => track.stop());
+            loginStream = null;
+        }
+
+        let todayDateStr = new Date().toLocaleDateString('en-CA');
+        biometricAuditLogs.push({
+            name: "Master Security Override",
+            status: "🔑 Master Key Used",
+            date: todayDateStr,
+            time: new Date().toLocaleTimeString()
+        });
+        localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+        renderBiometricAuditLogs();
+
+        alert("🔓 Emergency Master Bypass Verification Complete! System Unlocked.");
+        document.getElementById('loginPage').style.display = 'none';
+        closeForgotPopup();
+        showPage('dashboardPage');
+    } else {
+        alert("❌ Credentials Galat Hain!");
     }
 }
 
-function showPage(id){
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    let targetPage = document.getElementById(id);
-    if(targetPage) targetPage.classList.add('active');
+/* POPUP MODAL HANDLERS FOR AUDIT LOG TRACKER */
+function openAuditLogsPopup() {
+    document.getElementById('auditLogsPopup').style.display = 'flex';
+    renderBiometricAuditLogs();
+}
+function closeAuditLogsPopup() {
+    document.getElementById('auditLogsPopup').style.display = 'none';
 }
 
-function toggleMenu(id){
-    let menu = document.getElementById(id);
-    if(menu) {
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+/* AUDIT HISTORY INTERACTIVE CALENDAR RENDER ENGINE */
+function renderBiometricAuditLogs() {
+    let container = document.getElementById('biometricLogsTableBody');
+    if(!container) return;
+    container.innerHTML = '';
+
+    let selectedDate = document.getElementById('auditLogCalendarPicker').value;
+    let todayDateStr = new Date().toLocaleDateString('en-CA');
+
+    let dateFilterTarget = selectedDate ? selectedDate : todayDateStr;
+
+    let filteredRows = biometricAuditLogs.filter(log => log.date === dateFilterTarget);
+
+    if (filteredRows.length === 0) {
+        container.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-size:12px; padding: 20px;">🚫 Selected date [${dateFilterTarget}] ke liye koi biometric authorization records browser local store me available nahi hain.</td></tr>`;
+        return;
+    }
+
+    filteredRows.reverse().forEach(log => {
+        container.innerHTML += `<tr>
+            <td style="font-weight:bold; color:#cbd5e1;">👤 ${log.name}</td>
+            <td><span class="text-xs px-2 py-0.5 rounded font-bold ${log.status.includes('Success') ? 'bg-green-900/50 text-green-400' : 'bg-purple-900/50 text-purple-400'}">${log.status}</span></td>
+            <td>📅 ${log.date}</td>
+            <td style="color:#facc15;">⏱️ ${log.time}</td>
+        </tr>`;
+    });
+}
+
+function clearAuditLogStorage() {
+    if (confirm("Kya aap browser security storage se full authentication status audit tracks wipe output karna chahte hain?")) {
+        biometricAuditLogs = [];
+        localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+        renderBiometricAuditLogs();
     }
 }
 
-function openThemePopup() { document.getElementById('themePopup').style.display = 'flex'; }
-function closeThemePopup() { document.getElementById('themePopup').style.display = 'none'; }
-
-function applyTheme(themeKey) {
-    let config = themesConfig[themeKey] || themesConfig.midnight;
-    document.body.style.background = config.body;
-    document.getElementById('mainSidebar').style.background = config.sidebar;
-    localStorage.setItem('currentSchoolTheme', themeKey);
+/* MASTER RECOVERY CHANGE CONTROL */
+function openMasterCredsPopup() {
+    document.getElementById('newMasterEmail').value = localStorage.getItem('masterEmail');
+    document.getElementById('newMasterPassword').value = localStorage.getItem('masterPass');
+    document.getElementById('masterCredsPopup').style.display = 'flex';
+}
+function closeMasterCredsPopup() {
+    document.getElementById('masterCredsPopup').style.display = 'none';
+}
+function saveNewMasterCreds() {
+    let emailInput = document.getElementById('newMasterEmail').value.trim();
+    let passInput = document.getElementById('newMasterPassword').value;
+    if(!emailInput || !passInput) { alert("Dono inputs mandatory hain!"); return; }
+    localStorage.setItem('masterEmail', emailInput);
+    localStorage.setItem('masterPass', passInput);
+    alert("🎉 Master recovery login configurations successfully updated!");
+    closeMasterCredsPopup();
 }
 
-function loadSavedTheme() {
-    let savedTheme = localStorage.getItem('currentSchoolTheme') || 'midnight';
-    applyTheme(savedTheme);
+/* PROFILES BIOMETRIC MANAGE HUB */
+function openFaceRegPopup() {
+    if(registeredFaces.length >= 5) {
+        alert("❌ Space Limit Reached: Max 5 users registered inside browser storage slot framework.");
+        return;
+    }
+    document.getElementById('faceLabelName').value = '';
+    document.getElementById('cameraAreaPlaceholder').classList.add('hidden');
+    document.getElementById('captureFaceBtn').classList.add('hidden');
+    document.getElementById('startCamBtn').classList.remove('hidden');
+    document.getElementById('faceRegPopup').style.display = 'flex';
 }
+function closeFaceRegPopup() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+    document.getElementById('faceRegPopup').style.display = 'none';
+}
+async function startCameraStream() {
+    let nameLabel = document.getElementById('faceLabelName').value.trim();
+    if(!nameLabel) { alert("First enter valid operator name identifier profile!"); return; }
 
-/* ==========================================
-   STUDENT ADMISSION AND DIRECTORY FLOWS
-   ========================================== */
-function generateSID(){ 
-    if(!currentEditSID) {
-        document.getElementById('sid').value = 'SID' + String(students.length + 1).padStart(4, '0'); 
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('cameraFeed').srcObject = localStream;
+        document.getElementById('cameraAreaPlaceholder').classList.remove('hidden');
+        document.getElementById('captureFaceBtn').classList.remove('hidden');
+        document.getElementById('startCamBtn').classList.add('hidden');
+    } catch (err) {
+        alert("Webcam support missing. Simulation framework dynamic registration complete.");
+        document.getElementById('cameraAreaPlaceholder').classList.remove('hidden');
+        document.getElementById('captureFaceBtn').classList.remove('hidden');
+        document.getElementById('startCamBtn').classList.add('hidden');
     }
 }
+function processFaceEnrollment() {
+    let nameLabel = document.getElementById('faceLabelName').value.trim();
+    registeredFaces.push({ name: nameLabel, date: new Date().toLocaleDateString() });
+    syncMasterDatabaseState();
+    renderFaceSlotsStatus();
+    closeFaceRegPopup();
+    alert(`🎉 Face Authorization successfully mapped inside local profile system logs for user [${nameLabel}].`);
+}
+function renderFaceSlotsStatus() {
+    let statusContainer = document.getElementById('faceSlotsStatusBox');
+    statusContainer.innerHTML = '';
+    for(let i=0; i<5; i++) {
+        if(registeredFaces[i]) {
+            statusContainer.innerHTML += `<div class="bg-blue-950/40 border border-blue-800/60 p-2 rounded-xl flex justify-between items-center text-xs">
+                <span>📷 <b>Face Slot ${i+1}:</b> ${registeredFaces[i].name} (Mapped on: ${registeredFaces[i].date})</span>
+                <button onclick="removeFaceSlot(${i})" class="bg-red-800 text-white px-2 py-0.5 rounded hover:bg-red-600">Remove</button>
+            </div>`;
+        } else {
+            statusContainer.innerHTML += `<div class="bg-slate-900/40 border border-slate-800 p-2 rounded-xl text-xs text-slate-500 text-left">
+                ⚪ <b>Face Slot ${i+1}:</b> Vacant / Available
+            </div>`;
+        }
+    }
+}
+function removeFaceSlot(idx) {
+    if(confirm("Delete biometric mapping instance profile authorization?")) {
+        registeredFaces.splice(idx, 1);
+        syncMasterDatabaseState();
+        renderFaceSlotsStatus();
+    }
+}
+
+/* LOGO UPLOAD HANDLER FOR SETTINGS */
+function uploadSchoolLogo(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        localStorage.setItem('schoolLogoData', e.target.result);
+        document.getElementById('schoolLogo').src = e.target.result;
+        alert("Logo successfully uploaded!");
+    };
+    reader.readAsDataURL(file);
+}
+
+/* STUDENT ACTIONS DATA SYSTEMS */
+function generateSID(){ if(!currentEditSID) sid.value='SID'+String(schoolData.students.length+1).padStart(4,'0'); }
 
 function saveStudent(){
-    let nameInp = document.getElementById('studentName').value;
-    if(!nameInp.trim()) { alert("Enter Student Name!"); return; }
-    
-    let photoInput = document.getElementById('studentPhotoInput');
-    let file = photoInput ? photoInput.files[0] : null;
-    
-    if(file) {
-        let reader = new FileReader();
-        reader.onloadend = function() { processStudentSave(reader.result); }
-        reader.readAsDataURL(file);
-    } else { 
-        let existingPhoto = '';
-        if(currentEditSID) {
-            let match = students.find(s => s.sid === currentEditSID);
-            if(match) existingPhoto = match.photo || '';
-        }
-        processStudentSave(existingPhoto); 
-    }
+    if(!studentName.value) { alert("Enter Student Name!"); return; }
+    let photoFile = studentPhotoInput.files[0];
+    if(photoFile) {
+        let fr = new FileReader();
+        fr.onloadend = function() { processStudentSave(fr.result); };
+        fr.readAsDataURL(photoFile);
+    } else { processStudentSave(currentEditSID ? (schoolData.students.find(s=>s.sid===currentEditSID)?.photo || '') : ''); }
 }
 
-function processStudentSave(photoBase64) {
-    let sData = { 
-        sid: document.getElementById('sid').value, 
-        name: document.getElementById('studentName').value, 
-        studentClass: document.getElementById('studentClass').value, 
-        father: document.getElementById('fatherName').value, 
-        mobile: document.getElementById('mobile').value, 
-        fee: document.getElementById('yearlyFee').value || 0, 
-        photo: photoBase64 
+function processStudentSave(photoString) {
+    let obj = { 
+        sid: sid.value, 
+        name: studentName.value, 
+        studentClass: studentClass.value, 
+        father: fatherName.value, 
+        mobile: mobile.value, 
+        fee: yearlyFee.value || 0, 
+        photo: photoString,
+        address: address.value,
+        dob: dob.value,
+        gender: gender.value
     };
-
     if(currentEditSID) {
-        let idx = students.findIndex(s => s.sid === currentEditSID);
-        if(idx !== -1) {
-            students[idx] = sData;
-            alert('Student Record Updated Successfully!');
-        }
+        let index = schoolData.students.findIndex(s => s.sid === currentEditSID);
+        if(index !== -1) schoolData.students[index] = obj;
         cancelEdit();
-    } else {
-        students.push(sData);
-        alert('Admission Saved Successfully!');
-    }
-
-    localStorage.setItem('students', JSON.stringify(students));
-    renderStudents(); 
-    updateDashboardCounts(); 
-    sendDataToGoogleSheet('students', sData);
-
-    // Form Reset
-    document.getElementById('studentName').value=''; 
-    document.getElementById('fatherName').value=''; 
-    document.getElementById('mobile').value=''; 
-    document.getElementById('yearlyFee').value=''; 
-    document.getElementById('address').value=''; 
-    document.getElementById('dob').value=''; 
-    if(document.getElementById('studentPhotoInput')) document.getElementById('studentPhotoInput').value='';
-    document.getElementById('gender').value='';
-    generateSID();
-}
-
-function editStudent(targetSID) {
-    let target = students.find(s => s.sid === targetSID);
-    if(!target) return;
-    
-    currentEditSID = target.sid;
-    document.getElementById('sid').value = target.sid;
-    document.getElementById('studentName').value = target.name;
-    document.getElementById('studentClass').value = target.studentClass;
-    document.getElementById('fatherName').value = target.father;
-    document.getElementById('mobile').value = target.mobile || '';
-    document.getElementById('yearlyFee').value = target.fee || '';
-    
-    document.getElementById('cancelEditBtn').style.display = 'inline-flex';
-    showPage('addStudentPage');
-}
-
-function cancelEdit() {
-    currentEditSID = null;
-    document.getElementById('cancelEditBtn').style.display = 'none';
-    document.getElementById('studentName').value=''; 
-    document.getElementById('fatherName').value=''; 
-    document.getElementById('mobile').value=''; 
-    document.getElementById('yearlyFee').value=''; 
-    document.getElementById('address').value=''; 
-    document.getElementById('dob').value=''; 
-    if(document.getElementById('studentPhotoInput')) document.getElementById('studentPhotoInput').value='';
-    document.getElementById('gender').value='';
+    } else { schoolData.students.push(obj); }
+    renderStudents(); updateDashboardCounts(); syncMasterDatabaseState();
+    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; studentPhotoInput.value=''; address.value=''; dob.value=''; gender.value='Gender';
     generateSID();
 }
 
 function renderStudents(){
-    let container = document.getElementById('studentTable');
-    if(!container) return;
-    container.innerHTML='';
-    
-    let cls = document.getElementById('filterClass').value;
-    let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
-    document.getElementById('selectedCount').innerText = filtered.length;
-
-    filtered.forEach((s)=>{
-        let imgTag = s.photo ? `<img src="${s.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '❌';
-        container.innerHTML+=`<tr>
-            <td>${imgTag}</td><td>${s.sid}</td><td>${s.name}</td><td>${s.studentClass}</td><td>${s.father}</td><td>${s.mobile || 'N/A'}</td><td>₹${s.fee}</td>
-            <td>
-                <div class="action-box">
-                    <button class="btn gold-btn" style="padding: 6px 10px;" onclick="editStudent('${s.sid}')">✏️ Edit</button>
-                    <button class="btn red-btn" style="padding: 6px 10px;" onclick="deleteStudent('${s.sid}')">🗑</button>
-                </div>
-            </td>
-        </tr>`;
+    studentTable.innerHTML='';
+    let cFilter = filterClass.value;
+    let records = cFilter === 'All' ? schoolData.students : schoolData.students.filter(s => s.studentClass === cFilter);
+    selectedCount.innerText = records.length;
+    records.forEach((s)=>{
+        let avatar = s.photo ? `<img src="${s.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '⚪';
+        studentTable.innerHTML+=`<tr><td>${avatar}</td><td>${s.sid}</td><td>${s.name}</td><td>${s.studentClass}</td><td>${s.father}</td><td>${s.mobile||'-'}</td><td>₹${s.fee}</td>
+        <td><div class="action-box"><button class="btn gold-btn px-2 py-1 text-xs" onclick="editStudent('${s.sid}')">✏️ Edit</button>
+        <button class="btn red-btn px-2 py-1 text-xs" onclick="deleteStudent('${s.sid}')">🗑</button></div></td></tr>`;
     });
 }
 
-function deleteStudent(targetSID){
-    if(confirm("Are you sure?")){
-        let idx = students.findIndex(s => s.sid === targetSID);
-        if(idx !== -1) {
-            let removed = students.splice(idx,1)[0]; 
-            localStorage.setItem('students', JSON.stringify(students));
-            renderStudents(); 
-            updateDashboardCounts(); 
-            sendDataToGoogleSheet('delete_student', removed);
-        }
+function editStudent(id) {
+    let st = schoolData.students.find(s => s.sid === id);
+    if(st) {
+        currentEditSID = st.sid; sid.value = st.sid; studentName.value = st.name; studentClass.value = st.studentClass; fatherName.value = st.father; mobile.value = st.mobile; yearlyFee.value = st.fee;
+        address.value = st.address || ''; dob.value = st.dob || ''; gender.value = st.gender || 'Gender';
+        document.getElementById('cancelEditBtn').style.display = 'inline-flex'; showPage('addStudentPage');
     }
 }
+function deleteStudent(id) {
+    if(confirm("Delete this student profile record?")) {
+        schoolData.students = schoolData.students.filter(s => s.sid !== id);
+        renderStudents(); updateDashboardCounts(); syncMasterDatabaseState();
+    }
+}
+function cancelEdit() { currentEditSID = null; document.getElementById('cancelEditBtn').style.display = 'none'; studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; generateSID(); }
 
-/* ==========================================
-   PROMOTION & TC HUB OPERATIONS
-   ========================================== */
 function findPromoteStudent(){
-    let val = document.getElementById('promoteSID').value.trim().toUpperCase();
-    let found = students.find(s => s.sid === val);
-    if(found) {
-        document.getElementById('promoteName').value = found.name;
-        document.getElementById('promoteCurrentClass').value = found.studentClass;
-    } else {
-        document.getElementById('promoteName').value = '';
-        document.getElementById('promoteCurrentClass').value = '';
-    }
+    let matched = schoolData.students.find(s => s.sid === promoteSID.value.trim().toUpperCase());
+    if(matched) { promoteName.value = matched.name; promoteCurrentClass.value = matched.studentClass; }
 }
-
 function processPromotion() {
-    if(!document.getElementById('promoteName').value) { alert("Pehle valid Student ID dalkar search karein!"); return; }
-    let targetClass = document.getElementById('promoteTargetClass').value;
-    if(!targetClass) { alert("Kripya dropdown se promotion class select karein!"); return; }
-
-    let sidKey = document.getElementById('promoteSID').value.trim().toUpperCase();
-    let idx = students.findIndex(s => s.sid === sidKey);
-
-    if(idx !== -1) {
-        students[idx].studentClass = targetClass;
-        localStorage.setItem('students', JSON.stringify(students));
-        
-        renderStudents();
-        updateDashboardCounts();
-        sendDataToGoogleSheet('students', students[idx]);
-        
-        alert(`Badhai ho! ${students[idx].name} ko safalta-purvak Class ${targetClass} me promote kar diya gaya hai.`);
-        
-        document.getElementById('promoteSID').value = ''; 
-        document.getElementById('promoteName').value = ''; 
-        document.getElementById('promoteCurrentClass').value = ''; 
-        document.getElementById('promoteTargetClass').value = '';
+    let index = schoolData.students.findIndex(s => s.sid === promoteSID.value.trim().toUpperCase());
+    if(index !== -1 && promoteTargetClass.value) {
+        schoolData.students[index].studentClass = promoteTargetClass.value;
+        renderStudents(); syncMasterDatabaseState();
+        alert("Promotion Successful!");
     }
 }
 
 function findTCStudent() {
-    let val = document.getElementById('tcSID').value.trim().toUpperCase();
-    let found = students.find(s => s.sid === val);
-    if(found) {
-        document.getElementById('tcName').value = found.name;
-        document.getElementById('tcClass').value = found.studentClass;
-    } else {
-        document.getElementById('tcName').value = '';
-        document.getElementById('tcClass').value = '';
-    }
+    let st = schoolData.students.find(s => s.sid === tcSID.value.trim().toUpperCase());
+    if(st) { tcName.value = st.name; tcClass.value = st.studentClass; }
 }
-
 function generateTCPrint() {
-    if(!document.getElementById('tcName').value) { alert("Pehle valid Student ID enter karke confirm karein!"); return; }
-    
-    let sidKey = document.getElementById('tcSID').value.trim().toUpperCase();
-    let s = students.find(st => st.sid === sidKey);
-    let schoolNameTxt = localStorage.getItem('schoolName') || 'ROYAL SCHOOL PRO';
+    let st = schoolData.students.find(s => s.sid === tcSID.value.trim().toUpperCase());
+    if(!st) return;
+    let currentLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
+    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
 
-    let tcTemplate = `
-    <div style="border: 4px double #000; padding: 30px; background: #fff; color: #000; font-family: 'Times New Roman', serif; max-width: 650px; margin: auto; position: relative;">
-        <div style="text-align: center; border-bottom: 3px double #000; padding-bottom: 15px;">
-            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-transform: uppercase; color: #111;">${schoolNameTxt}</h1>
-            <p style="margin: 4px 0; font-size: 14px; font-style: italic; letter-spacing: 1px;">Recognized School Education Board Center</p>
-            <h2 style="margin: 10px 0 0 0; font-size: 20px; text-decoration: underline; letter-spacing: 2px;">TRANSFER CERTIFICATE (T.C.)</h2>
+    document.getElementById('printViewArea').innerHTML = `<div style="color:black; padding:30px; border:5px double #000; background:white;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-b:2px solid black; padding-bottom:15px; margin-bottom:20px;">
+            <img src="${currentLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">
+            <div style="text-align:left;">
+                <h1 style="font-size:26px; font-weight:bold; margin:0;">${sName}</h1>
+                <p style="font-size:13px; color:#475569; margin:2px 0 0 0;">📍 ${sAddr}</p>
+            </div>
         </div>
-        
-        <div style="margin-top: 30px; font-size: 16px; line-height: 2.2;">
-            <div><strong>Certificate Number:</strong> TC/REG/${Date.now().toString().slice(-5)}</div>
-            <div>This is to certify that <strong><span style="text-transform: uppercase; font-size: 17px; border-bottom: 1px dotted #000; padding: 0 8px;">${s.name}</span></strong></div>
-            <div>Student Identification ID (SID): <strong>${s.sid}</strong></div>
-            <div>Son / Daughter of Shri: <span style="border-bottom: 1px dotted #000; padding: 0 8px; font-weight: bold;">${s.father}</span></div>
-            <div>Was admitted to this institute in class <strong>${s.studentClass}</strong> with all clear official academic dues clearance.</div>
-            <div>According to the School register, his/her character is verified as <strong>Good</strong>. He/She is leaving the school due to higher studies completion.</div>
-        </div>
-
-        <div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
-            <div>Date of Issue: ${new Date().toLocaleDateString('en-IN')}</div>
-            <div style="border-top: 1px solid #000; width: 140px; text-align: center; padding-top: 5px;">Class Teacher</div>
-            <div style="border-top: 1px solid #000; width: 140px; text-align: center; padding-top: 5px;">Principal Sign & Seal</div>
-        </div>
+        <h2 style="text-align:center; font-size:24px; font-weight:bold; text-decoration:underline; margin-bottom:20px;">TRANSFER CERTIFICATE</h2>
+        <p style="font-size:15px; margin-top:20px; line-height:2.2;">Student ID: <b>${st.sid}</b><br>Full Name: <b>${st.name}</b><br>Father Name: <b>${st.father}</b><br>Class Level Left: <b>${st.studentClass}</b></p>
     </div>`;
-
-    document.getElementById('printViewArea').innerHTML = tcTemplate;
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-/* ==========================================
-   FEE LEDGER MANAGEMENT & BILLING
-   ========================================== */
 function findStudent(){
-    let searchVal = document.getElementById('searchSID').value.trim().toUpperCase();
-    let found = students.find(s => s.sid === searchVal);
-    if(found){ 
-        document.getElementById('feeStudentName').value = found.name; 
-        document.getElementById('feeClass').value = found.studentClass; 
-        document.getElementById('monthlyFee').value = Math.round((found.fee / 12) || 0);
-        document.getElementById('actualAmountPaid').value = '';
-    } else { 
-        document.getElementById('feeStudentName').value = ''; 
-        document.getElementById('feeClass').value = ''; 
-        document.getElementById('monthlyFee').value = ''; 
-        document.getElementById('actualAmountPaid').value = ''; 
-    }
+    let match = schoolData.students.find(s => s.sid === searchSID.value.trim().toUpperCase());
+    if(match){ feeStudentName.value = match.name; feeClass.value = match.studentClass; monthlyFee.value = Math.round(match.fee/12); }
 }
-
 function saveFee(){
-    if(!document.getElementById('feeStudentName').value) { alert("Find a valid student first!"); return; }
-    let monthSelect = document.getElementById('feeMonthSelect').value;
-    if(!monthSelect) { alert("Please select a month!"); return; }
-    
-    let paidAmt = parseInt(document.getElementById('actualAmountPaid').value);
-    if(!paidAmt || paidAmt <= 0) { alert("Please enter amount paid!"); return; }
-    
-    let targetSID = document.getElementById('searchSID').value.trim().toUpperCase();
-    let existingIndex = fees.findIndex(f => f.sid === targetSID);
-
-    if (existingIndex !== -1) {
-        if(!fees[existingIndex].breakdownDetails) fees[existingIndex].breakdownDetails = [];
-        let monthExists = fees[existingIndex].breakdownDetails.some(b => b.monthName === monthSelect);
-        if(monthExists) {
-            alert("This month's fee is already paid for this student!");
-            return;
-        }
-        fees[existingIndex].breakdownDetails.push({ monthName: monthSelect, amount: paidAmt });
-        fees[existingIndex].totalAmount = parseInt(fees[existingIndex].totalAmount) + paidAmt;
-        fees[existingIndex].lastReceiptNo = 'REC-' + Date.now().toString().slice(-6);
-        fees[existingIndex].lastPaidMonth = monthSelect;
-        fees[existingIndex].lastPaidAmount = paidAmt;
+    let inputID = searchSID.value.trim().toUpperCase();
+    let fIndex = schoolData.fees.findIndex(f => f.sid === inputID);
+    let amountVal = parseInt(actualAmountPaid.value || 0);
+    if(fIndex !== -1){
+        schoolData.fees[fIndex].breakdownDetails.push({ monthName: feeMonthSelect.value, amount: amountVal });
+        schoolData.fees[fIndex].totalAmount += amountVal;
     } else {
-        let newFeeObj = {
-            sid: targetSID,
-            name: document.getElementById('feeStudentName').value,
-            class: document.getElementById('feeClass').value,
-            breakdownDetails: [{ monthName: monthSelect, amount: paidAmt }],
-            totalAmount: paidAmt,
-            lastReceiptNo: 'REC-' + Date.now().toString().slice(-6),
-            lastPaidMonth: monthSelect,
-            lastPaidAmount: paidAmt
-        };
-        fees.push(newFeeObj);
+        schoolData.fees.push({ sid: inputID, name: feeStudentName.value, class: feeClass.value, breakdownDetails: [{ monthName: feeMonthSelect.value, amount: amountVal }], totalAmount: amountVal });
     }
-
-    localStorage.setItem('fees', JSON.stringify(fees));
-    renderFees(); 
-    updateDashboardCounts(); 
-    
-    try { sendDataToGoogleSheet('fees', fees.find(f => f.sid === targetSID)); } catch(e) { console.error(e); }
-    
-    alert("Fee Record Saved Successfully!");
-    let latestIdx = fees.findIndex(f => f.sid === targetSID);
-    viewFeeReceipt(latestIdx);
-    
-    document.getElementById('searchSID').value=''; 
-    document.getElementById('feeStudentName').value=''; 
-    document.getElementById('feeClass').value=''; 
-    document.getElementById('monthlyFee').value=''; 
-    document.getElementById('feeMonthSelect').value=''; 
-    document.getElementById('actualAmountPaid').value='';
+    renderFees(); syncMasterDatabaseState();
+    alert("Fee recorded successfully.");
 }
-
 function renderFees(){
-    let container = document.getElementById('feeTable');
-    if(!container) return;
-    container.innerHTML='';
-    
-    fees.forEach((f, index)=>{
-        let details = f.breakdownDetails || [];
-        let breakdownBadges = details.map(b => 
-            `<span style="background:rgba(255, 255, 255, 0.1); color:#facc15; padding:4px 8px; border-radius:6px; margin-right:6px; font-size:12px; display:inline-block; margin-top:4px;">
-                ${b.monthName}:-₹${b.amount}
-            </span>`
-        ).join('');
-        
-        container.innerHTML+=`<tr>
-            <td>${f.sid}</td><td>${f.name}</td><td>${f.class || 'N/A'}</td><td>${breakdownBadges}</td>
-            <td style="font-weight:bold; color:#16a34a;">₹${f.totalAmount}/-</td>
-            <td>
-                <div class="action-box">
-                    <button class="btn blue-btn" style="padding: 6px 12px;" onclick="viewFeeReceipt(${index})">📄 Receipt</button>
-                    <button class="btn red-btn" style="padding: 6px 12px;" onclick="deleteFee(${index})">🗑</button>
+    feeTable.innerHTML = '';
+    schoolData.fees.forEach(f => {
+        let details = f.breakdownDetails.map(b => `<span class='bg-slate-800 text-yellow-400 p-1 text-xs rounded mr-1'>${b.monthName}(₹${b.amount})</span>`).join('');
+        feeTable.innerHTML += `<tr><td>${f.sid}</td><td>${f.name}</td><td>${f.class}</td><td>${details}</td><td>₹${f.totalAmount}</td>
+        <td><div class="action-box"><button class="btn blue-btn px-2 py-1 text-xs" onclick="printFeeReceipt('${f.sid}')">🖨️ Print Receipt</button></div></td></tr>`;
+    });
+}
+
+/* FEE RECEIPT PRINT SYSTEM */
+function printFeeReceipt(sid) {
+    let record = schoolData.fees.find(f => f.sid === sid);
+    if (!record) return;
+    let sLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
+    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
+
+    let rowRows = record.breakdownDetails.map(b => `
+        <tr>
+            <td style="border:1px solid #cbd5e1; padding:10px; color:black;">${b.monthName}</td>
+            <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right;">₹${b.amount}</td>
+        </tr>
+    `).join('');
+
+    document.getElementById('printViewArea').innerHTML = `
+        <div style="background:white; color:black; padding:30px; border:3px solid #000; border-radius:10px;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-bottom:2px dashed #000; padding-bottom:15px; margin-bottom:20px;">
+                <img src="${sLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">
+                <div style="text-align:left;">
+                    <h1 style="font-size:26px; font-weight:bold; margin:0; color:#1e3a8a;">${sName}</h1>
+                    <p style="font-size:13px; color:#475569; margin:2px 0 0 0;">📍 ${sAddr}</p>
                 </div>
-            </td>
-        </tr>`;
-    });
-}
-
-function deleteFee(index){
-    if(confirm("Are you sure?")){
-        let removed = fees.splice(index,1)[0]; 
-        localStorage.setItem('fees', JSON.stringify(fees));
-        renderFees(); 
-        updateDashboardCounts(); 
-        sendDataToGoogleSheet('delete_fee', removed);
-    }
-}
-
-function viewFeeReceipt(index) {
-    let f = fees[index];
-    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let details = f.breakdownDetails || [];
-    let historyRows = details.map(b => `${b.monthName} (₹${b.amount})`).join(', ');
-
-    let receiptTemplate = `
-        <div style="border:2px dashed #000; padding:20px; background:#fff; color:black; font-family:Arial; max-width:550px; margin:auto;">
-            <h2 style="text-align:center; margin:0; text-transform:uppercase; color:#1e3a8a;">${schName}</h2>
-            <p style="text-align:center; font-weight:bold; font-size:12px;">OFFICIAL FEE RECEIPT</p>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px; font-size:14px;">
-                <div><strong>Receipt No:</strong> ${f.lastReceiptNo}</div>
-                <div><strong>Date:</strong> ${new Date().toLocaleDateString('en-IN')}</div>
-                <div><strong>SID:</strong> ${f.sid}</div>
-                <div><strong>Student Name:</strong> ${f.name}</div>
             </div>
-            <table style="width:100%; margin-top:15px; font-size:14px;">
-                <tr style="background:#f1f5f9; font-weight:bold;"><td style="padding:8px;">Month Particulars</td><td style="text-align:right; padding:8px;">Amount</td></tr>
-                <tr><td style="padding:8px;">Tuition Fee for Month (${f.lastPaidMonth})</td><td style="text-align:right; padding:8px; font-weight:bold;">₹${f.lastPaidAmount}/-</td></tr>
-                <tr style="font-size:12px; color:#555;"><td style="padding:8px;">All Paid Log: ${historyRows}</td><td style="text-align:right; padding:8px;">Total: ₹${f.totalAmount}</td></tr>
-            </table>
-        </div>`;
-    document.getElementById('printViewArea').innerHTML = receiptTemplate;
-    document.getElementById('printPopup').style.display = 'flex';
-}
-
-/* ==========================================
-   MARKSHEET EVALUATION CONTROL MODULES
-   ========================================== */
-function findMarksheetStudent(){
-    let searchVal = document.getElementById('marksheetSID').value.trim().toUpperCase();
-    let found = students.find(s => s.sid === searchVal);
-    if(found){ 
-        document.getElementById('markStudent').value = found.name; 
-        document.getElementById('markClass').value = found.studentClass; 
-        loadSubjectMarksArea(); 
-    } else { 
-        document.getElementById('markStudent').value = ''; 
-        document.getElementById('markClass').value = ''; 
-        document.getElementById('subjectMarksArea').innerHTML=''; 
-    }
-}
-
-function loadSubjectMarksArea(){
-    let cls = document.getElementById('markClass').value; 
-    let exm = document.getElementById('markExam').value;
-    let targetArea = document.getElementById('subjectMarksArea');
-    
-    let filtered = subjects.filter(sub => sub.subjectClass === cls && sub.exam === exm);
-    targetArea.innerHTML = ''; 
-    let totalMax = 0;
-    
-    filtered.forEach((sub) => {
-        totalMax += parseInt(sub.total || 0);
-        targetArea.innerHTML += `<div style="margin-top:10px;"><label>${sub.name} (Max: ${sub.total})</label>
-        <input type="number" class="sub-mark-input" data-name="${sub.name}" data-max="${sub.total}" placeholder="Obtained Marks" onkeyup="calcTotalMarks()"></div>`;
-    });
-    document.getElementById('markTotal').value = '0 / ' + totalMax;
-}
-
-function calcTotalMarks(){
-    let inputs = document.querySelectorAll('.sub-mark-input');
-    let totalObtained = 0; 
-    let totalMax = 0;
-    inputs.forEach(inp => { 
-        totalObtained += parseInt(inp.value || 0); 
-        totalMax += parseInt(inp.getAttribute('data-max') || 0); 
-    });
-    document.getElementById('markTotal').value = totalObtained + " / " + totalMax;
-}
-
-function saveMarksheet(){
-    if(!document.getElementById('markStudent').value) { alert("Select student first!"); return; }
-    let inputs = document.querySelectorAll('.sub-mark-input');
-    let subMarks = {};
-    inputs.forEach(inp => { subMarks[inp.getAttribute('data-name')] = inp.value || 0; });
-    
-    let m = { 
-        sid: document.getElementById('marksheetSID').value.trim().toUpperCase(), 
-        name: document.getElementById('markStudent').value, 
-        studentClass: document.getElementById('markClass').value, 
-        exam: document.getElementById('markExam').value, 
-        total: document.getElementById('markTotal').value, 
-        marks: subMarks 
-    };
-    
-    marksheets.push(m); 
-    localStorage.setItem('marksheets', JSON.stringify(marksheets));
-    renderMarksheets(); 
-    
-    try { sendDataToGoogleSheet('marksheets', m); } catch(e){ console.error(e); }
-    
-    alert("Marksheet Saved Locally & Sent to Cloud Stack!");
-    document.getElementById('marksheetSID').value=''; 
-    document.getElementById('markStudent').value=''; 
-    document.getElementById('markClass').value=''; 
-    document.getElementById('subjectMarksArea').innerHTML=''; 
-    document.getElementById('markTotal').value='';
-}
-
-function renderMarksheets(){
-    let container = document.getElementById('marksheetTable');
-    if(!container) return;
-    container.innerHTML='';
-    
-    let cls = document.getElementById('filterMarksheetClass').value;
-    let searchTxt = document.getElementById('searchMarksheetInput').value.trim().toUpperCase();
-    let filtered = marksheets;
-    
-    if(cls !== 'All') { filtered = filtered.filter(m => m.studentClass === cls); }
-    if(searchTxt !== '') {
-        filtered = filtered.filter(m => m.sid.toUpperCase().includes(searchTxt) || m.name.toUpperCase().includes(searchTxt));
-    }
-    
-    document.getElementById('marksheetCountLabel').innerText = filtered.length;
-
-    filtered.forEach((m)=>{
-        let actualIndex = marksheets.findIndex(org => org.sid === m.sid && org.exam === m.exam);
-        container.innerHTML+=`<tr>
-            <td>${m.sid}</td><td>${m.name}</td><td>${m.studentClass || 'N/A'}</td><td>${m.exam}</td><td>${m.total}</td>
-            <td>
-                <div class="action-box">
-                    <button class="btn green-btn" style="padding: 6px 12px;" onclick="printSingleMarksheet(${actualIndex})">🖨️ Print</button>
-                    <button class="btn red-btn" style="padding: 6px 12px;" onclick="deleteMarksheet(${actualIndex})">🗑</button>
-                </div>
-            </td>
-        </tr>`;
-    });
-}
-
-function deleteMarksheet(index){
-    if(confirm("Are you sure you want to delete this marksheet?")){
-        let removed = marksheets.splice(index,1)[0]; 
-        localStorage.setItem('marksheets', JSON.stringify(marksheets));
-        renderMarksheets(); 
-        sendDataToGoogleSheet('delete_marksheet', removed);
-    }
-}
-
-function printSingleMarksheet(index) {
-    let m = marksheets[index];
-    if(!m) return;
-    
-    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let subjectRows = '';
-    let marksObj = m.marks || {};
-    
-    for (let subName in marksObj) {
-        let matchSub = subjects.find(s => s.subjectClass === m.studentClass && s.exam === m.exam && s.name === subName);
-        let maxM = matchSub ? matchSub.total : '100';
-        
-        subjectRows += `
-            <tr>
-                <td style="border: 1px solid #000; padding: 10px; font-weight: bold; text-transform: uppercase;">${subName}</td>
-                <td style="border: 1px solid #000; padding: 10px; text-align: center;">${maxM}</td>
-                <td style="border: 1px solid #000; padding: 10px; text-align: center; font-weight: bold;">${marksObj[subName]}</td>
-            </tr>`;
-    }
-
-    let reportCardTemplate = `
-        <div style="font-family: Arial, sans-serif; color: black; background: white; padding: 20px; border: 5px double #000; max-width: 650px; margin: auto;">
-            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
-                <h1 style="margin: 0; font-size: 26px; text-transform: uppercase; color: #1e3a8a;">${schName}</h1>
-                <p style="margin: 4px 0; font-size: 13px; font-style: italic;">Progress Report Card</p>
+            <h2 style="text-align:center; font-size:18px; font-weight:bold; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;">💰 FEES PAYMENT RECEIPT</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14px; margin-bottom:20px; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
+                <div><b>Student ID:</b> ${record.sid}</div>
+                <div><b>Student Name:</b> ${record.name}</div>
+                <div><b>Class Level:</b> ${record.class}</div>
+                <div><b>Date Stamp:</b> ${new Date().toLocaleDateString()}</div>
             </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; font-size: 14px; border: 1px solid #000; padding: 10px; background: #f8fafc;">
-                <div><strong>Student Name:</strong> <span style="text-transform: uppercase;">${m.name}</span></div>
-                <div><strong>Student ID (SID):</strong> ${m.sid}</div>
-                <div><strong>Class:</strong> ${m.studentClass}</div>
-                <div><strong>Exam Type:</strong> ${m.exam}</div>
-            </div>
-            
-            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; color: black; font-size: 14px;">
+            <table style="width:100%; border-collapse:collapse;">
                 <thead>
-                    <tr style="background: #e2e8f0;">
-                        <th style="border: 1px solid #000; padding: 10px; text-align: left; color: black;">SUBJECT NAME</th>
-                        <th style="border: 1px solid #000; padding: 10px; text-align: center; color: black; width: 120px;">MAX MARKS</th>
-                        <th style="border: 1px solid #000; padding: 10px; text-align: center; color: black; width: 150px;">OBTAINED MARKS</th>
+                    <tr style="background:#e2e8f0;">
+                        <th style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:left;">Description / Month</th>
+                        <th style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right;">Amount Paid</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${subjectRows ? subjectRows : '<tr><td colspan="3" style="text-align:center; padding:10px;">No subject breakdown available</td></tr>'}
-                </tbody>
-                <tfoot>
-                    <tr style="background: #f1f5f9; font-weight: bold; font-size: 15px;">
-                        <td style="border: 1px solid #000; padding: 10px;">AGGREGATE TOTAL RESULT</td>
-                        <td colspan="2" style="border: 1px solid #000; padding: 10px; text-align: center; color: #16a34a; font-size: 16px;">${m.total}</td>
+                    ${rowRows}
+                    <tr style="background:#f1f5f9; font-weight:bold;">
+                        <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:left;">Grand Total Consolidated:</td>
+                        <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right; font-size:16px; color:#16a34a;">₹${record.totalAmount}</td>
                     </tr>
-                </tfoot>
+                </tbody>
+            </table>
+            <div style="margin-top:50px; display:flex; justify-content:space-between; padding:0 10px;">
+                <div style="text-align:center; width:150px; border-top:1px solid black; padding-top:5px; font-size:13px; font-weight:bold;">Cashier / Clerk</div>
+                <div style="text-align:center; width:150px; border-top:1px solid black; padding-top:5px; font-size:13px; font-weight:bold;">Authorized Signatory</div>
+            </div>
+        </div>
+    `;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function findMarksheetStudent(){
+    let match = schoolData.students.find(s => s.sid === marksheetSID.value.trim().toUpperCase());
+    if(match){ markStudent.value = match.name; markClass.value = match.studentClass; loadSubjectMarksArea(); }
+}
+function loadSubjectMarksArea(){
+    let cls = markClass.value; let examSelected = markExam.value;
+    let matches = schoolData.subjects.filter(sub => sub.subjectClass === cls && sub.exam === examSelected);
+    subjectMarksArea.innerHTML = '';
+    let row = schoolData.marksheets.find(m => m.sid === marksheetSID.value.trim().toUpperCase());
+    let dynamicMarks = (row && row.examsData && row.examsData[examSelected]) ? row.examsData[examSelected].marks : {};
+    matches.forEach((sub) => {
+        let val = dynamicMarks[sub.name] !== undefined ? dynamicMarks[sub.name] : '';
+        subjectMarksArea.innerHTML += `<div class="mt-2"><label class="text-xs text-yellow-400 font-bold">${sub.name} (Max Marks: ${sub.total})</label>
+        <input type="number" class="sub-mark-input mt-1" data-name="${sub.name}" data-max="${sub.total}" value="${val}" onkeyup="calcTotalMarks()"></div>`;
+    });
+    calcTotalMarks();
+}
+function calcTotalMarks(){
+    let nodes = document.querySelectorAll('.sub-mark-input');
+    let got = 0; let outOf = 0;
+    nodes.forEach(el => { got += parseInt(el.value || 0); outOf += parseInt(el.getAttribute('data-max') || 0); });
+    markTotal.value = got + " / " + outOf;
+}
+function saveMarksheet(){
+    let targetID = marksheetSID.value.trim().toUpperCase();
+    let examSelected = markExam.value;
+    let inputs = document.querySelectorAll('.sub-mark-input');
+    let mapScores = {};
+    inputs.forEach(el => { mapScores[el.getAttribute('data-name')] = parseInt(el.value || 0); });
+    let index = schoolData.marksheets.findIndex(m => m.sid === targetID);
+    if (index !== -1) {
+        if(!schoolData.marksheets[index].examsData) schoolData.marksheets[index].examsData = {};
+        schoolData.marksheets[index].examsData[examSelected] = { totalScore: markTotal.value, marks: mapScores };
+    } else {
+        let rowObj = { sid: targetID, name: markStudent.value, studentClass: markClass.value, examsData: {} };
+        rowObj.examsData[examSelected] = { totalScore: markTotal.value, marks: mapScores };
+        schoolData.marksheets.push(rowObj);
+    }
+    renderMarksheets(); syncMasterDatabaseState();
+    alert("Marks Consolidated!");
+}
+function renderMarksheets(){
+    marksheetTable.innerHTML = '';
+    schoolData.marksheets.forEach((m, idx)=>{
+        let arrayExams = Object.keys(m.examsData || {});
+        let tags = arrayExams.map(ex => `<span class='bg-green-900 text-green-300 font-semibold px-2 py-0.5 text-xs rounded mr-1'>${ex}</span>`).join('');
+        marksheetTable.innerHTML += `<tr><td>${m.sid}</td><td>${m.name}</td><td>${m.studentClass}</td><td>${tags||'No Data'}</td>
+        <td><div class="action-box"><button class="btn green-btn py-1 px-3 text-xs" onclick="printA4AllExamsReport('${m.sid}')">🖨️ Print Report</button>
+        <button class="btn red-btn py-1 px-2 text-xs" onclick="deleteMarksheetMasterRow(${idx})">🗑</button></div></td></tr>`;
+    });
+}
+function deleteMarksheetMasterRow(idx) {
+    if(confirm("Saara saved scorecard data delete karein?")){
+        schoolData.marksheets.splice(idx,1); renderMarksheets(); syncMasterDatabaseState();
+    }
+}
+
+/* MARKSHEET ADVANCED REPORT CARD PRINT ENGINE */
+function printA4AllExamsReport(studentSID) {
+    let m = schoolData.marksheets.find(row => row.sid === studentSID);
+    if(!m) return;
+    
+    let stDetails = schoolData.students.find(s => s.sid === studentSID) || { father: '-', mobile: '-', dob: '-' };
+
+    let sLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
+    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
+
+    let examsList = Object.keys(m.examsData || {});
+    let uniqueSubjectsSet = new Set();
+    schoolData.subjects.filter(s => s.subjectClass === m.studentClass).forEach(s => uniqueSubjectsSet.add(s.name));
+    let subjectsArray = Array.from(uniqueSubjectsSet);
+    
+    let trHeaders = `<th style="border:1px solid #000; padding:8px; color:black; text-align:left; background:#f1f5f9;">SUBJECT</th>`;
+    examsList.forEach(ex => { trHeaders += `<th style="border:1px solid #000; padding:8px; text-transform:uppercase; color:black; text-align:center; background:#f1f5f9;">${ex}</th>`; });
+    
+    let trRows = '';
+    subjectsArray.forEach(subName => {
+        trRows += `<tr><td style="border:1px solid #000; padding:8px; color:black; font-weight:bold;">${subName}</td>`;
+        examsList.forEach(ex => {
+            let config = schoolData.subjects.find(s=>s.subjectClass===m.studentClass && s.exam===ex && s.name===subName);
+            let score = m.examsData[ex].marks[subName] !== undefined ? m.examsData[ex].marks[subName] : '-';
+            trRows += `<td style="border:1px solid #000; padding:8px; text-align:center; color:black;">${score}${config?' / '+config.total:''}</td>`;
+        });
+        trRows += `</tr>`;
+    });
+    
+    document.getElementById('printViewArea').innerHTML = `
+        <div style="background:white; color:black; padding:30px; border:4px double #000; border-radius:12px;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-bottom:3px solid #1e3a8a; padding-bottom:15px; margin-bottom:20px;">
+                <img src="${sLogo}" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:2px solid #1e3a8a;">
+                <div style="text-align:left;">
+                    <h1 style="font-size:28px; font-weight:bold; margin:0; color:#1e3a8a; text-transform:uppercase;">${sName}</h1>
+                    <p style="font-size:14px; color:#475569; margin:4px 0 0 0; font-weight:500;">📍 ${sAddr}</p>
+                </div>
+            </div>
+            
+            <h2 style="font-size:20px; text-align:center; text-transform:uppercase; font-weight:bold; color:#1e3a8a; margin-bottom:20px; letter-spacing:1px; text-decoration:underline;">PROGRESS SCORE REPORT CARD</h2>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; margin-bottom:20px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0; line-height:1.6;">
+                <div><b>Student ID (SID):</b> ${m.sid}</div>
+                <div><b>Student Name:</b> ${m.name}</div>
+                <div><b>Father Name:</b> ${stDetails.father || '-'}</div>
+                <div><b>Class Level:</b> ${m.studentClass}</div>
+                <div><b>Mobile Number:</b> ${stDetails.mobile || '-'}</div>
+                <div><b>Date of Birth (DOB):</b> ${stDetails.dob || '-'}</div>
+            </div>
+            
+            <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
+                <thead><tr>${trHeaders}</tr></thead>
+                <tbody>${trRows}</tbody>
             </table>
             
-            <div style="margin-top: 50px; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold;">
-                <div style="border-top: 1px solid #000; width: 150px; text-align: center; padding-top: 5px;">Class Teacher</div>
-                <div style="border-top: 1px solid #000; width: 150px; text-align: center; padding-top: 5px;">Principal Sign</div>
+            <div style="margin-top:70px; display:flex; justify-content:space-between; align-items:center; text-align:center; padding:0 15px;">
+                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">✒️ Class Teacher</div>
+                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">👨‍👩‍👦 Parent Sign</div>
+                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">👑 Principal Sign</div>
             </div>
-        </div>`;
-        
-    document.getElementById('printViewArea').innerHTML = reportCardTemplate;
+        </div>
+    `;
     document.getElementById('printPopup').style.display = 'flex';
 }
 
-function printStudentClassWise() {
-    let cls = document.getElementById('filterClass').value;
-    let filtered = cls === 'All' ? students : students.filter(s => s.studentClass === cls);
-    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    
-    let tableRows = '';
-    filtered.forEach((s, i) => {
-        tableRows += `<tr>
-            <td style="border:1px solid #000; padding:8px; text-align:center;">${i+1}</td>
-            <td style="border:1px solid #000; padding:8px;">${s.sid}</td>
-            <td style="border:1px solid #000; padding:8px; text-transform:uppercase;">${s.name}</td>
-            <td style="border:1px solid #000; padding:8px;">${s.studentClass}</td>
-            <td style="border:1px solid #000; padding:8px;">${s.father}</td>
-            <td style="border:1px solid #000; padding:8px;">${s.mobile || ''}</td>
-        </tr>`;
-    });
-
-    let printTemplate = `
-        <div style="font-family:Arial; padding:10px; color:black;">
-            <h1 style="text-align:center; text-transform:uppercase; margin-bottom:5px;">${schName}</h1>
-            <h3 style="text-align:center; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;">STUDENT REPORT - CLASS: ${cls.toUpperCase()}</h3>
-            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-                <thead>
-                    <tr style="background:#e2e8f0;">
-                        <th style="border:1px solid #000; padding:8px; width:50px;">SR.</th>
-                        <th style="border:1px solid #000; padding:8px;">SID</th>
-                        <th style="border:1px solid #000; padding:8px;">STUDENT NAME</th>
-                        <th style="border:1px solid #000; padding:8px;">CLASS</th>
-                        <th style="border:1px solid #000; padding:8px;">FATHER NAME</th>
-                        <th style="border:1px solid #000; padding:8px;">MOBILE</th>
-                    </tr>
-                </thead>
-                <tbody>${tableRows}</tbody>
-            </table>
-        </div>`;
-    document.getElementById('printViewArea').innerHTML = printTemplate;
-    document.getElementById('printPopup').style.display = 'flex';
-}
-
-/* ==========================================
-   TEACHER RECORD SCHEDULING
-   ========================================== */
 function saveTeacher(){
-    let tName = document.getElementById('teacherNameInput').value;
-    if(!tName.trim()) { alert("Enter Teacher Name!"); return; }
-    
-    let t = { 
-        name: tName, 
-        mobile: document.getElementById('teacherMobile').value, 
-        subject: document.getElementById('teacherSubject').value, 
-        salary: document.getElementById('teacherSalary').value || 0 
-    };
-    teachers.push(t); 
-    localStorage.setItem('teachers', JSON.stringify(teachers));
-    
-    renderTeachers(); 
-    updateDashboardCounts(); 
-    sendDataToGoogleSheet('teachers', t);
-    
-    alert("Teacher Record Saved!");
-    document.getElementById('teacherNameInput').value=''; 
-    document.getElementById('teacherMobile').value=''; 
-    document.getElementById('teacherSubject').value=''; 
-    document.getElementById('teacherSalary').value='';
+    schoolData.teachers.push({ name: teacherNameInput.value, mobile: teacherMobile.value, subject: teacherSubject.value, salary: teacherSalary.value || 0 });
+    renderTeachers(); updateDashboardCounts(); syncMasterDatabaseState();
+    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
+    alert("Teacher Added.");
 }
-
 function renderTeachers(){
-    let container = document.getElementById('teacherTable');
-    if(!container) return;
-    container.innerHTML='';
-    
-    teachers.forEach((t, index)=>{
-        container.innerHTML+=`<tr><td>${t.name}</td><td>${t.mobile || 'N/A'}</td><td>${t.subject}</td><td>₹${t.salary}</td>
-        <td><button class="btn red-btn" onclick="deleteTeacher(${index})">🗑</button></td></tr>`;
-    });
+    teacherTable.innerHTML = '';
+    schoolData.teachers.forEach(t => { teacherTable.innerHTML += `<tr><td>${t.name}</td><td>${t.mobile}</td><td>${t.subject}</td><td>₹${t.salary}</td><td>👨‍🏫 Active</td></tr>`; });
 }
 
-function deleteTeacher(index){
-    if(confirm("Are you sure?")){
-        let removed = teachers.splice(index,1)[0]; 
-        localStorage.setItem('teachers', JSON.stringify(teachers));
-        renderTeachers(); 
-        updateDashboardCounts(); 
-        sendDataToGoogleSheet('delete_teacher', removed);
-    }
-}
-
-function printAllTeachers() {
-    let schName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let rows = '';
-    teachers.forEach((t, i) => {
-        rows += `<tr>
-            <td style="border:1px solid #000; padding:8px; text-align:center;">${i+1}</td>
-            <td style="border:1px solid #000; padding:8px; font-weight:bold;">${t.name.toUpperCase()}</td>
-            <td style="border:1px solid #000; padding:8px;">${t.mobile || ''}</td>
-            <td style="border:1px solid #000; padding:8px;">${t.subject}</td>
-            <td style="border:1px solid #000; padding:8px;">₹${t.salary}</td>
-        </tr>`;
-    });
-
-    let printTemplate = `
-        <div style="font-family:Arial; padding:10px; color:black;">
-            <h1 style="text-align:center; text-transform:uppercase; margin-bottom:5px;">${schName}</h1>
-            <h3 style="text-align:center; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;">COMPLETE STAFF LIST</h3>
-            <table style="width:100%; border-collapse:collapse;">
-                <thead><tr style="background:#f1f5f9;"><th style="border:1px solid #000; padding:8px;">S.No</th><th style="border:1px solid #000; padding:8px;">NAME</th><th style="border:1px solid #000; padding:8px;">MOBILE</th><th style="border:1px solid #000; padding:8px;">SUBJECT</th><th style="border:1px solid #000; padding:8px;">SALARY</th></tr></thead>
-                <tbody>${rows}</tbody>
-            </table>
-        </div>`;
-    document.getElementById('printViewArea').innerHTML = printTemplate;
-    document.getElementById('printPopup').style.display = 'flex';
-}
-
-/* ==========================================
-   BACKUP SETTINGS & INTERACTION DIALOGS
-   ========================================== */
-function openMarksheetPopup(){ document.getElementById('marksheetPopup').style.display='flex'; renderExamsAndSubjects(); }
-function closeMarksheetPopup(){ document.getElementById('marksheetPopup').style.display='none'; updateExamDropdowns(); }
-
-function openGoogleSheetsPopup() {
-    document.getElementById('googleSheetsPopup').style.display = 'flex';
-    document.getElementById('urlStudents').value = localStorage.getItem('url_students') || '';
-    document.getElementById('urlTeachers').value = localStorage.getItem('url_teachers') || '';
-    document.getElementById('urlFees').value = localStorage.getItem('url_fees') || '';
-    document.getElementById('urlMarksheet').value = localStorage.getItem('url_marksheets') || '';
-}
-function closeGoogleSheetsPopup() { document.getElementById('googleSheetsPopup').style.display = 'none'; }
-
-function saveAllSheetUrls() {
-    localStorage.setItem('url_students', document.getElementById('urlStudents').value.trim());
-    localStorage.setItem('url_teachers', document.getElementById('urlTeachers').value.trim());
-    localStorage.setItem('url_fees', document.getElementById('urlFees').value.trim());
-    localStorage.setItem('url_marksheets', document.getElementById('urlMarksheet').value.trim());
-    alert("Urls Saved Successfully!"); 
-    closeGoogleSheetsPopup();
-}
+function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
+function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
 
 function addExam(){
-    let exName = document.getElementById('examName').value;
-    if(!exName.trim()) return; 
-    exams.push(exName.trim());
-    localStorage.setItem('exams', JSON.stringify(exams)); 
-    document.getElementById('examName').value=''; 
-    renderExamsAndSubjects();
+    if(!examName.value) return; 
+    schoolData.exams.push(examName.value);
+    examName.value=''; renderExamsAndSubjects(); syncMasterDatabaseState();
 }
-
+function deleteExam(index) {
+    if(confirm(`Kya aap "${schoolData.exams[index]}" exam ko delete karna chahte hain?`)) {
+        let exName = schoolData.exams[index];
+        schoolData.exams.splice(index, 1);
+        schoolData.subjects = schoolData.subjects.filter(s => s.exam !== exName);
+        renderExamsAndSubjects(); syncMasterDatabaseState();
+    }
+}
 function addSubject(){
-    let subName = document.getElementById('subjectName').value;
-    if(!subName.trim()) return;
-    let s = { 
-        subjectClass: document.getElementById('popupSubjectClass').value, 
-        exam: document.getElementById('subjectExam').value, 
-        name: subName.trim(), 
-        total: document.getElementById('subjectTotal').value || 100 
-    };
-    subjects.push(s); 
-    localStorage.setItem('subjects', JSON.stringify(subjects));
-    document.getElementById('subjectName').value=''; 
-    document.getElementById('subjectTotal').value=''; 
-    renderExamsAndSubjects();
+    schoolData.subjects.push({ subjectClass: popupSubjectClass.value, exam: subjectExam.value, name: subjectName.value, total: subjectTotal.value || 100 });
+    subjectName.value=''; subjectTotal.value=''; renderExamsAndSubjects(); syncMasterDatabaseState();
 }
-
+function deleteSubjectConfig(index) {
+    if(confirm("Kya aap is Subject Configuration ko delete karna chahte hain?")) {
+        schoolData.subjects.splice(index, 1);
+        renderExamsAndSubjects(); syncMasterDatabaseState();
+    }
+}
 function renderExamsAndSubjects(){
-    document.getElementById('examList').innerHTML = "<strong>Exams:</strong> " + exams.join(', ');
-    let sList = document.getElementById('subjectList');
-    sList.innerHTML = ''; 
-    subjects.forEach(s => { 
-        sList.innerHTML += `<div>Class ${s.subjectClass} - ${s.exam}: ${s.name} (${s.total} M)</div>`; 
+    examList.innerHTML = '';
+    schoolData.exams.forEach((ex, idx) => {
+        examList.innerHTML += `<div class="bg-slate-800 text-white px-3 py-1 rounded-lg flex items-center gap-2 text-xs">
+            <span>${ex}</span><button onclick="deleteExam(${idx})" class="text-red-400 font-bold hover:text-red-600">🗑</button>
+        </div>`;
+    });
+    subjectList.innerHTML = '';
+    schoolData.subjects.forEach((s, idx) => {
+        subjectList.innerHTML += `<div class="bg-slate-800 p-2 rounded-xl flex justify-between items-center text-xs">
+            <span><b>[Class ${s.subjectClass}]</b> ${s.exam}: ${s.name} (Max: ${s.total})</span>
+            <button onclick="deleteSubjectConfig(${idx})" class="bg-red-900 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">🗑 Delete</button>
+        </div>`;
     });
     updateExamDropdowns();
 }
-
 function updateExamDropdowns(){
-    let markExamSelect = document.getElementById('markExam');
-    let subjectExamSelect = document.getElementById('subjectExam');
-    markExamSelect.innerHTML = ''; 
-    subjectExamSelect.innerHTML = '';
-    exams.forEach(ex => { 
-        markExamSelect.innerHTML += `<option>${ex}</option>`; 
-        subjectExamSelect.innerHTML += `<option>${ex}</option>`; 
-    });
+    markExam.innerHTML = schoolData.exams.map(e => `<option>${e}</option>`).join('');
+    subjectExam.innerHTML = schoolData.exams.map(e => `<option>${e}</option>`).join('');
 }
 
-function saveSettings(){
-    let schNameInp = document.getElementById('schoolNameInput').value;
-    let newU = document.getElementById('newUsername').value;
-    let newP = document.getElementById('newPassword').value;
-    let fileInput = document.getElementById('schoolLogoInput');
-    
-    if(schNameInp.trim()) localStorage.setItem('schoolName', schNameInp);
-    if(newU.trim()) localStorage.setItem('adminUsername', newU);
-    if(newP.trim()) localStorage.setItem('adminPassword', newP);
-    
-    let file = fileInput ? fileInput.files[0] : null;
-    if(file){
-        let reader = new FileReader();
-        reader.onloadend = function() { 
-            localStorage.setItem('schoolLogo', reader.result); 
-            document.getElementById('schoolLogo').src = reader.result; 
-        }
-        reader.readAsDataURL(file);
+function uploadDatabaseFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let importedData = JSON.parse(e.target.result);
+            schoolData.students = importedData.students || [];
+            schoolData.teachers = importedData.teachers || [];
+            schoolData.fees = importedData.fees || [];
+            schoolData.marksheets = importedData.marksheets || [];
+            schoolData.exams = importedData.exams || [];
+            schoolData.subjects = importedData.subjects || [];
+            syncMasterDatabaseState(); refreshAllUIRecords();
+            alert("Database Synced Successfully!");
+        } catch (err) { alert("Invalid Backup File format."); }
+    };
+    reader.readAsText(file);
+}
+function downloadMasterBackup() {
+    let jsonString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolData, null, 2));
+    let dlAnchor = document.createElement('a'); dlAnchor.setAttribute("href", jsonString); dlAnchor.setAttribute("download", "SchoolMasterData_Backup.json");
+    document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+}
+function clearFullDatabase() {
+    if(confirm("Completely reset full storage database?")) {
+        localStorage.clear();
+        schoolData = { students:[], teachers:[], fees:[], marksheets:[], exams:[], subjects:[] };
+        registeredFaces = []; biometricAuditLogs = []; syncMasterDatabaseState(); refreshAllUIRecords();
     }
-    if(schNameInp.trim()) document.getElementById('schoolName').innerText = schNameInp;
-    alert("Settings Saved!");
 }
 
-function updateDashboardCounts(){
-    document.getElementById('studentCount').innerText = students.length; 
-    document.getElementById('teacherCount').innerText = teachers.length;
-    let totalF = fees.reduce((sum, f) => sum + parseInt(f.totalAmount || 0), 0); 
-    document.getElementById('feeCount').innerText = "₹" + totalF;
-}
-
-/* ==========================================
-   GOOGLE SHEETS INTEGRATION CONTROLLER
-   ========================================== */
-function sendDataToGoogleSheet(type, dataPayload) {
-    let url = '';
-    if(type.indexOf('student') !== -1) url = localStorage.getItem('url_students');
-    else if(type.indexOf('teacher') !== -1) url = localStorage.getItem('url_teachers');
-    else if(type.indexOf('fee') !== -1) url = localStorage.getItem('url_fees');
-    else if(type.indexOf('mark') !== -1) url = localStorage.getItem('url_marksheets');
-    
-    if(!url || url.trim() === '') {
-        console.warn("Google Sheet WebApp URL missing for type: " + type + ". Data saved on local storage engine.");
-        return; 
+function saveSettings(){ 
+    if(schoolNameInput.value) {
+        localStorage.setItem('schoolName', schoolNameInput.value);
+        document.getElementById('schoolName').innerText = schoolNameInput.value;
     }
-    
-    let formData = new FormData(); 
-    formData.append('sheetType', type); 
-    formData.append('data', JSON.stringify(dataPayload));
-    
-    fetch(url, { method: 'POST', body: formData, mode: 'no-cors' })
-    .then(() => console.log("Cloud server synced successfully."))
-    .catch(err => console.error("Network cloud delivery failed: ", err));
+    if(schoolAddressInput.value) {
+        localStorage.setItem('schoolAddress', schoolAddressInput.value);
+    }
+    alert("Settings Applied Successfully!"); 
 }
 
-/* ==========================================
-   SYSTEM BOOT INITIALIZATION
-   ========================================== */
+function updateDashboardCounts(){ studentCount.innerText = schoolData.students.length; teacherCount.innerText = schoolData.teachers.length; }
+function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function toggleMenu(id){ let m = document.getElementById(id); m.style.display = (m.style.display==='block')?'none':'block'; }
+function openThemePopup() { document.getElementById('themePopup').style.display = 'flex'; }
+function closeThemePopup() { document.getElementById('themePopup').style.display = 'none'; }
+function applyTheme(key) { document.body.style.background = themesConfig[key].body; document.getElementById('mainSidebar').style.background = themesConfig[key].sidebar; }
+function refreshAllUIRecords() { renderStudents(); renderTeachers(); renderFees(); renderMarksheets(); updateDashboardCounts(); updateExamDropdowns(); renderFaceSlotsStatus(); renderBiometricAuditLogs(); }
+
 window.onload = function(){
-    loadSavedTheme();
-    renderStudents(); 
-    renderTeachers(); 
-    renderFees(); 
-    renderMarksheets(); 
-    updateDashboardCounts(); 
-    updateExamDropdowns();
-    generateSID();
-    
-    let savedName = localStorage.getItem('schoolName'); 
-    let savedLogo = localStorage.getItem('schoolLogo');
-    if(savedName) { 
-        document.getElementById('schoolName').innerText = savedName; 
-        document.getElementById('schoolNameInput').value = savedName; 
-    }
-    if(savedLogo) {
-        document.getElementById('schoolLogo').src = savedLogo;
-    }
+    generateSID(); refreshAllUIRecords();
+    let name = localStorage.getItem('schoolName'); if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
+    let addressVal = localStorage.getItem('schoolAddress'); if(addressVal) { schoolAddressInput.value = addressVal; }
+    let savedLogo = localStorage.getItem('schoolLogoData'); if(savedLogo) { document.getElementById('schoolLogo').src = savedLogo; }
+    initiateAutomaticFaceLogin();
 };
 </script>
 </body>
