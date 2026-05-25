@@ -616,6 +616,17 @@ overflow-y: auto;
 <div id="settingsPage" class="page">
 <div class="glass">
 <h1 class="section-title">⚙ Settings & Biometric Panel</h1>
+<div class="glass mb-5 p-4 flex flex-col md:flex-row items-center gap-4" style="border:1px solid rgba(250,204,21,0.15); background:rgba(15,23,42,0.85);">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:48px; height:48px; border-radius:14px; background:#ffffff; display:flex; align-items:center; justify-content:center;">
+            <img src="https://www.gstatic.com/devrel-devsite/prod/vc8c0ed1e33f2cd0029537053ff5154d09895a003432ed24247ee6f8d0183c1ec/cloud/images/favicons/onecloud/favicon.ico" alt="Google Cloud" style="width:28px; height:28px;">
+        </div>
+    </div>
+    <div>
+        <h2 class="text-yellow-400 font-bold text-base mb-1">Google Cloud Welcome</h2>
+        <p class="text-sm text-slate-300 leading-relaxed">Project number: <strong>508600830980</strong> · Project ID: <strong>school-database-497006</strong>. Yeh project Google Drive aur Drive API ke liye configure karein, taaki aap apna database file Drive me save kar saken.</p>
+    </div>
+</div>
 <div class="grid-4 items-center gap-5">
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">📷 AI FACE DETECTION</label>
@@ -865,7 +876,7 @@ function revealERPInterface() {
 }
 
 function signUpWithGoogle() {
-    alert('Google signup clicked. Configure Google Drive API or Google Identity to create a Drive file and store your database.');
+    alert('Google Cloud project set: 508600830980 / school-database-497006. Configure Google Drive API or Google Identity to create your database file in Drive.');
 }
 
 function syncMasterDatabaseState() {
