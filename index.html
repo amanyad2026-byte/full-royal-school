@@ -23,7 +23,7 @@ transition: background 0.5s ease;
 }
 
 /* AUTOMATIC FACE LOGIN BANNER */
-#loginPage{
+#loginPage {
 position:fixed;
 top:0;
 left:0;
@@ -53,8 +53,8 @@ color:#facc15;
 font-weight: bold;
 }
 
-/* SIDEBAR & OVERALL ERP */
-.sidebar{
+/* SIDEBAR & OVERALL ERP (Hidden during Login View Mode) */
+.sidebar {
 width:280px;
 height:100vh;
 position:fixed;
@@ -65,6 +65,8 @@ padding:20px;
 border-right:2px solid #facc15;
 overflow-y:auto;
 transition: background 0.5s ease;
+display: none; /* Hide by default on login screen */
+z-index: 1000;
 }
 
 .logo-box{
@@ -117,6 +119,7 @@ margin-left:15px;
 .main{
 margin-left:280px;
 padding:30px;
+display: none; /* Hide main body element content during login session frame */
 }
 
 .page{
@@ -160,7 +163,7 @@ grid-template-columns:repeat(2,1fr);
 gap:20px;
 }
 
-input,select{
+input,select,textarea{
 width:100%;
 padding:14px;
 border:none;
@@ -191,6 +194,8 @@ transform:scale(1.04);
 .green-btn{ background:#16a34a; color:white; }
 .red-btn{ background:#dc2626; color:white; }
 .purple-btn{ background:#7c3aed; color:white; }
+.google-btn{ background:#ffffff; color:#1f2937; border:1px solid rgba(0,0,0,0.1); }
+.google-btn img{width:18px; height:18px;}
 
 table{
 width:100%;
@@ -327,11 +332,14 @@ overflow-y: auto;
 <div id="teacherMenu" class="dropdown">
 <button class="menu-btn" onclick="showPage('addTeacherPage')">➕ Add Teacher</button>
 <button class="menu-btn" onclick="showPage('teacherRecordPage')">📋 Teacher Records</button>
+<button class="menu-btn" onclick="showPage('teacherSalaryPage')">💰 Salary Ledger</button>
 </div>
 <button class="menu-btn" onclick="toggleMenu('feeMenu')">💰 Fees ▼</button>
 <div id="feeMenu" class="dropdown">
 <button class="menu-btn" onclick="showPage('addFeePage')">➕ Add Fee</button>
 <button class="menu-btn" onclick="showPage('feeRecordPage')">📋 Fee Records</button>
+<button class="menu-btn" onclick="showPage('admitCardPage')">🎟️ Admit Card Engine</button>
+<button class="menu-btn" onclick="showPage('feeNoticePage')">⚠️ Fee Due Notices</button>
 </div>
 <button class="menu-btn" onclick="toggleMenu('marksMenu')">📝 Marksheet ▼</button>
 <div id="marksMenu" class="dropdown">
@@ -341,7 +349,7 @@ overflow-y: auto;
 <button class="menu-btn" onclick="showPage('settingsPage')">⚙ Settings</button>
 </div>
 
-<div class="main">
+<div class="main" id="mainContentBlock">
 
 <div id="dashboardPage" class="page">
 <div class="grid-3">
@@ -367,7 +375,7 @@ overflow-y: auto;
 <div class="glass">
 <h1 class="section-title">🎓 Student Admission</h1>
 <div class="grid-3">
-<input id="sid" readonly>
+<input id="sid" readonly style="font-weight: bold; color: #facc15;">
 <input id="studentName" placeholder="Student Name">
 <select id="studentClass">
 <option value="">Select Class</option>
@@ -376,6 +384,7 @@ overflow-y: auto;
 <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
 </select>
 <input id="fatherName" placeholder="Father Name">
+<input id="motherNameInput" placeholder="Mother Name">
 <input id="mobile" placeholder="Mobile Number">
 <input id="yearlyFee" type="number" placeholder="Yearly Fee">
 <input id="address" placeholder="Address">
@@ -452,6 +461,7 @@ overflow-y: auto;
 <div class="glass">
 <h1 class="section-title">👨‍🏫 Add Teacher</h1>
 <div class="grid-3">
+<input id="teacherTID" readonly style="font-weight: bold; color: #facc15;">
 <input id="teacherNameInput" placeholder="Teacher Name">
 <input id="teacherMobile" placeholder="Mobile Number">
 <input id="teacherSubject" placeholder="Subject">
@@ -466,10 +476,24 @@ overflow-y: auto;
 <h1 class="section-title">📋 Teacher Records</h1>
 <table>
 <thead>
-<tr><th>Name</th><th>Mobile</th><th>Subject</th><th>Salary</th><th>Action</th></tr>
+<tr><th>TID</th><th>Name</th><th>Mobile</th><th>Subject</th><th>Salary Reference</th><th>Salary Ledger Statement (Date-wise)</th><th>Action</th></tr>
 </thead>
 <tbody id="teacherTable"></tbody>
 </table>
+</div>
+</div>
+
+<div id="teacherSalaryPage" class="page">
+<div class="glass">
+<h1 class="section-title">💰 Teacher Salary Ledger & Distribution</h1>
+<div class="grid-3">
+    <input id="salarySearchTID" placeholder="Enter Teacher TID" onkeyup="findSalaryTeacher()">
+    <input id="salaryTeacherName" readonly placeholder="Teacher Name">
+    <input id="salaryTeacherSubject" readonly placeholder="Subject Field">
+    <input id="salaryTransactionDate" type="date">
+    <input id="salaryDistributedAmount" type="number" placeholder="Enter Distributed Amount">
+</div>
+<button class="btn green-btn mt-5" onclick="distributeTeacherSalary()">💸 Disburse Salary to Teacher</button>
 </div>
 </div>
 
@@ -506,6 +530,62 @@ overflow-y: auto;
 </div>
 </div>
 
+<div id="admitCardPage" class="page">
+<div class="glass">
+<h1 class="section-title">🎟️ Examination Admit Card Engine</h1>
+<div class="grid-3 items-end">
+    <div>
+        <label class="text-xs text-yellow-400 block mb-1">Class Filter:</label>
+        <select id="admitCardClassFilter" onchange="renderAdmitCardEngineTable()">
+            <option value="All">All Classes</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 block mb-1">Search Minimum Paid Fee Amount (+):</label>
+        <input id="admitCardFeeMinSearch" type="number" placeholder="e.g. 500" value="500" onkeyup="renderAdmitCardEngineTable()">
+    </div>
+    <button class="btn purple-btn" onclick="printBulkFilteredAdmitCards()">🖨️ Bulk Print Filtered Admit Cards</button>
+</div>
+<table class="mt-5">
+<thead>
+    <tr><th>SID</th><th>Name</th><th>Class</th><th>Total Paid Fee</th><th>Action</th></tr>
+</thead>
+<tbody id="admitCardEngineTableBody"></tbody>
+</table>
+</div>
+</div>
+
+<div id="feeNoticePage" class="page">
+<div class="glass">
+<h1 class="section-title">⚠️ Due Fee Reminders & Notices Hub</h1>
+<div class="grid-3 items-end">
+    <div>
+        <label class="text-xs text-yellow-400 block mb-1">Class Wise Filter:</label>
+        <select id="noticeClassFilter" onchange="renderNoticeEngineTable()">
+            <option value="All">All Classes</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 block mb-1">Search Maximum Paid Limit (-):</label>
+        <input id="noticeFeeMaxSearch" type="number" placeholder="Show below amount jinka jama hai" value="2000" onkeyup="renderNoticeEngineTable()">
+    </div>
+    <button class="btn red-btn" onclick="printBulkFilteredNotices()">🖨️ Bulk Preview & Print Notices</button>
+</div>
+<table class="mt-5">
+<thead>
+    <tr><th>SID</th><th>Name</th><th>Class</th><th>Total Paid Fee</th><th>Action</th></tr>
+</thead>
+<tbody id="noticeEngineTableBody"></tbody>
+</table>
+</div>
+</div>
+
 <div id="addMarksheetPage" class="page">
 <div class="glass">
 <h1 class="section-title">📝 Add Student Marks</h1>
@@ -533,10 +613,10 @@ overflow-y: auto;
 </div>
 </div>
 
-<div id="settingsPage" class="page active">
+<div id="settingsPage" class="page">
 <div class="glass">
 <h1 class="section-title">⚙ Settings & Biometric Panel</h1>
-<div class="grid-3 items-center gap-5">
+<div class="grid-4 items-center gap-5">
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">📷 AI FACE DETECTION</label>
         <button class="btn green-btn w-full" onclick="openFaceRegPopup()">➕ Register New Face Profile</button>
@@ -548,6 +628,10 @@ overflow-y: auto;
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">🏫 UPLOAD SCHOOL LOGO</label>
         <input type="file" id="schoolLogoUploadInput" accept="image/*" onchange="uploadSchoolLogo(event)" style="padding:10px;">
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">📝 NOTICE TEMPLATE</label>
+        <button class="btn gold-btn w-full" onclick="openNoticeEditorPopup()">✏️ Edit Notice Template</button>
     </div>
 </div>
 
@@ -576,12 +660,36 @@ overflow-y: auto;
 </div>
 
 <div class="mt-5 flex gap-3 flex-wrap">
+<button class="btn google-btn" onclick="signUpWithGoogle()" style="gap:10px; color:#111827; font-weight:700;">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Signup with Google Drive
+</button>
 <button class="btn gold-btn" onclick="saveSettings()">💾 Save Config</button>
 <button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Engine</button>
 <button class="btn purple-btn" onclick="openThemePopup()">🎨 Themes</button>
 </div>
 </div>
 
+</div>
+
+<div id="noticeEditorPopup" class="popup">
+    <div class="popup-box" style="max-width: 650px;">
+        <h2 class="text-yellow-400 font-bold text-xl mb-3">📝 Notice Template Variable Config Editor</h2>
+        <p class="text-xs text-slate-400 mb-2">Niche diye gaye buttons par click karke unhe template me automated link karein:</p>
+        <div class="flex flex-wrap gap-2 mb-3">
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[SID]')">Student SID</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[NAME]')">Full Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[FATHER]')">Father Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[MOTHER]')">Mother Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[TOTAL]')">Total Fee</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[PAID]')">Paid Fee</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[DUE]')">Due Fee</button>
+        </div>
+        <textarea id="noticeTemplateTextArea" rows="8" class="w-full text-sm p-3 bg-slate-950 border border-slate-700 rounded-xl mb-4 text-white" placeholder="Write notice content here..."></textarea>
+        <div class="flex gap-3 justify-end">
+            <button class="btn green-btn" onclick="saveNoticeTemplateText()">💾 Save Template</button>
+            <button class="btn red-btn" onclick="document.getElementById('noticeEditorPopup').style.display='none'">❌ Close</button>
+        </div>
+    </div>
 </div>
 
 <div id="auditLogsPopup" class="popup">
@@ -622,7 +730,7 @@ overflow-y: auto;
 </div>
 
 <div id="printPopup" class="popup">
-<div class="popup-box" style="max-width: 800px; background: white;">
+<div class="popup-box" style="max-width: 800px; background: white; margin-top:20px; margin-bottom:20px;">
 <div id="printViewArea"></div>
 <div class="mt-5 flex gap-3 no-print">
 <button class="btn green-btn" onclick="window.print()">🖨 Print Now</button>
@@ -723,6 +831,9 @@ overflow-y: auto;
 if(!localStorage.getItem('masterEmail')) localStorage.setItem('masterEmail', 'amanyadav2026@gmail.com');
 if(!localStorage.getItem('masterPass')) localStorage.setItem('masterPass', 'aman1234yadav');
 if(!localStorage.getItem('schoolAddress')) localStorage.setItem('schoolAddress', 'Varanasi, Uttar Pradesh, India');
+if(!localStorage.getItem('noticeTemplateText')) {
+    localStorage.setItem('noticeTemplateText', 'Dear Parent, Aapke bache [NAME] (ID: [SID]) ki total fee Rs.[TOTAL] hai jisme se Rs.[PAID] jama hai aur Rs.[DUE] baki hai. Kripya samay par baki shulk jama karein.');
+}
 
 let registeredFaces = JSON.parse(localStorage.getItem('registeredFaces') || '[]');
 let biometricAuditLogs = JSON.parse(localStorage.getItem('biometricAuditLogs') || '[]');
@@ -739,7 +850,6 @@ let schoolData = {
     exams: JSON.parse(localStorage.getItem('exams')||'[]'),
     subjects: JSON.parse(localStorage.getItem('subjects')||'[]')
 };
-
 let currentEditSID = null;
 
 const themesConfig = {
@@ -748,6 +858,15 @@ const themesConfig = {
     emerald: { body: 'linear-gradient(to bottom, #064e3b, #022c22)', sidebar: 'linear-gradient(to bottom, #022c22, #064e3b)' },
     ruby: { body: 'linear-gradient(to bottom, #701a75, #4a044e)', sidebar: 'linear-gradient(to bottom, #4a044e, #2a0033)' }
 };
+
+function revealERPInterface() {
+    document.getElementById('mainSidebar').style.display = 'block';
+    document.getElementById('mainContentBlock').style.display = 'block';
+}
+
+function signUpWithGoogle() {
+    alert('Google signup clicked. Configure Google Drive API or Google Identity to create a Drive file and store your database.');
+}
 
 function syncMasterDatabaseState() {
     localStorage.setItem('students', JSON.stringify(schoolData.students));
@@ -764,18 +883,15 @@ function syncMasterDatabaseState() {
 async function initiateAutomaticFaceLogin() {
     let secondsLeft = 5;
     document.getElementById('secondsTimerCounter').innerText = secondsLeft;
-
     try {
         loginStream = await navigator.mediaDevices.getUserMedia({ video: true });
         document.getElementById('loginAuthVideoFeed').srcObject = loginStream;
     } catch (e) {
         document.getElementById('scannerLogPrompt').innerText = "⚠️ Live Camera Feed Access Error! Please complete bypass recovery verification.";
     }
-
     countdownTimerInterval = setInterval(() => {
         secondsLeft--;
         document.getElementById('secondsTimerCounter').innerText = secondsLeft;
-
         if (secondsLeft <= 0) {
             clearInterval(countdownTimerInterval);
             processAutoFaceMatchResult();
@@ -788,30 +904,20 @@ function processAutoFaceMatchResult() {
         loginStream.getTracks().forEach(track => track.stop());
         loginStream = null;
     }
-
-    let todayDateStr = new Date().toLocaleDateString('en-CA'); 
+    let todayDateStr = new Date().toLocaleDateString('en-CA');
     let timestampStr = new Date().toLocaleTimeString();
-
     if (registeredFaces.length === 0) {
         alert("❌ System me koi Authorized Face Profile configured nahi mili! Emergency Master Credentials use karein.");
         document.getElementById('countdownStatusBox').innerText = "🔒 Scan Failed: No Registered Face Profiles!";
         return;
     }
-
     let matchProfile = registeredFaces[Math.floor(Math.random() * registeredFaces.length)];
-    
-    biometricAuditLogs.push({
-        name: matchProfile.name,
-        status: "🟢 Success",
-        date: todayDateStr,
-        time: timestampStr
-    });
-
+    biometricAuditLogs.push({ name: matchProfile.name, status: "🟢 Success", date: todayDateStr, time: timestampStr });
     localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
     renderBiometricAuditLogs();
-
     alert(`🟢 Face Verification Success!\nWelcome back, ${matchProfile.name}.`);
     document.getElementById('loginPage').style.display = 'none';
+    revealERPInterface();
     showPage('dashboardPage');
 }
 
@@ -823,596 +929,874 @@ function processBackupRecoveryLogin() {
     let uPass = document.getElementById('recoveryPassword').value;
     let savedEmail = localStorage.getItem('masterEmail');
     let savedPass = localStorage.getItem('masterPass');
-
-    if(uEmail === savedEmail && uPass === savedPass) {
-        if(countdownTimerInterval) clearInterval(countdownTimerInterval);
-        if (loginStream) {
-            loginStream.getTracks().forEach(track => track.stop());
-            loginStream = null;
-        }
-
-        let todayDateStr = new Date().toLocaleDateString('en-CA');
-        biometricAuditLogs.push({
-            name: "Master Security Override",
-            status: "🔑 Master Key Used",
-            date: todayDateStr,
-            time: new Date().toLocaleTimeString()
-        });
-        localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
-        renderBiometricAuditLogs();
-
-        alert("🔓 Emergency Master Bypass Verification Complete! System Unlocked.");
+    if (uEmail === savedEmail && uPass === savedPass) {
+        if (loginStream) { loginStream.getTracks().forEach(t => t.stop()); loginStream = null; }
+        clearInterval(countdownTimerInterval);
+        alert("🔓 Bypass Authorized Success!");
+        document.getElementById('forgotPopup').style.display = 'none';
         document.getElementById('loginPage').style.display = 'none';
-        closeForgotPopup();
+        revealERPInterface();
         showPage('dashboardPage');
     } else {
-        alert("❌ Credentials Galat Hain!");
+        alert("❌ Invalid Recovery Credentials!");
     }
 }
 
-/* POPUP MODAL HANDLERS FOR AUDIT LOG TRACKER */
-function openAuditLogsPopup() {
-    document.getElementById('auditLogsPopup').style.display = 'flex';
-    renderBiometricAuditLogs();
+// 1, 2, 3... Serial Wise ID Generator
+function generateSID(){
+    let nextIndex = schoolData.students.length + 1;
+    document.getElementById('sid').value = nextIndex;
 }
-function closeAuditLogsPopup() {
-    document.getElementById('auditLogsPopup').style.display = 'none';
+function generateTID(){
+    let nextIndex = schoolData.teachers.length + 1;
+    document.getElementById('teacherTID').value = nextIndex;
 }
 
-/* AUDIT HISTORY INTERACTIVE CALENDAR RENDER ENGINE */
-function renderBiometricAuditLogs() {
-    let container = document.getElementById('biometricLogsTableBody');
-    if(!container) return;
-    container.innerHTML = '';
+// Student Operations
+function saveStudent() {
+    let photoInput = document.getElementById('studentPhotoInput');
+    if(photoInput.files && photoInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            executeStudentSave(e.target.result);
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        let existingPhoto = "";
+        if(currentEditSID) {
+            let existingObj = schoolData.students.find(s => String(s.sid) === String(currentEditSID));
+            if(existingObj) existingPhoto = existingObj.photo || "";
+        }
+        executeStudentSave(existingPhoto);
+    }
+}
 
-    let selectedDate = document.getElementById('auditLogCalendarPicker').value;
-    let todayDateStr = new Date().toLocaleDateString('en-CA');
+function executeStudentSave(photoDataString) {
+    let nameVal = document.getElementById('studentName').value.trim();
+    let classVal = document.getElementById('studentClass').value;
+    let fatherVal = document.getElementById('fatherName').value.trim();
+    let motherVal = document.getElementById('motherNameInput').value.trim();
+    let mobVal = document.getElementById('mobile').value.trim();
+    let feeVal = parseFloat(document.getElementById('yearlyFee').value) || 0;
+    let addressVal = document.getElementById('address').value.trim();
+    let dobVal = document.getElementById('dob').value;
+    let genVal = document.getElementById('gender').value;
 
-    let dateFilterTarget = selectedDate ? selectedDate : todayDateStr;
+    if(!nameVal || !classVal) { alert("Please complete Name and Class fields."); return; }
 
-    let filteredRows = biometricAuditLogs.filter(log => log.date === dateFilterTarget);
-
-    if (filteredRows.length === 0) {
-        container.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-size:12px; padding: 20px;">🚫 Selected date [${dateFilterTarget}] ke liye koi biometric authorization records browser local store me available nahi hain.</td></tr>`;
-        return;
+    if(currentEditSID) {
+        let idx = schoolData.students.findIndex(s => String(s.sid) === String(currentEditSID));
+        if(idx !== -1) {
+            schoolData.students[idx] = { 
+                sid: currentEditSID, name: nameVal, class: classVal, father: fatherVal, 
+                mother: motherVal, mobile: mobVal, yearlyFee: feeVal, address: addressVal, 
+                dob: dobVal, gender: genVal, photo: photoDataString 
+            };
+        }
+        currentEditSID = null;
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        alert("Student record updated successfully.");
+    } else {
+        let sidVal = document.getElementById('sid').value;
+        schoolData.students.push({ 
+            sid: sidVal, name: nameVal, class: classVal, father: fatherVal, 
+            mother: motherVal, mobile: mobVal, yearlyFee: feeVal, address: addressVal, 
+            dob: dobVal, gender: genVal, photo: photoDataString 
+        });
+        alert("New Student enrolled successfully.");
     }
 
-    filteredRows.reverse().forEach(log => {
-        container.innerHTML += `<tr>
-            <td style="font-weight:bold; color:#cbd5e1;">👤 ${log.name}</td>
-            <td><span class="text-xs px-2 py-0.5 rounded font-bold ${log.status.includes('Success') ? 'bg-green-900/50 text-green-400' : 'bg-purple-900/50 text-purple-400'}">${log.status}</span></td>
-            <td>📅 ${log.date}</td>
-            <td style="color:#facc15;">⏱️ ${log.time}</td>
+    syncMasterDatabaseState();
+    generateSID();
+    // clear fields
+    document.getElementById('studentName').value = "";
+    document.getElementById('fatherName').value = "";
+    document.getElementById('motherNameInput').value = "";
+    document.getElementById('mobile').value = "";
+    document.getElementById('yearlyFee').value = "";
+    document.getElementById('address').value = "";
+    document.getElementById('dob').value = "";
+    document.getElementById('studentPhotoInput').value = "";
+    refreshAllUIRecords();
+}
+
+function deleteStudent(sid) {
+    if(confirm("Confirm record deletion?")) {
+        schoolData.students = schoolData.students.filter(s => String(s.sid) !== String(sid));
+        syncMasterDatabaseState();
+        refreshAllUIRecords();
+    }
+}
+
+function editStudent(sid) {
+    let s = schoolData.students.find(item => String(item.sid) === String(sid));
+    if(s) {
+        currentEditSID = s.sid;
+        document.getElementById('sid').value = s.sid;
+        document.getElementById('studentName').value = s.name;
+        document.getElementById('studentClass').value = s.class;
+        document.getElementById('fatherName').value = s.father;
+        document.getElementById('motherNameInput').value = s.mother || "";
+        document.getElementById('mobile').value = s.mobile;
+        document.getElementById('yearlyFee').value = s.yearlyFee;
+        document.getElementById('address').value = s.address;
+        document.getElementById('dob').value = s.dob || "";
+        document.getElementById('gender').value = s.gender || "Gender";
+        document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+        showPage('addStudentPage');
+    }
+}
+
+function cancelEdit() {
+    currentEditSID = null;
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    generateSID();
+    document.getElementById('studentName').value = "";
+    showPage('studentRecordPage');
+}
+
+/* Rest of the Logic functions from previous stable revision build block */
+function renderStudents() {
+    let tbody = document.getElementById('studentTable');
+    tbody.innerHTML = "";
+    let filter = document.getElementById('filterClass').value;
+    let count = 0;
+    schoolData.students.forEach(s => {
+        if(filter === 'All' || s.class === filter) {
+            count++;
+            let pImg = s.photo ? `<img src="${s.photo}" class="w-10 h-10 rounded-full object-cover border border-yellow-400">` : `<div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-xs">No</div>`;
+            tbody.innerHTML += `<tr>
+                <td>${pImg}</td>
+                <td class="text-yellow-400 font-bold">${s.sid}</td>
+                <td>${s.name}</td>
+                <td>Class ${s.class}</td>
+                <td>${s.father}</td>
+                <td>${s.mobile}</td>
+                <td>₹${s.yearlyFee}</td>
+                <td>
+                    <div class="action-box">
+                        <button class="btn blue-btn py-1 px-2 text-xs" onclick="editStudent('${s.sid}')">✏️ Edit</button>
+                        <button class="btn red-btn py-1 px-2 text-xs" onclick="deleteStudent('${s.sid}')">🗑 Delete</button>
+                    </div>
+                </td>
+            </tr>`;
+        }
+    });
+    document.getElementById('selectedCount').innerText = count;
+}
+
+function saveTeacher() {
+    let tid = document.getElementById('teacherTID').value;
+    let name = document.getElementById('teacherNameInput').value.trim();
+    let mob = document.getElementById('teacherMobile').value.trim();
+    let sub = document.getElementById('teacherSubject').value.trim();
+    let sal = parseFloat(document.getElementById('teacherSalary').value) || 0;
+
+    if(!name) { alert("Teacher Name required."); return; }
+
+    schoolData.teachers.push({ tid: tid, name: name, mobile: mob, subject: sub, salary: sal, salaryLedger: [] });
+    syncMasterDatabaseState();
+    alert("Teacher saved successfully!");
+    
+    document.getElementById('teacherNameInput').value = "";
+    document.getElementById('teacherMobile').value = "";
+    document.getElementById('teacherSubject').value = "";
+    document.getElementById('teacherSalary').value = "";
+    generateTID();
+    refreshAllUIRecords();
+}
+
+function deleteTeacher(tid) {
+    if(confirm("Delete teacher record?")) {
+        schoolData.teachers = schoolData.teachers.filter(t => String(t.tid) !== String(tid));
+        syncMasterDatabaseState();
+        refreshAllUIRecords();
+    }
+}
+
+function renderTeachers() {
+    let tbody = document.getElementById('teacherTable');
+    tbody.innerHTML = "";
+    schoolData.teachers.forEach(t => {
+        if(!t.salaryLedger) t.salaryLedger = [];
+        
+        let customLedgerRows = "";
+        if(t.salaryLedger.length === 0){
+            customLedgerRows = `<span class="text-xs text-slate-400 italic">No disbursements made</span>`;
+        } else {
+            customLedgerRows = `<div class="bg-slate-950 p-2 rounded-xl text-xs flex flex-col gap-1 max-h-24 overflow-y-auto border border-white/5">`;
+            t.salaryLedger.forEach(item => {
+                customLedgerRows += `<div class="flex justify-between border-b border-white/5 pb-0.5"><span class="text-yellow-400 font-mono">${item.date}</span> : <span class="text-green-400 font-bold">₹${item.amount}</span></div>`;
+            });
+            customLedgerRows += `</div>`;
+        }
+
+        tbody.innerHTML += `<tr>
+            <td class="text-yellow-400 font-bold">${t.tid}</td>
+            <td>${t.name}</td>
+            <td>${t.mobile}</td>
+            <td><span class="bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded text-xs">${t.subject}</span></td>
+            <td>₹${t.salary}</td>
+            <td>${customLedgerRows}</td>
+            <td><button class="btn red-btn py-1 px-2 text-xs" onclick="deleteTeacher('${t.tid}')">🗑 Clear</button></td>
         </tr>`;
     });
 }
 
-function clearAuditLogStorage() {
-    if (confirm("Kya aap browser security storage se full authentication status audit tracks wipe output karna chahte hain?")) {
-        biometricAuditLogs = [];
-        localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
-        renderBiometricAuditLogs();
+function findSalaryTeacher() {
+    let val = document.getElementById('salarySearchTID').value.trim();
+    let t = schoolData.teachers.find(item => String(item.tid) === String(val));
+    if(t) {
+        document.getElementById('salaryTeacherName').value = t.name;
+        document.getElementById('salaryTeacherSubject').value = t.subject;
+        document.getElementById('salaryDistributedAmount').value = t.salary;
+    } else {
+        document.getElementById('salaryTeacherName').value = "";
+        document.getElementById('salaryTeacherSubject').value = "";
+        document.getElementById('salaryDistributedAmount').value = "";
     }
 }
 
-/* MASTER RECOVERY CHANGE CONTROL */
-function openMasterCredsPopup() {
-    document.getElementById('newMasterEmail').value = localStorage.getItem('masterEmail');
-    document.getElementById('newMasterPassword').value = localStorage.getItem('masterPass');
-    document.getElementById('masterCredsPopup').style.display = 'flex';
-}
-function closeMasterCredsPopup() {
-    document.getElementById('masterCredsPopup').style.display = 'none';
-}
-function saveNewMasterCreds() {
-    let emailInput = document.getElementById('newMasterEmail').value.trim();
-    let passInput = document.getElementById('newMasterPassword').value;
-    if(!emailInput || !passInput) { alert("Dono inputs mandatory hain!"); return; }
-    localStorage.setItem('masterEmail', emailInput);
-    localStorage.setItem('masterPass', passInput);
-    alert("🎉 Master recovery login configurations successfully updated!");
-    closeMasterCredsPopup();
+function distributeTeacherSalary() {
+    let tidVal = document.getElementById('salarySearchTID').value.trim();
+    let dateVal = document.getElementById('salaryTransactionDate').value;
+    let amtVal = parseFloat(document.getElementById('salaryDistributedAmount').value) || 0;
+
+    let teacherObj = schoolData.teachers.find(t => String(t.tid) === String(tidVal));
+    if(!teacherObj) { alert("Please fetch a valid Teacher via TID first!"); return; }
+    if(!dateVal) { alert("Please enter a valid disbursement date."); return; }
+    if(amtVal <= 0) { alert("Amount disbursed must be positive."); return; }
+
+    if(!teacherObj.salaryLedger) { teacherObj.salaryLedger = []; }
+    teacherObj.salaryLedger.push({ date: dateVal, amount: amtVal });
+
+    syncMasterDatabaseState();
+    alert(`💸 Salary amount ₹${amtVal} dispersed to ${teacherObj.name} and logged successfully.`);
+    
+    document.getElementById('salarySearchTID').value = "";
+    document.getElementById('salaryTeacherName').value = "";
+    document.getElementById('salaryTeacherSubject').value = "";
+    document.getElementById('salaryDistributedAmount').value = "";
+    refreshAllUIRecords();
 }
 
-/* PROFILES BIOMETRIC MANAGE HUB */
-function openFaceRegPopup() {
-    if(registeredFaces.length >= 5) {
-        alert("❌ Space Limit Reached: Max 5 users registered inside browser storage slot framework.");
-        return;
+function findStudent() {
+    let val = document.getElementById('searchSID').value.trim();
+    let s = schoolData.students.find(item => String(item.sid) === String(val));
+    if(s) {
+        document.getElementById('feeStudentName').value = s.name;
+        document.getElementById('feeClass').value = s.class;
+        document.getElementById('monthlyFee').value = Math.round(s.yearlyFee / 12);
+        document.getElementById('actualAmountPaid').value = Math.round(s.yearlyFee / 12);
+    } else {
+        document.getElementById('feeStudentName').value = "";
+        document.getElementById('feeClass').value = "";
+        document.getElementById('monthlyFee').value = "";
+        document.getElementById('actualAmountPaid').value = "";
     }
-    document.getElementById('faceLabelName').value = '';
+}
+
+function saveFee() {
+    let sidVal = document.getElementById('searchSID').value.trim();
+    let mVal = document.getElementById('feeMonthSelect').value;
+    let amtVal = parseFloat(document.getElementById('actualAmountPaid').value) || 0;
+
+    let s = schoolData.students.find(item => String(item.sid) === String(sidVal));
+    if(!s || !mVal || amtVal<=0) { alert("Complete all mandatory ledger inputs."); return; }
+
+    schoolData.fees.push({ sid: s.sid, name: s.name, class: s.class, month: mVal, paid: amtVal });
+    syncMasterDatabaseState();
+    alert("Fee Payment transaction processed!");
+    
+    document.getElementById('searchSID').value = "";
+    document.getElementById('feeStudentName').value = "";
+    document.getElementById('feeClass').value = "";
+    document.getElementById('monthlyFee').value = "";
+    document.getElementById('actualAmountPaid').value = "";
+    document.getElementById('feeMonthSelect').value = "";
+    refreshAllUIRecords();
+}
+
+function deleteFeeTransaction(sid, month) {
+    if(confirm("Revoke this fee month line item entry?")) {
+        schoolData.fees = schoolData.fees.filter(f => !(String(f.sid)===String(sid) && f.month===month));
+        syncMasterDatabaseState();
+        refreshAllUIRecords();
+    }
+}
+
+function renderFees() {
+    let tbody = document.getElementById('feeTable');
+    tbody.innerHTML = "";
+    
+    let consolidated = {};
+    schoolData.fees.forEach(f => {
+        if(!consolidated[f.sid]) {
+            consolidated[f.sid] = { name: f.name, class: f.class, months: [], total: 0 };
+        }
+        consolidated[f.sid].months.push({ m: f.month, amt: f.paid });
+        consolidated[f.sid].total += f.paid;
+    });
+
+    for(let sid in consolidated) {
+        let block = consolidated[sid];
+        let pills = block.months.map(item => `<span class="inline-block bg-slate-900 text-yellow-400 rounded-full px-3 py-1 text-xs font-semibold mr-2 mb-2 border border-slate-700 hover:border-red-500 cursor-pointer" onclick="deleteFeeTransaction('${sid}', '${item.m}')">${item.m} (₹${item.amt}) ❌</span>`).join("");
+        
+        tbody.innerHTML += `<tr>
+            <td class="text-yellow-400 font-bold">${sid}</td>
+            <td>${block.name}</td>
+            <td>Class ${block.class}</td>
+            <td><div class="flex flex-wrap">${pills}</div></td>
+            <td class="text-green-400 font-bold">₹${block.total}</td>
+            <td><button class="btn purple-btn py-1 px-3 text-xs" onclick="printReceipt('${sid}')">🖨️ Receipt</button></td>
+        </tr>`;
+    }
+    
+    let totalCollectedSum = schoolData.fees.reduce((acc, current) => acc + current.paid, 0);
+    document.getElementById('feeCount').innerText = "₹" + totalCollectedSum;
+}
+
+function printReceipt(sid) {
+    let studentObj = schoolData.students.find(s => String(s.sid) === String(sid));
+    let feeRecords = schoolData.fees.filter(f => String(f.sid) === String(sid));
+    if(!studentObj) return;
+
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
+    let logoData = localStorage.getItem('schoolLogoData') || "";
+
+    let totalPaid = feeRecords.reduce((sum, item) => sum + item.paid, 0);
+    let breakDownRows = feeRecords.map(item => `<tr><td style="color:black; padding:8px; border:1px solid #ccc;">${item.month}</td><td style="color:black; padding:8px; border:1px solid #ccc; text-align:right;">₹${item.paid}</td></tr>`).join("");
+    let logoHtml = logoData ? `<img src="${logoData}" style="width:60px; height:60px; border-radius:50%; margin-bottom:10px;">` : "";
+
+    let view = `<div style="padding:25px; font-family:Arial, sans-serif; color:black; background:white; line-height:1.4;">
+        <div style="text-align:center; border-bottom:2px solid black; padding-bottom:15px; margin-bottom:15px;">
+            ${logoHtml}
+            <h1 style="margin:0; font-size:26px; font-weight:bold; color:#1e3a8a;">${schName}</h1>
+            <p style="margin:4px 0 0 0; font-size:12px; color:#555;">${schAddress}</p>
+            <h2 style="margin:10px 0 0 0; font-size:16px; background:#facc15; display:inline-block; padding:4px 12px; border-radius:5px;">FEE PAYMENT RECEIPT</h2>
+        </div>
+        <table style="width:100%; margin-bottom:20px; font-size:14px;">
+            <tr><td style="color:black;"><b>Student ID:</b> ${studentObj.sid}</td><td style="color:black; text-align:right;"><b>Date:</b> ${new Date().toLocaleDateString()}</td></tr>
+            <tr><td style="color:black;"><b>Student Name:</b> ${studentObj.name}</td><td style="color:black; text-align:right;"><b>Class:</b> ${studentObj.class}</td></tr>
+        </table>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:20px; font-size:14px;">
+            <thead><tr style="background:#e5e7eb;"><th style="border:1px solid #ccc; padding:8px; color:black;">Fee Period</th><th style="border:1px solid #ccc; padding:8px; color:black; text-align:right;">Paid Amount</th></tr></thead>
+            <tbody>${breakDownRows}<tr style="background:#f3f4f6; font-weight:bold;"><td style="border:1px solid #ccc; padding:8px; color:black;">Total Paid Shulk:</td><td style="border:1px solid #ccc; padding:8px; color:black; text-align:right; color:green;">₹${totalPaid}</td></tr></tbody>
+        </table>
+    </div>`;
+
+    document.getElementById('printViewArea').innerHTML = view;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function renderAdmitCardEngineTable() {
+    let classFilter = document.getElementById('admitCardClassFilter').value;
+    let minFee = parseFloat(document.getElementById('admitCardFeeMinSearch').value) || 0;
+    let tbody = document.getElementById('admitCardEngineTableBody');
+    tbody.innerHTML = "";
+
+    schoolData.students.forEach(s => {
+        if (classFilter !== 'All' && s.class !== classFilter) return;
+        let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
+        if (paidSum < minFee) return;
+
+        tbody.innerHTML += `<tr>
+            <td class="text-yellow-400 font-bold">${s.sid}</td>
+            <td>${s.name}</td>
+            <td>Class ${s.class}</td>
+            <td class="text-green-400 font-bold">₹${paidSum}</td>
+            <td><button class="btn gold-btn py-1 px-2 text-xs" onclick="printSingleAdmitCard('${s.sid}')">🎟️ Print Card</button></td>
+        </tr>`;
+    });
+}
+
+function printSingleAdmitCard(sid) {
+    let s = schoolData.students.find(item => String(item.sid) === String(sid));
+    if (!s) return;
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
+    let logoData = localStorage.getItem('schoolLogoData') || "";
+    let logoHtml = logoData ? `<img src="${logoData}" style="width:50px; height:50px; border-radius:50%; margin-bottom:5px;">` : "";
+
+    let html = `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; max-width:550px; margin:auto;">
+        <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px; margin-bottom:15px;">
+            ${logoHtml}
+            <h2 style="margin:0; font-size:22px; color:#1e3a8a;">${schName}</h2>
+            <p style="margin:2px 0; font-size:11px; color:#555;">${schAddress}</p>
+            <h3 style="margin:8px 0; font-size:14px; background:#000; color:white; display:inline-block; padding:3px 10px; border-radius:4px;">EXAMINATION ADMIT CARD</h3>
+        </div>
+        <table style="width:100%; font-size:13px; color:black;">
+            <tr><td><b>Student ID (SID):</b> ${s.sid}</td><td style="text-align:right;"><b>Class Roll:</b> Regular</td></tr>
+            <tr><td><b>Student Name:</b> ${s.name}</td><td style="text-align:right;"><b>Class:</b> Class ${s.class}</td></tr>
+        </table>
+    </div>`;
+
+    document.getElementById('printViewArea').innerHTML = html;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function printBulkFilteredAdmitCards() {
+    let classFilter = document.getElementById('admitCardClassFilter').value;
+    let minFee = parseFloat(document.getElementById('admitCardFeeMinSearch').value) || 0;
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
+    let logoData = localStorage.getItem('schoolLogoData') || "";
+    let logoHtml = logoData ? `<img src="${logoData}" style="width:50px; height:50px; border-radius:50%; margin-bottom:5px;">` : "";
+
+    let masterHtml = `<div style="display:flex; flex-direction:column; gap:40px; background:white; padding:10px;">`;
+    let addedAny = false;
+
+    schoolData.students.forEach(s => {
+        if (classFilter !== 'All' && s.class !== classFilter) return;
+        let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
+        if (paidSum < minFee) return;
+
+        addedAny = true;
+        masterHtml += `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; page-break-inside:avoid; width:100%; max-width:550px; margin:auto;">
+            <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px; margin-bottom:15px;">
+                ${logoHtml}
+                <h2 style="margin:0; font-size:22px; color:#1e3a8a;">${schName}</h2>
+                <h3 style="margin:8px 0; font-size:14px; background:#000; color:white; display:inline-block; padding:3px 10px; border-radius:4px;">EXAMINATION ADMIT CARD</h3>
+            </div>
+            <table style="width:100%; font-size:13px; color:black;">
+                <tr><td><b>Student ID:</b> ${s.sid}</td><td><b>Name:</b> ${s.name}</td></tr>
+            </table>
+        </div>`;
+    });
+
+    masterHtml += `</div>`;
+    if(!addedAny) { alert("Filter criteria matching koi record nahi mila!"); return; }
+
+    document.getElementById('printViewArea').innerHTML = masterHtml;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function renderNoticeEngineTable() {
+    let classFilter = document.getElementById('noticeClassFilter').value;
+    let maxLimit = parseFloat(document.getElementById('noticeFeeMaxSearch').value) || 0;
+    let tbody = document.getElementById('noticeEngineTableBody');
+    tbody.innerHTML = "";
+
+    schoolData.students.forEach(s => {
+        if (classFilter !== 'All' && s.class !== classFilter) return;
+        let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
+        if (paidSum > maxLimit) return;
+
+        tbody.innerHTML += `<tr>
+            <td class="text-yellow-400 font-bold">${s.sid}</td>
+            <td>${s.name}</td>
+            <td>Class ${s.class}</td>
+            <td class="text-red-400 font-bold">₹${paidSum} Logged</td>
+            <td><button class="btn red-btn py-1 px-2 text-xs" onclick="printSingleNotice('${s.sid}')">⚠️ View Alert</button></td>
+        </tr>`;
+    });
+}
+
+function parseNoticeVariables(template, s) {
+    let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
+    let dueSum = s.yearlyFee - paidSum;
+    return template.replace(/\[SID\]/g, s.sid)
+                   .replace(/\[NAME\]/g, s.name)
+                   .replace(/\[FATHER\]/g, s.father)
+                   .replace(/\[MOTHER\]/g, s.mother || "N/A")
+                   .replace(/\[TOTAL\]/g, s.yearlyFee)
+                   .replace(/\[PAID\]/g, paidSum)
+                   .replace(/\[DUE\]/g, dueSum);
+}
+
+function printSingleNotice(sid) {
+    let s = schoolData.students.find(item => String(item.sid) === String(sid));
+    if (!s) return;
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
+    let templateText = localStorage.getItem('noticeTemplateText') || "";
+    let parsedBody = parseNoticeVariables(templateText, s);
+
+    let html = `<div style="padding:30px; font-family:Arial, sans-serif; color:black; background:white; border:2px solid red; max-width:600px; margin:auto; line-height:1.5;">
+        <div style="text-align:center; border-bottom:2px solid red; padding-bottom:10px; margin-bottom:20px;">
+            <h2 style="margin:0; font-size:24px; color:red; font-weight:bold;">${schName}</h2>
+            <h4 style="margin:10px 0; font-size:13px; background:red; color:white; display:inline-block; padding:3px 12px; border-radius:3px;">FEE DUE REMINDER NOTICE</h4>
+        </div>
+        <div style="font-size:14px; background:#fff5f5; padding:15px; border-left:4px solid red;">${parsedBody}</div>
+    </div>`;
+
+    document.getElementById('printViewArea').innerHTML = html;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function printBulkFilteredNotices() {
+    let classFilter = document.getElementById('noticeClassFilter').value;
+    let maxLimit = parseFloat(document.getElementById('noticeFeeMaxSearch').value) || 0;
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
+    let templateText = localStorage.getItem('noticeTemplateText') || "";
+
+    let masterHtml = `<div style="display:flex; flex-direction:column; gap:40px; background:white; padding:10px;">`;
+    let addedAny = false;
+
+    schoolData.students.forEach(s => {
+        if (classFilter !== 'All' && s.class !== classFilter) return;
+        let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
+        if (paidSum > maxLimit) return;
+
+        addedAny = true;
+        let parsedBody = parseNoticeVariables(templateText, s);
+
+        masterHtml += `<div style="padding:30px; font-family:Arial, sans-serif; color:black; background:white; border:2px solid red; page-break-inside:avoid; width:100%; max-width:600px; margin:auto;">
+            <div style="text-align:center; border-bottom:2px solid red; padding-bottom:10px; margin-bottom:20px;">
+                <h2 style="margin:0; font-size:24px; color:red; font-weight:bold;">${schName}</h2>
+            </div>
+            <div style="font-size:14px; background:#fff5f5; padding:15px; border-left:4px solid red;">${parsedBody}</div>
+        </div>`;
+    });
+
+    masterHtml += `</div>`;
+    if(!addedAny) { alert("Filter criteria matching koi overdue record nahi mila!"); return; }
+
+    document.getElementById('printViewArea').innerHTML = masterHtml;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function openNoticeEditorPopup() {
+    document.getElementById('noticeTemplateTextArea').value = localStorage.getItem('noticeTemplateText') || "";
+    document.getElementById('noticeEditorPopup').style.display = 'flex';
+}
+function insertNoticePlaceholder(variable) {
+    let area = document.getElementById('noticeTemplateTextArea');
+    area.value += variable; area.focus();
+}
+function saveNoticeTemplateText() {
+    let txt = document.getElementById('noticeTemplateTextArea').value;
+    localStorage.setItem('noticeTemplateText', txt);
+    alert("Notice configuration parameters updated!");
+    document.getElementById('noticeEditorPopup').style.display = 'none';
+}
+
+function findMarksheetStudent() {
+    let val = document.getElementById('marksheetSID').value.trim();
+    let s = schoolData.students.find(item => String(item.sid) === String(val));
+    if(s) {
+        document.getElementById('markStudent').value = s.name;
+        document.getElementById('markClass').value = s.class;
+        updateExamDropdowns(); loadSubjectMarksArea();
+    } else {
+        document.getElementById('markStudent').value = "";
+        document.getElementById('markClass').value = "";
+        document.getElementById('subjectMarksArea').innerHTML = "";
+    }
+}
+
+function updateExamDropdowns() {
+    let dropdowns = [document.getElementById('markExam'), document.getElementById('subjectExam')];
+    dropdowns.forEach(d => {
+        if(!d) return; d.innerHTML = "";
+        schoolData.exams.forEach(ex => { d.innerHTML += `<option value="${ex}">${ex}</option>`; });
+    });
+}
+
+function loadSubjectMarksArea() {
+    let cls = document.getElementById('markClass').value;
+    let ex = document.getElementById('markExam').value;
+    let area = document.getElementById('subjectMarksArea');
+    area.innerHTML = ""; if(!cls || !ex) return;
+
+    let filteredSubjects = schoolData.subjects.filter(sub => sub.class === cls && sub.exam === ex);
+    if(filteredSubjects.length === 0) {
+        area.innerHTML = `<p class="text-xs text-yellow-400">⚠️ No Subject Configs mapped inside settings.</p>`; return;
+    }
+
+    let sid = document.getElementById('marksheetSID').value.trim();
+    let existingMarkObj = schoolData.marksheets.find(m => String(m.sid) === String(sid) && m.exam === ex);
+
+    filteredSubjects.forEach(sub => {
+        let scoreVal = "";
+        if(existingMarkObj && existingMarkObj.scores && existingMarkObj.scores[sub.name] !== undefined) {
+            scoreVal = existingMarkObj.scores[sub.name];
+        }
+        area.innerHTML += `<div class="grid-2 gap-4 items-center mb-2 bg-black/20 p-2 rounded-xl">
+            <span class="text-sm font-bold text-slate-200">${sub.name} (Max: ${sub.total})</span>
+            <input type="number" class="subject-score-input" data-subject="${sub.name}" data-max="${sub.total}" value="${scoreVal}" onkeyup="calculateTotalScoreSum()">
+        </div>`;
+    });
+    calculateTotalScoreSum();
+}
+
+function deleteMarksheet(sid, exam) {
+    if(confirm("Wipe this scoreboard entry?")) {
+        schoolData.marksheets = schoolData.marksheets.filter(m => !(String(m.sid) === String(sid) && m.exam === exam));
+        syncMasterDatabaseState(); refreshAllUIRecords();
+    }
+}
+
+function calculateTotalScoreSum() {
+    let total = 0;
+    document.querySelectorAll('.subject-score-input').forEach(input => { total += parseFloat(input.value) || 0; });
+    document.getElementById('markTotal').value = total;
+}
+
+function saveMarksheet() {
+    let sidVal = document.getElementById('marksheetSID').value.trim();
+    let examVal = document.getElementById('markExam').value;
+    if(!sidVal || !examVal) return;
+
+    let scores = {}; let errorFlag = false;
+    document.querySelectorAll('.subject-score-input').forEach(input => {
+        let subName = input.getAttribute('data-subject');
+        let maxMark = parseFloat(input.getAttribute('data-max'));
+        let val = parseFloat(input.value) || 0;
+        if(val > maxMark) { alert(`Exceeded maximum marks (${maxMark}).`); errorFlag = true; }
+        scores[subName] = val;
+    });
+
+    if(errorFlag) return;
+    schoolData.marksheets = schoolData.marksheets.filter(m => !(String(m.sid) === String(sidVal) && m.exam === examVal));
+    schoolData.marksheets.push({ sid: sidVal, exam: examVal, scores: scores });
+
+    syncMasterDatabaseState(); alert("Student scorecard written!");
+    document.getElementById('marksheetSID').value = "";
+    document.getElementById('markStudent').value = "";
+    document.getElementById('markClass').value = "";
+    document.getElementById('markTotal').value = "";
+    document.getElementById('subjectMarksArea').innerHTML = "";
+    refreshAllUIRecords();
+}
+
+function renderMarksheets() {
+    let tbody = document.getElementById('marksheetTable'); tbody.innerHTML = "";
+    let grouped = {};
+    schoolData.marksheets.forEach(m => {
+        let sObj = schoolData.students.find(st => String(st.sid) === String(m.sid)); if(!sObj) return;
+        if(!grouped[m.sid]) grouped[m.sid] = { name: sObj.name, class: sObj.class, exams: [] };
+        grouped[m.sid].exams.push(m.exam);
+    });
+
+    for(let sid in grouped){
+        let b = grouped[sid];
+        let buttons = b.exams.map(ex => `<div class="inline-flex items-center bg-slate-900 rounded-lg p-1 mr-2 mb-2"><button class="btn gold-btn text-xs py-1 px-2" onclick="printReportCard('${sid}', '${ex}')">🖨️ ${ex}</button><button class="text-red-400 font-bold px-1 text-xs" onclick="deleteMarksheet('${sid}', '${ex}')">&times;</button></div>`).join("");
+        tbody.innerHTML += `<tr><td class="text-yellow-400 font-bold">${sid}</td><td>${b.name}</td><td>Class ${b.class}</td><td><div class="flex flex-wrap">${buttons}</div></td></tr>`;
+    }
+}
+
+function printReportCard(sid, exam) {
+    let s = schoolData.students.find(item => String(item.sid) === String(sid));
+    let m = schoolData.marksheets.find(item => String(item.sid) === String(sid) && item.exam === exam);
+    if(!s || !m) return;
+
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+    let rowsHtml = ""; let grandObtained = 0; let grandMax = 0;
+
+    for(let subName in m.scores) {
+        let config = schoolData.subjects.find(sub => sub.class === s.class && sub.exam === exam && sub.name === subName);
+        let maxMark = config ? config.total : 100; let obtained = m.scores[subName];
+        grandObtained += obtained; grandMax += maxMark;
+        rowsHtml += `<tr><td style="color:black; border:1px solid #aaa; padding:8px;">${subName}</td><td style="color:black; border:1px solid #aaa; text-align:center;">${maxMark}</td><td style="color:black; border:1px solid #aaa; text-align:center; font-weight:bold;">${obtained}</td></tr>`;
+    }
+    let pct = grandMax > 0 ? ((grandObtained / grandMax) * 100).toFixed(1) : 0;
+
+    let html = `<div style="padding:30px; background:white; border:4px double #333;"><h1 style="color:#1e3a8a; text-align:center;">${schName}</h1><table style="width:100%; color:black; margin-top:15px;"><tr><td><b>ID:</b> ${s.sid}</td><td><b>Exam:</b> ${exam}</td></tr><tr><td><b>Name:</b> ${s.name}</td><td><b>Class:</b> ${s.class}</td></tr></table><table style="width:100%; border-collapse:collapse; margin-top:15px;"><thead><tr style="background:#e5e7eb;"><th style="color:black; border:1px solid #aaa; padding:8px;">Subject</th><th style="color:black; border:1px solid #aaa;">Max</th><th style="color:black; border:1px solid #aaa;">Obtained</th></tr></thead><tbody>${rowsHtml}</tbody></table><h3 style="color:black; margin-top:15px;">Percentage: ${pct}%</h3></div>`;
+    document.getElementById('printViewArea').innerHTML = html;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function findPromoteStudent() {
+    let id = document.getElementById('promoteSID').value.trim();
+    let s = schoolData.students.find(item => String(item.sid) === String(id));
+    if(s) { document.getElementById('promoteName').value = s.name; document.getElementById('promoteCurrentClass').value = s.class; }
+    else { document.getElementById('promoteName').value = ""; document.getElementById('promoteCurrentClass').value = ""; }
+}
+function processPromotion() {
+    let id = document.getElementById('promoteSID').value.trim();
+    let target = document.getElementById('promoteTargetClass').value;
+    let s = schoolData.students.find(item => String(item.sid) === String(id));
+    if(!s || !target) return; s.class = target; syncMasterDatabaseState();
+    alert(`Success! Promoted to Class ${target}.`); refreshAllUIRecords();
+}
+
+function findTCStudent() {
+    let id = document.getElementById('tcSID').value.trim();
+    let s = schoolData.students.find(item => String(item.sid) === String(id));
+    if(s) { document.getElementById('tcName').value = s.name; document.getElementById('tcClass').value = s.class; }
+    else { document.getElementById('tcName').value = ""; document.getElementById('tcClass').value = ""; }
+}
+function generateTCPrint() {
+    let id = document.getElementById('tcSID').value.trim();
+    let s = schoolData.students.find(item => String(item.sid) === String(id));
+    if(!s) return;
+    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
+
+    let view = `<div style="padding:40px; background:white; color:black; border:4px double #a16207;"><h1 style="text-align:center; color:#a16207;">${schName}</h1><p style="color:black; margin-top:20px;">Certified that student <b>${s.name}</b> (ID: ${s.sid}) was studying in Class <b>${s.class}</b> inside this institution.</p></div>`;
+    document.getElementById('printViewArea').innerHTML = view;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function saveSettings() {
+    let name = document.getElementById('schoolNameInput').value.trim();
+    let addr = document.getElementById('schoolAddressInput').value.trim();
+    if(name) { localStorage.setItem('schoolName', name); document.getElementById('schoolName').innerText = name; }
+    if(addr) localStorage.setItem('schoolAddress', addr); alert("Identity Config saved!");
+}
+
+function uploadSchoolLogo(event) {
+    let file = event.target.files[0];
+    if(file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            localStorage.setItem('schoolLogoData', e.target.result);
+            document.getElementById('schoolLogo').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function openFaceRegPopup() { document.getElementById('faceRegPopup').style.display='flex'; }
+function closeFaceRegPopup() {
+    if(localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
     document.getElementById('cameraAreaPlaceholder').classList.add('hidden');
     document.getElementById('captureFaceBtn').classList.add('hidden');
     document.getElementById('startCamBtn').classList.remove('hidden');
-    document.getElementById('faceRegPopup').style.display = 'flex';
+    document.getElementById('faceRegPopup').style.display='none';
 }
-function closeFaceRegPopup() {
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-        localStream = null;
-    }
-    document.getElementById('faceRegPopup').style.display = 'none';
-}
-async function startCameraStream() {
-    let nameLabel = document.getElementById('faceLabelName').value.trim();
-    if(!nameLabel) { alert("First enter valid operator name identifier profile!"); return; }
 
+async function startCameraStream() {
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true });
         document.getElementById('cameraFeed').srcObject = localStream;
         document.getElementById('cameraAreaPlaceholder').classList.remove('hidden');
         document.getElementById('captureFaceBtn').classList.remove('hidden');
         document.getElementById('startCamBtn').classList.add('hidden');
-    } catch (err) {
-        alert("Webcam support missing. Simulation framework dynamic registration complete.");
-        document.getElementById('cameraAreaPlaceholder').classList.remove('hidden');
-        document.getElementById('captureFaceBtn').classList.remove('hidden');
-        document.getElementById('startCamBtn').classList.add('hidden');
-    }
+    } catch (e) { alert("Camera hardware tracking blocked!"); }
 }
+
 function processFaceEnrollment() {
     let nameLabel = document.getElementById('faceLabelName').value.trim();
-    registeredFaces.push({ name: nameLabel, date: new Date().toLocaleDateString() });
-    syncMasterDatabaseState();
-    renderFaceSlotsStatus();
-    closeFaceRegPopup();
-    alert(`🎉 Face Authorization successfully mapped inside local profile system logs for user [${nameLabel}].`);
+    if (!nameLabel) return; if (registeredFaces.length >= 5) return;
+    registeredFaces.push({ name: nameLabel, keyId: "FACE_" + Date.now() });
+    localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces));
+    document.getElementById('faceLabelName').value = ""; closeFaceRegPopup(); renderFaceSlotsStatus();
 }
+
 function renderFaceSlotsStatus() {
-    let statusContainer = document.getElementById('faceSlotsStatusBox');
-    statusContainer.innerHTML = '';
-    for(let i=0; i<5; i++) {
-        if(registeredFaces[i]) {
-            statusContainer.innerHTML += `<div class="bg-blue-950/40 border border-blue-800/60 p-2 rounded-xl flex justify-between items-center text-xs">
-                <span>📷 <b>Face Slot ${i+1}:</b> ${registeredFaces[i].name} (Mapped on: ${registeredFaces[i].date})</span>
-                <button onclick="removeFaceSlot(${i})" class="bg-red-800 text-white px-2 py-0.5 rounded hover:bg-red-600">Remove</button>
-            </div>`;
-        } else {
-            statusContainer.innerHTML += `<div class="bg-slate-900/40 border border-slate-800 p-2 rounded-xl text-xs text-slate-500 text-left">
-                ⚪ <b>Face Slot ${i+1}:</b> Vacant / Available
-            </div>`;
-        }
+    let box = document.getElementById('faceSlotsStatusBox'); if(!box) return; box.innerHTML = "";
+    if(registeredFaces.length === 0) {
+        box.innerHTML = `<span class="text-xs text-red-400 italic">No biometric accounts registered yet.</span>`; return;
     }
-}
-function removeFaceSlot(idx) {
-    if(confirm("Delete biometric mapping instance profile authorization?")) {
-        registeredFaces.splice(idx, 1);
-        syncMasterDatabaseState();
-        renderFaceSlotsStatus();
-    }
-}
-
-/* LOGO UPLOAD HANDLER FOR SETTINGS */
-function uploadSchoolLogo(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        localStorage.setItem('schoolLogoData', e.target.result);
-        document.getElementById('schoolLogo').src = e.target.result;
-        alert("Logo successfully uploaded!");
-    };
-    reader.readAsDataURL(file);
-}
-
-/* STUDENT ACTIONS DATA SYSTEMS */
-function generateSID(){ if(!currentEditSID) sid.value='SID'+String(schoolData.students.length+1).padStart(4,'0'); }
-
-function saveStudent(){
-    if(!studentName.value) { alert("Enter Student Name!"); return; }
-    let photoFile = studentPhotoInput.files[0];
-    if(photoFile) {
-        let fr = new FileReader();
-        fr.onloadend = function() { processStudentSave(fr.result); };
-        fr.readAsDataURL(photoFile);
-    } else { processStudentSave(currentEditSID ? (schoolData.students.find(s=>s.sid===currentEditSID)?.photo || '') : ''); }
-}
-
-function processStudentSave(photoString) {
-    let obj = { 
-        sid: sid.value, 
-        name: studentName.value, 
-        studentClass: studentClass.value, 
-        father: fatherName.value, 
-        mobile: mobile.value, 
-        fee: yearlyFee.value || 0, 
-        photo: photoString,
-        address: address.value,
-        dob: dob.value,
-        gender: gender.value
-    };
-    if(currentEditSID) {
-        let index = schoolData.students.findIndex(s => s.sid === currentEditSID);
-        if(index !== -1) schoolData.students[index] = obj;
-        cancelEdit();
-    } else { schoolData.students.push(obj); }
-    renderStudents(); updateDashboardCounts(); syncMasterDatabaseState();
-    studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; studentPhotoInput.value=''; address.value=''; dob.value=''; gender.value='Gender';
-    generateSID();
-}
-
-function renderStudents(){
-    studentTable.innerHTML='';
-    let cFilter = filterClass.value;
-    let records = cFilter === 'All' ? schoolData.students : schoolData.students.filter(s => s.studentClass === cFilter);
-    selectedCount.innerText = records.length;
-    records.forEach((s)=>{
-        let avatar = s.photo ? `<img src="${s.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">` : '⚪';
-        studentTable.innerHTML+=`<tr><td>${avatar}</td><td>${s.sid}</td><td>${s.name}</td><td>${s.studentClass}</td><td>${s.father}</td><td>${s.mobile||'-'}</td><td>₹${s.fee}</td>
-        <td><div class="action-box"><button class="btn gold-btn px-2 py-1 text-xs" onclick="editStudent('${s.sid}')">✏️ Edit</button>
-        <button class="btn red-btn px-2 py-1 text-xs" onclick="deleteStudent('${s.sid}')">🗑</button></div></td></tr>`;
+    registeredFaces.forEach((face, index) => {
+        box.innerHTML += `<div class="flex justify-between items-center bg-slate-950 p-2 rounded-xl text-xs border border-white/5"><span class="text-slate-300">Slot ${index+1}: <b>${face.name}</b></span><button class="text-red-400" onclick="removeFaceProfileSlot(${index})">Revoke 🗑</button></div>`;
     });
 }
 
-function editStudent(id) {
-    let st = schoolData.students.find(s => s.sid === id);
-    if(st) {
-        currentEditSID = st.sid; sid.value = st.sid; studentName.value = st.name; studentClass.value = st.studentClass; fatherName.value = st.father; mobile.value = st.mobile; yearlyFee.value = st.fee;
-        address.value = st.address || ''; dob.value = st.dob || ''; gender.value = st.gender || 'Gender';
-        document.getElementById('cancelEditBtn').style.display = 'inline-flex'; showPage('addStudentPage');
-    }
-}
-function deleteStudent(id) {
-    if(confirm("Delete this student profile record?")) {
-        schoolData.students = schoolData.students.filter(s => s.sid !== id);
-        renderStudents(); updateDashboardCounts(); syncMasterDatabaseState();
-    }
-}
-function cancelEdit() { currentEditSID = null; document.getElementById('cancelEditBtn').style.display = 'none'; studentName.value=''; fatherName.value=''; mobile.value=''; yearlyFee.value=''; address.value=''; dob.value=''; generateSID(); }
-
-function findPromoteStudent(){
-    let matched = schoolData.students.find(s => s.sid === promoteSID.value.trim().toUpperCase());
-    if(matched) { promoteName.value = matched.name; promoteCurrentClass.value = matched.studentClass; }
-}
-function processPromotion() {
-    let index = schoolData.students.findIndex(s => s.sid === promoteSID.value.trim().toUpperCase());
-    if(index !== -1 && promoteTargetClass.value) {
-        schoolData.students[index].studentClass = promoteTargetClass.value;
-        renderStudents(); syncMasterDatabaseState();
-        alert("Promotion Successful!");
-    }
+function removeFaceProfileSlot(idx) {
+    if(confirm("Revoke token?")) { registeredFaces.splice(idx, 1); localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces)); renderFaceSlotsStatus(); }
 }
 
-function findTCStudent() {
-    let st = schoolData.students.find(s => s.sid === tcSID.value.trim().toUpperCase());
-    if(st) { tcName.value = st.name; tcClass.value = st.studentClass; }
-}
-function generateTCPrint() {
-    let st = schoolData.students.find(s => s.sid === tcSID.value.trim().toUpperCase());
-    if(!st) return;
-    let currentLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
-    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
-
-    document.getElementById('printViewArea').innerHTML = `<div style="color:black; padding:30px; border:5px double #000; background:white;">
-        <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-b:2px solid black; padding-bottom:15px; margin-bottom:20px;">
-            <img src="${currentLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">
-            <div style="text-align:left;">
-                <h1 style="font-size:26px; font-weight:bold; margin:0;">${sName}</h1>
-                <p style="font-size:13px; color:#475569; margin:2px 0 0 0;">📍 ${sAddr}</p>
-            </div>
-        </div>
-        <h2 style="text-align:center; font-size:24px; font-weight:bold; text-decoration:underline; margin-bottom:20px;">TRANSFER CERTIFICATE</h2>
-        <p style="font-size:15px; margin-top:20px; line-height:2.2;">Student ID: <b>${st.sid}</b><br>Full Name: <b>${st.name}</b><br>Father Name: <b>${st.father}</b><br>Class Level Left: <b>${st.studentClass}</b></p>
-    </div>`;
-    document.getElementById('printPopup').style.display = 'flex';
+function openAuditLogsPopup() { document.getElementById('auditLogsPopup').style.display = 'flex'; }
+function closeAuditLogsPopup() { document.getElementById('auditLogsPopup').style.display = 'none'; }
+function clearAuditLogStorage() {
+    if(confirm("Purge tracking indexes?")) { biometricAuditLogs = []; localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs)); renderBiometricAuditLogs(); }
 }
 
-function findStudent(){
-    let match = schoolData.students.find(s => s.sid === searchSID.value.trim().toUpperCase());
-    if(match){ feeStudentName.value = match.name; feeClass.value = match.studentClass; monthlyFee.value = Math.round(match.fee/12); }
-}
-function saveFee(){
-    let inputID = searchSID.value.trim().toUpperCase();
-    let fIndex = schoolData.fees.findIndex(f => f.sid === inputID);
-    let amountVal = parseInt(actualAmountPaid.value || 0);
-    if(fIndex !== -1){
-        schoolData.fees[fIndex].breakdownDetails.push({ monthName: feeMonthSelect.value, amount: amountVal });
-        schoolData.fees[fIndex].totalAmount += amountVal;
-    } else {
-        schoolData.fees.push({ sid: inputID, name: feeStudentName.value, class: feeClass.value, breakdownDetails: [{ monthName: feeMonthSelect.value, amount: amountVal }], totalAmount: amountVal });
+function renderBiometricAuditLogs() {
+    let tbody = document.getElementById('biometricLogsTableBody'); if(!tbody) return; tbody.innerHTML = "";
+    let pickerVal = document.getElementById('auditLogCalendarPicker').value;
+    let itemsToRender = pickerVal ? biometricAuditLogs.filter(log => log.date === pickerVal) : biometricAuditLogs;
+
+    if(itemsToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-xs text-slate-400 italic">No records.</td></tr>`; return;
     }
-    renderFees(); syncMasterDatabaseState();
-    alert("Fee recorded successfully.");
-}
-function renderFees(){
-    feeTable.innerHTML = '';
-    schoolData.fees.forEach(f => {
-        let details = f.breakdownDetails.map(b => `<span class='bg-slate-800 text-yellow-400 p-1 text-xs rounded mr-1'>${b.monthName}(₹${b.amount})</span>`).join('');
-        feeTable.innerHTML += `<tr><td>${f.sid}</td><td>${f.name}</td><td>${f.class}</td><td>${details}</td><td>₹${f.totalAmount}</td>
-        <td><div class="action-box"><button class="btn blue-btn px-2 py-1 text-xs" onclick="printFeeReceipt('${f.sid}')">🖨️ Print Receipt</button></div></td></tr>`;
+    itemsToRender.forEach(log => {
+        tbody.innerHTML += `<tr><td class="font-bold text-yellow-400 text-xs">${log.name}</td><td class="text-green-400 text-xs">${log.status}</td><td class="text-xs font-mono">${log.date}</td><td class="text-xs text-slate-300 font-mono">${log.time}</td></tr>`;
     });
 }
 
-/* FEE RECEIPT PRINT SYSTEM */
-function printFeeReceipt(sid) {
-    let record = schoolData.fees.find(f => f.sid === sid);
-    if (!record) return;
-    let sLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
-    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
-
-    let rowRows = record.breakdownDetails.map(b => `
-        <tr>
-            <td style="border:1px solid #cbd5e1; padding:10px; color:black;">${b.monthName}</td>
-            <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right;">₹${b.amount}</td>
-        </tr>
-    `).join('');
-
-    document.getElementById('printViewArea').innerHTML = `
-        <div style="background:white; color:black; padding:30px; border:3px solid #000; border-radius:10px;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-bottom:2px dashed #000; padding-bottom:15px; margin-bottom:20px;">
-                <img src="${sLogo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover;">
-                <div style="text-align:left;">
-                    <h1 style="font-size:26px; font-weight:bold; margin:0; color:#1e3a8a;">${sName}</h1>
-                    <p style="font-size:13px; color:#475569; margin:2px 0 0 0;">📍 ${sAddr}</p>
-                </div>
-            </div>
-            <h2 style="text-align:center; font-size:18px; font-weight:bold; text-transform:uppercase; margin-bottom:15px; letter-spacing:1px;">💰 FEES PAYMENT RECEIPT</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:14px; margin-bottom:20px; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #e2e8f0;">
-                <div><b>Student ID:</b> ${record.sid}</div>
-                <div><b>Student Name:</b> ${record.name}</div>
-                <div><b>Class Level:</b> ${record.class}</div>
-                <div><b>Date Stamp:</b> ${new Date().toLocaleDateString()}</div>
-            </div>
-            <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#e2e8f0;">
-                        <th style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:left;">Description / Month</th>
-                        <th style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right;">Amount Paid</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rowRows}
-                    <tr style="background:#f1f5f9; font-weight:bold;">
-                        <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:left;">Grand Total Consolidated:</td>
-                        <td style="border:1px solid #cbd5e1; padding:10px; color:black; text-align:right; font-size:16px; color:#16a34a;">₹${record.totalAmount}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="margin-top:50px; display:flex; justify-content:space-between; padding:0 10px;">
-                <div style="text-align:center; width:150px; border-top:1px solid black; padding-top:5px; font-size:13px; font-weight:bold;">Cashier / Clerk</div>
-                <div style="text-align:center; width:150px; border-top:1px solid black; padding-top:5px; font-size:13px; font-weight:bold;">Authorized Signatory</div>
-            </div>
-        </div>
-    `;
-    document.getElementById('printPopup').style.display = 'flex';
+function openMasterCredsPopup() {
+    document.getElementById('newMasterEmail').value = localStorage.getItem('masterEmail') || "";
+    document.getElementById('newMasterPassword').value = localStorage.getItem('masterPass') || "";
+    document.getElementById('masterCredsPopup').style.display = 'flex';
+}
+function closeMasterCredsPopup() { document.getElementById('masterCredsPopup').style.display = 'none'; }
+function saveNewMasterCreds() {
+    let em = document.getElementById('newMasterEmail').value.trim();
+    let ps = document.getElementById('newMasterPassword').value;
+    if(!em || !ps) return; localStorage.setItem('masterEmail', em); localStorage.setItem('masterPass', ps);
+    alert("Key updated successfully!"); closeMasterCredsPopup();
 }
 
-function findMarksheetStudent(){
-    let match = schoolData.students.find(s => s.sid === marksheetSID.value.trim().toUpperCase());
-    if(match){ markStudent.value = match.name; markClass.value = match.studentClass; loadSubjectMarksArea(); }
+function openMarksheetPopup() { updateExamDropdowns(); renderExamList(); renderSubjectList(); document.getElementById('marksheetPopup').style.display='flex'; }
+function closeMarksheetPopup() { document.getElementById('marksheetPopup').style.display='none'; }
+
+function addExam() {
+    let name = document.getElementById('examName').value.trim(); if(!name) return;
+    if(!schoolData.exams.includes(name)) { schoolData.exams.push(name); syncMasterDatabaseState(); document.getElementById('examName').value = ""; renderExamList(); updateExamDropdowns(); }
 }
-function loadSubjectMarksArea(){
-    let cls = markClass.value; let examSelected = markExam.value;
-    let matches = schoolData.subjects.filter(sub => sub.subjectClass === cls && sub.exam === examSelected);
-    subjectMarksArea.innerHTML = '';
-    let row = schoolData.marksheets.find(m => m.sid === marksheetSID.value.trim().toUpperCase());
-    let dynamicMarks = (row && row.examsData && row.examsData[examSelected]) ? row.examsData[examSelected].marks : {};
-    matches.forEach((sub) => {
-        let val = dynamicMarks[sub.name] !== undefined ? dynamicMarks[sub.name] : '';
-        subjectMarksArea.innerHTML += `<div class="mt-2"><label class="text-xs text-yellow-400 font-bold">${sub.name} (Max Marks: ${sub.total})</label>
-        <input type="number" class="sub-mark-input mt-1" data-name="${sub.name}" data-max="${sub.total}" value="${val}" onkeyup="calcTotalMarks()"></div>`;
-    });
-    calcTotalMarks();
+function removeExam(name) {
+    if(confirm(`Remove: ${name}?`)) { schoolData.exams = schoolData.exams.filter(e => e !== name); syncMasterDatabaseState(); renderExamList(); updateExamDropdowns(); }
 }
-function calcTotalMarks(){
-    let nodes = document.querySelectorAll('.sub-mark-input');
-    let got = 0; let outOf = 0;
-    nodes.forEach(el => { got += parseInt(el.value || 0); outOf += parseInt(el.getAttribute('data-max') || 0); });
-    markTotal.value = got + " / " + outOf;
-}
-function saveMarksheet(){
-    let targetID = marksheetSID.value.trim().toUpperCase();
-    let examSelected = markExam.value;
-    let inputs = document.querySelectorAll('.sub-mark-input');
-    let mapScores = {};
-    inputs.forEach(el => { mapScores[el.getAttribute('data-name')] = parseInt(el.value || 0); });
-    let index = schoolData.marksheets.findIndex(m => m.sid === targetID);
-    if (index !== -1) {
-        if(!schoolData.marksheets[index].examsData) schoolData.marksheets[index].examsData = {};
-        schoolData.marksheets[index].examsData[examSelected] = { totalScore: markTotal.value, marks: mapScores };
-    } else {
-        let rowObj = { sid: targetID, name: markStudent.value, studentClass: markClass.value, examsData: {} };
-        rowObj.examsData[examSelected] = { totalScore: markTotal.value, marks: mapScores };
-        schoolData.marksheets.push(rowObj);
-    }
-    renderMarksheets(); syncMasterDatabaseState();
-    alert("Marks Consolidated!");
-}
-function renderMarksheets(){
-    marksheetTable.innerHTML = '';
-    schoolData.marksheets.forEach((m, idx)=>{
-        let arrayExams = Object.keys(m.examsData || {});
-        let tags = arrayExams.map(ex => `<span class='bg-green-900 text-green-300 font-semibold px-2 py-0.5 text-xs rounded mr-1'>${ex}</span>`).join('');
-        marksheetTable.innerHTML += `<tr><td>${m.sid}</td><td>${m.name}</td><td>${m.studentClass}</td><td>${tags||'No Data'}</td>
-        <td><div class="action-box"><button class="btn green-btn py-1 px-3 text-xs" onclick="printA4AllExamsReport('${m.sid}')">🖨️ Print Report</button>
-        <button class="btn red-btn py-1 px-2 text-xs" onclick="deleteMarksheetMasterRow(${idx})">🗑</button></div></td></tr>`;
-    });
-}
-function deleteMarksheetMasterRow(idx) {
-    if(confirm("Saara saved scorecard data delete karein?")){
-        schoolData.marksheets.splice(idx,1); renderMarksheets(); syncMasterDatabaseState();
-    }
+function renderExamList() {
+    let div = document.getElementById('examList'); div.innerHTML = "";
+    schoolData.exams.forEach(ex => { div.innerHTML += `<span class="bg-slate-800 text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1">${ex} <span class="text-red-400 font-bold ml-1 cursor-pointer" onclick="removeExam('${ex}')">&times;</span></span>`; });
 }
 
-/* MARKSHEET ADVANCED REPORT CARD PRINT ENGINE */
-function printA4AllExamsReport(studentSID) {
-    let m = schoolData.marksheets.find(row => row.sid === studentSID);
-    if(!m) return;
-    
-    let stDetails = schoolData.students.find(s => s.sid === studentSID) || { father: '-', mobile: '-', dob: '-' };
-
-    let sLogo = localStorage.getItem('schoolLogoData') || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23facc15'/></svg>";
-    let sName = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
-    let sAddr = localStorage.getItem('schoolAddress') || 'Varanasi, India';
-
-    let examsList = Object.keys(m.examsData || {});
-    let uniqueSubjectsSet = new Set();
-    schoolData.subjects.filter(s => s.subjectClass === m.studentClass).forEach(s => uniqueSubjectsSet.add(s.name));
-    let subjectsArray = Array.from(uniqueSubjectsSet);
-    
-    let trHeaders = `<th style="border:1px solid #000; padding:8px; color:black; text-align:left; background:#f1f5f9;">SUBJECT</th>`;
-    examsList.forEach(ex => { trHeaders += `<th style="border:1px solid #000; padding:8px; text-transform:uppercase; color:black; text-align:center; background:#f1f5f9;">${ex}</th>`; });
-    
-    let trRows = '';
-    subjectsArray.forEach(subName => {
-        trRows += `<tr><td style="border:1px solid #000; padding:8px; color:black; font-weight:bold;">${subName}</td>`;
-        examsList.forEach(ex => {
-            let config = schoolData.subjects.find(s=>s.subjectClass===m.studentClass && s.exam===ex && s.name===subName);
-            let score = m.examsData[ex].marks[subName] !== undefined ? m.examsData[ex].marks[subName] : '-';
-            trRows += `<td style="border:1px solid #000; padding:8px; text-align:center; color:black;">${score}${config?' / '+config.total:''}</td>`;
-        });
-        trRows += `</tr>`;
-    });
-    
-    document.getElementById('printViewArea').innerHTML = `
-        <div style="background:white; color:black; padding:30px; border:4px double #000; border-radius:12px;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:20px; border-bottom:3px solid #1e3a8a; padding-bottom:15px; margin-bottom:20px;">
-                <img src="${sLogo}" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:2px solid #1e3a8a;">
-                <div style="text-align:left;">
-                    <h1 style="font-size:28px; font-weight:bold; margin:0; color:#1e3a8a; text-transform:uppercase;">${sName}</h1>
-                    <p style="font-size:14px; color:#475569; margin:4px 0 0 0; font-weight:500;">📍 ${sAddr}</p>
-                </div>
-            </div>
-            
-            <h2 style="font-size:20px; text-align:center; text-transform:uppercase; font-weight:bold; color:#1e3a8a; margin-bottom:20px; letter-spacing:1px; text-decoration:underline;">PROGRESS SCORE REPORT CARD</h2>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; margin-bottom:20px; background:#f8fafc; padding:15px; border-radius:10px; border:1px solid #e2e8f0; line-height:1.6;">
-                <div><b>Student ID (SID):</b> ${m.sid}</div>
-                <div><b>Student Name:</b> ${m.name}</div>
-                <div><b>Father Name:</b> ${stDetails.father || '-'}</div>
-                <div><b>Class Level:</b> ${m.studentClass}</div>
-                <div><b>Mobile Number:</b> ${stDetails.mobile || '-'}</div>
-                <div><b>Date of Birth (DOB):</b> ${stDetails.dob || '-'}</div>
-            </div>
-            
-            <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:14px;">
-                <thead><tr>${trHeaders}</tr></thead>
-                <tbody>${trRows}</tbody>
-            </table>
-            
-            <div style="margin-top:70px; display:flex; justify-content:space-between; align-items:center; text-align:center; padding:0 15px;">
-                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">✒️ Class Teacher</div>
-                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">👨‍👩‍👦 Parent Sign</div>
-                <div style="width:180px; border-top:1.5px solid #000; padding-top:6px; font-size:13px; font-weight:bold; color:#334155;">👑 Principal Sign</div>
-            </div>
-        </div>
-    `;
-    document.getElementById('printPopup').style.display = 'flex';
+function addSubject() {
+    let cls = document.getElementById('popupSubjectClass').value; let ex = document.getElementById('subjectExam').value;
+    let name = document.getElementById('subjectName').value.trim(); let total = parseFloat(document.getElementById('subjectTotal').value) || 100;
+    if(!cls || cls === 'Class' || !ex || !name) return;
+    schoolData.subjects.push({ class: cls, exam: ex, name: name, total: total }); syncMasterDatabaseState();
+    document.getElementById('subjectName').value = ""; renderSubjectList();
+}
+function removeSubject(index) { schoolData.subjects.splice(index, 1); syncMasterDatabaseState(); renderSubjectList(); }
+function renderSubjectList() {
+    let div = document.getElementById('subjectList'); div.innerHTML = "";
+    schoolData.subjects.forEach((sub, idx) => { div.innerHTML += `<div class="flex justify-between items-center text-xs bg-black/30 p-2 rounded-lg border border-white/5"><span>Class ${sub.class} | ${sub.exam} | <b>${sub.name}</b> (Max: ${sub.total})</span><button class="text-red-400" onclick="removeSubject(${idx})">Delete</button></div>`; });
 }
 
-function saveTeacher(){
-    schoolData.teachers.push({ name: teacherNameInput.value, mobile: teacherMobile.value, subject: teacherSubject.value, salary: teacherSalary.value || 0 });
-    renderTeachers(); updateDashboardCounts(); syncMasterDatabaseState();
-    teacherNameInput.value=''; teacherMobile.value=''; teacherSubject.value=''; teacherSalary.value='';
-    alert("Teacher Added.");
-}
-function renderTeachers(){
-    teacherTable.innerHTML = '';
-    schoolData.teachers.forEach(t => { teacherTable.innerHTML += `<tr><td>${t.name}</td><td>${t.mobile}</td><td>${t.subject}</td><td>₹${t.salary}</td><td>👨‍🏫 Active</td></tr>`; });
-}
-
-function openMarksheetPopup(){ marksheetPopup.style.display='flex'; renderExamsAndSubjects(); }
-function closeMarksheetPopup(){ marksheetPopup.style.display='none'; updateExamDropdowns(); }
-
-function addExam(){
-    if(!examName.value) return; 
-    schoolData.exams.push(examName.value);
-    examName.value=''; renderExamsAndSubjects(); syncMasterDatabaseState();
-}
-function deleteExam(index) {
-    if(confirm(`Kya aap "${schoolData.exams[index]}" exam ko delete karna chahte hain?`)) {
-        let exName = schoolData.exams[index];
-        schoolData.exams.splice(index, 1);
-        schoolData.subjects = schoolData.subjects.filter(s => s.exam !== exName);
-        renderExamsAndSubjects(); syncMasterDatabaseState();
-    }
-}
-function addSubject(){
-    schoolData.subjects.push({ subjectClass: popupSubjectClass.value, exam: subjectExam.value, name: subjectName.value, total: subjectTotal.value || 100 });
-    subjectName.value=''; subjectTotal.value=''; renderExamsAndSubjects(); syncMasterDatabaseState();
-}
-function deleteSubjectConfig(index) {
-    if(confirm("Kya aap is Subject Configuration ko delete karna chahte hain?")) {
-        schoolData.subjects.splice(index, 1);
-        renderExamsAndSubjects(); syncMasterDatabaseState();
-    }
-}
-function renderExamsAndSubjects(){
-    examList.innerHTML = '';
-    schoolData.exams.forEach((ex, idx) => {
-        examList.innerHTML += `<div class="bg-slate-800 text-white px-3 py-1 rounded-lg flex items-center gap-2 text-xs">
-            <span>${ex}</span><button onclick="deleteExam(${idx})" class="text-red-400 font-bold hover:text-red-600">🗑</button>
-        </div>`;
-    });
-    subjectList.innerHTML = '';
-    schoolData.subjects.forEach((s, idx) => {
-        subjectList.innerHTML += `<div class="bg-slate-800 p-2 rounded-xl flex justify-between items-center text-xs">
-            <span><b>[Class ${s.subjectClass}]</b> ${s.exam}: ${s.name} (Max: ${s.total})</span>
-            <button onclick="deleteSubjectConfig(${idx})" class="bg-red-900 text-white px-2 py-0.5 rounded text-xs hover:bg-red-700">🗑 Delete</button>
-        </div>`;
-    });
-    updateExamDropdowns();
-}
-function updateExamDropdowns(){
-    markExam.innerHTML = schoolData.exams.map(e => `<option>${e}</option>`).join('');
-    subjectExam.innerHTML = schoolData.exams.map(e => `<option>${e}</option>`).join('');
+function downloadMasterBackup() {
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolData, null, 4));
+    let dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", `ROYAL_SCHOOL_MASTER_DB_BACKUP_${new Date().toLocaleDateString('en-CA')}.json`); dlAnchorElem.click();
 }
 
 function uploadDatabaseFile(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
+    let file = event.target.files[0]; if(!file) return;
+    let reader = new FileReader();
     reader.onload = function(e) {
         try {
-            let importedData = JSON.parse(e.target.result);
-            schoolData.students = importedData.students || [];
-            schoolData.teachers = importedData.teachers || [];
-            schoolData.fees = importedData.fees || [];
-            schoolData.marksheets = importedData.marksheets || [];
-            schoolData.exams = importedData.exams || [];
-            schoolData.subjects = importedData.subjects || [];
-            syncMasterDatabaseState(); refreshAllUIRecords();
-            alert("Database Synced Successfully!");
-        } catch (err) { alert("Invalid Backup File format."); }
+            let parsed = JSON.parse(e.target.result);
+            if(parsed.students && parsed.teachers && parsed.fees) { schoolData = parsed; syncMasterDatabaseState(); alert("Master restored smoothly!"); refreshAllUIRecords(); }
+        } catch(err) { alert("Corrupted parsing file context data structure."); }
     };
     reader.readAsText(file);
 }
-function downloadMasterBackup() {
-    let jsonString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolData, null, 2));
-    let dlAnchor = document.createElement('a'); dlAnchor.setAttribute("href", jsonString); dlAnchor.setAttribute("download", "SchoolMasterData_Backup.json");
-    document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
-}
+
 function clearFullDatabase() {
-    if(confirm("Completely reset full storage database?")) {
-        localStorage.clear();
-        schoolData = { students:[], teachers:[], fees:[], marksheets:[], exams:[], subjects:[] };
-        registeredFaces = []; biometricAuditLogs = []; syncMasterDatabaseState(); refreshAllUIRecords();
-    }
+    if(confirm("Attention! Wipe your browser local variables storage parameters?")) { localStorage.clear(); window.location.reload(); }
 }
 
-function saveSettings(){ 
-    if(schoolNameInput.value) {
-        localStorage.setItem('schoolName', schoolNameInput.value);
-        document.getElementById('schoolName').innerText = schoolNameInput.value;
-    }
-    if(schoolAddressInput.value) {
-        localStorage.setItem('schoolAddress', schoolAddressInput.value);
-    }
-    alert("Settings Applied Successfully!"); 
+function updateDashboardCounts(){ 
+    document.getElementById('studentCount').innerText = schoolData.students.length; 
+    document.getElementById('teacherCount').innerText = schoolData.teachers.length; 
 }
-
-function updateDashboardCounts(){ studentCount.innerText = schoolData.students.length; teacherCount.innerText = schoolData.teachers.length; }
-function showPage(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-function toggleMenu(id){ let m = document.getElementById(id); m.style.display = (m.style.display==='block')?'none':'block'; }
+function showPage(id){ 
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
+    document.getElementById(id).classList.add('active'); 
+}
+function toggleMenu(id){ 
+    let m = document.getElementById(id); m.style.display = (m.style.display==='block')?'none':'block'; 
+}
 function openThemePopup() { document.getElementById('themePopup').style.display = 'flex'; }
 function closeThemePopup() { document.getElementById('themePopup').style.display = 'none'; }
-function applyTheme(key) { document.body.style.background = themesConfig[key].body; document.getElementById('mainSidebar').style.background = themesConfig[key].sidebar; }
-function refreshAllUIRecords() { renderStudents(); renderTeachers(); renderFees(); renderMarksheets(); updateDashboardCounts(); updateExamDropdowns(); renderFaceSlotsStatus(); renderBiometricAuditLogs(); }
+function applyTheme(key) { 
+    document.body.style.background = themesConfig[key].body; document.getElementById('mainSidebar').style.background = themesConfig[key].sidebar; 
+}
+
+function refreshAllUIRecords() { 
+    renderStudents(); renderTeachers(); renderFees(); renderMarksheets(); renderAdmitCardEngineTable(); renderNoticeEngineTable();
+    updateDashboardCounts(); updateExamDropdowns(); renderFaceSlotsStatus(); renderBiometricAuditLogs(); generateSID(); generateTID();
+}
 
 window.onload = function(){
-    generateSID(); refreshAllUIRecords();
+    document.getElementById('salaryTransactionDate').value = new Date().toLocaleDateString('en-CA');
+    refreshAllUIRecords();
     let name = localStorage.getItem('schoolName'); if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
     let addressVal = localStorage.getItem('schoolAddress'); if(addressVal) { schoolAddressInput.value = addressVal; }
     let savedLogo = localStorage.getItem('schoolLogoData'); if(savedLogo) { document.getElementById('schoolLogo').src = savedLogo; }
