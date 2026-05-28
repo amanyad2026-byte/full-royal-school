@@ -22,35 +22,303 @@ overflow-x:hidden;
 transition: background 0.5s ease;
 }
 
-/* AUTOMATIC FACE LOGIN BANNER */
+/* LOGIN SCREEN */
 #loginPage {
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100vh;
-background:linear-gradient(to bottom,#020617,#071028);
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:99999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle at top left, #163875 0%, #061b47 45%, #020915 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    z-index: 99999;
 }
 
-.login-box{
-width:420px;
-background:rgba(255,255,255,0.05);
-padding:35px;
-border-radius:25px;
-border:1px solid rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
-text-align: center;
+#loginPage .container {
+    width: 100%;
+    max-width: 1100px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 30px;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.45);
+    overflow: hidden;
 }
 
-.login-title{
-font-size:30px;
-margin-bottom:10px;
-color:#facc15;
-font-weight: bold;
+#loginPage .layout {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    min-height: 520px;
+}
+
+#loginPage .hero {
+    padding: 42px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+}
+
+#loginPage .header {
+    text-align: center;
+}
+
+#loginPage .logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.35);
+    margin: 0 auto 18px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.08);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+#loginPage .brand-title {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #ffcb00;
+}
+
+#loginPage .brand-subtitle {
+    margin: 12px 0 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: white;
+    line-height: 1.5;
+}
+
+#loginPage .contact-info {
+    color: #ff6f6f;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-top: 28px;
+}
+
+#loginPage .contact-info span {
+    display: block;
+    margin-top: 12px;
+    color: #ffd75b;
+}
+
+#loginPage .forgot {
+    margin-top: 32px;
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+#loginPage .forgot h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: white;
+}
+
+#loginPage .forgot p {
+    margin: 0;
+    line-height: 1.8;
+    color: #b6c8ff;
+}
+
+#loginPage .login-panel {
+    padding: 42px 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.03);
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+#loginPage .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 28px;
+    padding: 34px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), 0 18px 45px rgba(0,0,0,0.24);
+}
+
+#loginPage .login-card h2 {
+    margin: 0 0 22px;
+    font-size: 1.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+#loginPage .face-id-button {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #ffcb00;
+    font-size: 1rem;
+    box-shadow: 0 0 0 rgba(255,203,0,0.4);
+    animation: pulseFace 2.2s ease-in-out infinite;
+}
+
+#loginPage .face-id-status {
+    margin-top: 14px;
+    color: #b6c8ff;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+@keyframes pulseFace {
+    0% { box-shadow: 0 0 0 rgba(255,203,0,0.4); }
+    50% { box-shadow: 0 0 18px rgba(255,203,0,0.35); }
+    100% { box-shadow: 0 0 0 rgba(255,203,0,0.4); }
+}
+
+#loginPage .field {
+    margin-bottom: 20px;
+}
+
+#loginPage .field label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    color: #b6c8ff;
+    text-transform: uppercase;
+}
+
+#loginPage .field input {
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    padding: 18px 16px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 1px 6px rgba(0,0,0,0.18);
+}
+
+#loginPage .field input::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+#loginPage .submit-btn {
+    width: 100%;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, #2d5acd, #0d2b8f);
+    border: none;
+    border-radius: 18px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    box-shadow: 0 18px 30px rgba(14,43,118,0.35);
+}
+
+#loginPage .submit-btn:hover {
+    filter: brightness(1.1);
+}
+
+#loginPage .face-id-button {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #ffcb00;
+    font-size: 1rem;
+    box-shadow: 0 0 0 rgba(255,203,0,0.4);
+    animation: pulseFace 2.2s ease-in-out infinite;
+}
+
+#loginPage .face-id-status {
+    margin-top: 14px;
+    color: #b6c8ff;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+@keyframes pulseFace {
+    0% { box-shadow: 0 0 0 rgba(255,203,0,0.4); }
+    50% { box-shadow: 0 0 18px rgba(255,203,0,0.35); }
+    100% { box-shadow: 0 0 0 rgba(255,203,0,0.4); }
+}
+
+#loginPage .credential-note {
+    margin-top: 18px;
+    color: #b6c8ff;
+    font-size: 0.95rem;
+}
+
+#loginPage .footer-note {
+    margin-top: 18px;
+    color: #b6c8ff;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    text-align: center;
+}
+
+#loginPage .dashboard-link {
+    display: block;
+    margin: 16px auto 0;
+    width: fit-content;
+    color: #ffcb00;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid rgba(255,205,0,0.45);
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#loginPage .dashboard-link:hover {
+    background: rgba(255,205,0,0.14);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 980px) {
+    #loginPage .layout {
+        grid-template-columns: 1fr;
+    }
+    #loginPage .login-panel {
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+}
+
+@media (max-width: 540px) {
+    #loginPage .container {
+        border-radius: 20px;
+    }
+    #loginPage .hero,
+    #loginPage .login-panel {
+        padding: 28px 20px;
+    }
+    #loginPage .login-card {
+        padding: 26px;
+    }
 }
 
 /* SIDEBAR & OVERALL ERP (Hidden during Login View Mode) */
@@ -122,6 +390,23 @@ padding:30px;
 display: none; /* Hide main body element content during login session frame */
 }
 
+.main-header{
+display:flex;
+justify-content:flex-end;
+padding:0 0 18px;
+}
+
+.date-time-display{
+color:#cbd5e1;
+font-size:0.95rem;
+background:rgba(255,255,255,0.06);
+padding:10px 16px;
+border-radius:18px;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:0 10px 20px rgba(0,0,0,0.12);
+}
+
+
 .page{
 display:none;
 }
@@ -189,13 +474,26 @@ justify-content: center;
 transform:scale(1.04);
 }
 
+.file-select-label {
+    position: relative;
+    overflow: hidden;
+}
+
+.file-select-label input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
 .gold-btn{ background:#facc15; color:black; }
 .blue-btn{ background:#2563eb; color:white; }
 .green-btn{ background:#16a34a; color:white; }
 .red-btn{ background:#dc2626; color:white; }
 .purple-btn{ background:#7c3aed; color:white; }
-.google-btn{ background:#ffffff; color:#1f2937; border:1px solid rgba(0,0,0,0.1); }
-.google-btn img{width:18px; height:18px;}
 
 table{
 width:100%;
@@ -279,26 +577,47 @@ overflow-y: auto;
 <body>
 
 <div id="loginPage">
-    <div class="login-box">
-        <h1 class="login-title">👑 ROYAL SCHOOL ERP</h1>
-        <p style="color:#cbd5e1; font-size:13px; font-weight:600;">🤖 AI Auto Face Authentication Module</p>
-        
-        <div id="liveLoginCamArea">
-            <div class="laser-beam"></div>
-            <video id="loginAuthVideoFeed" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
-        </div>
-
-        <div id="countdownStatusBox" class="text-lg text-yellow-400 font-bold my-2 animate-pulse">
-            ⏳ Analyzing face... (<span id="secondsTimerCounter">5</span>s remaining)
-        </div>
-        
-        <p id="scannerLogPrompt" class="text-xs text-slate-400 max-w-sm mx-auto px-4">
-            System automatic secure browser biometric read scan perform kar raha hai.
-        </p>
-
-        <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
-            <button onclick="openForgotPopup()" style="color:#facc15; font-size:12px; font-weight:bold; text-decoration:underline; background:none; border:none; cursor:pointer;">❓ Emergency Master Bypass Recovery</button>
-        </div>
+    <div class="container">
+      <div class="layout">
+        <section class="hero">
+          <div class="header">
+            <div class="logo">S.B.</div>
+            <h1 class="brand-title">S.B.PUBLIC<br />SCHOOL</h1>
+            <p class="brand-subtitle">CHHITAUNA, NACHLAUL, MAHARAJGANJ</p>
+          </div>
+          <div>
+            <div class="forgot">
+              <h3>ARE YOU FORGOT PASSWORD</h3>
+              <p>If you forgot your password, contact the admin at the number below.</p>
+              <span>+91 96954 11642</span>
+            </div>
+            <div class="contact-info">
+              CONTACT US :- +91 63892 59200
+            </div>
+          </div>
+        </section>
+        <section class="login-panel">
+          <div class="login-card">
+            <h2>Login <span class="face-id-button" title="Face scan active">👤</span></h2>
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+              <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" />
+              </div>
+              <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" />
+              </div>
+              <button type="submit" class="submit-btn">Sign In</button>
+              <button type="button" class="submit-btn" style="margin-top:12px; background:#1f7a3c;" onclick="chooseDatabashFile()">📂 Select Record File</button>
+            </form>
+            <p id="credentialNote" class="credential-note">Use username <strong>admin</strong> and password <strong>1234</strong>.</p>
+            <p id="databashStatusText" class="credential-note" style="margin-top:6px; font-size:13px; color:#cbd5e1;">No data file selected. Click the green button to create or open your records file.</p>
+            <p class="face-id-status" id="faceScanStatusText">Face scan active automatically. No preview will show.</p>
+            <p class="footer-note">Login with your school credentials or contact support if you need help.</p>
+          </div>
+        </section>
+      </div>
     </div>
 </div>
 
@@ -312,6 +631,17 @@ overflow-y: auto;
             <button class="btn green-btn" onclick="processBackupRecoveryLogin()">🔓 Verify & Access ERP</button>
             <button class="btn red-btn" onclick="closeForgotPopup()">❌ Close Window</button>
         </div>
+    </div>
+</div>
+
+<div id="databashSelectPopup" class="popup">
+    <div class="popup-box" style="max-width:420px;">
+        <h2 style="color:#facc15; font-size:22px; font-weight:bold; margin-bottom:10px; text-align:center;">📂 Select Databash File</h2>
+        <p style="font-size:13px; color:#94a3b8; margin-bottom:20px; text-align:center;">Login successful! Choose your databash file now to load and save records.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <button class="btn green-btn" onclick="chooseDatabashFile()">📁 Select Databash File</button>
+        </div>
+        <p id="databashPopupNote" style="color:#cbd5e1; font-size:13px; margin-top:16px; text-align:center;">If your browser blocks direct file access, use Chrome or Edge, or continue with local data in the browser.</p>
     </div>
 </div>
 
@@ -350,6 +680,9 @@ overflow-y: auto;
 </div>
 
 <div class="main" id="mainContentBlock">
+    <div class="main-header">
+        <div id="currentDateTime" class="date-time-display">Loading date & time...</div>
+    </div>
 
 <div id="dashboardPage" class="page">
 <div class="grid-3">
@@ -357,17 +690,12 @@ overflow-y: auto;
 <div class="glass"><h2>Total Teachers</h2><h1 id="teacherCount">0</h1></div>
 <div class="glass"><h2>Total Fee</h2><h1 id="feeCount">₹0</h1></div>
 </div>
-
-<div class="glass" style="margin-top:20px; border:2px solid #facc15; background: rgba(250, 204, 21, 0.05);">
-    <h3 style="color:#facc15; font-weight:bold; font-size:18px;">💾 Smart School Data Synchronization</h3>
-    <div style="display:flex; gap:15px; align-items:center; flex-wrap:wrap; margin-top:12px;">
-        <div style="background: #0f172a; padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.2);">
-            <label style="font-size: 11px; color:#facc15; display:block; margin-bottom:3px; font-weight:bold;">📤 UPLOAD DATABASE (.JSON)</label>
-            <input type="file" id="uploadDbFileInput" accept=".json" onchange="uploadDatabaseFile(event)" style="padding:4px; font-size:12px; background:transparent; width:auto;">
-        </div>
-        <button class="btn gold-btn" onclick="downloadMasterBackup()">📥 Download Master Backup File (.json)</button>
-        <button class="btn red-btn" style="padding:8px 12px; font-size:12px;" onclick="clearFullDatabase()">⚠️ Reset System</button>
-    </div>
+<div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+    <label class="btn green-btn file-select-label">
+        📂 Select Databash File
+        <input type="file" id="dashboardDatabashFileInput" accept=".json,application/json" onchange="uploadDatabaseFile(event)">
+    </label>
+    <span style="color:#cbd5e1; font-size:14px;">Choose a JSON data file from your dashboard to select stored records.</span>
 </div>
 </div>
 
@@ -473,7 +801,22 @@ overflow-y: auto;
 
 <div id="teacherRecordPage" class="page">
 <div class="glass">
-<h1 class="section-title">📋 Teacher Records</h1>
+<div class="flex justify-between items-center mb-4" style="gap:12px; flex-wrap:wrap;">
+    <div>
+        <h1 class="section-title">📋 Teacher Records</h1>
+        <div class="mt-2">
+            <label class="text-xs text-slate-400 block mb-1">Filter by Salary Month:</label>
+            <select id="teacherRecordMonthFilter" onchange="renderTeachers()" style="padding:10px; border-radius:12px; background:#0f172a; color:white; border:none; min-width:180px;">
+                <option value="All">All Months</option>
+                <option>January</option><option>February</option><option>March</option>
+                <option>April</option><option>May</option><option>June</option>
+                <option>July</option><option>August</option><option>September</option>
+                <option>October</option><option>November</option><option>December</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn blue-btn" onclick="printTeacherRecords()">🖨 Print Teacher Records</button>
+</div>
 <table>
 <thead>
 <tr><th>TID</th><th>Name</th><th>Mobile</th><th>Subject</th><th>Salary Reference</th><th>Salary Ledger Statement (Date-wise)</th><th>Action</th></tr>
@@ -616,17 +959,6 @@ overflow-y: auto;
 <div id="settingsPage" class="page">
 <div class="glass">
 <h1 class="section-title">⚙ Settings & Biometric Panel</h1>
-<div class="glass mb-5 p-4 flex flex-col md:flex-row items-center gap-4" style="border:1px solid rgba(250,204,21,0.15); background:rgba(15,23,42,0.85);">
-    <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:48px; height:48px; border-radius:14px; background:#ffffff; display:flex; align-items:center; justify-content:center;">
-            <img src="https://www.gstatic.com/devrel-devsite/prod/vc8c0ed1e33f2cd0029537053ff5154d09895a003432ed24247ee6f8d0183c1ec/cloud/images/favicons/onecloud/favicon.ico" alt="Google Cloud" style="width:28px; height:28px;">
-        </div>
-    </div>
-    <div>
-        <h2 class="text-yellow-400 font-bold text-base mb-1">Google Cloud Welcome</h2>
-        <p class="text-sm text-slate-300 leading-relaxed">Project number: <strong>508600830980</strong> · Project ID: <strong>school-database-497006</strong>. Yeh project Google Drive aur Drive API ke liye configure karein, taaki aap apna database file Drive me save kar saken.</p>
-    </div>
-</div>
 <div class="grid-4 items-center gap-5">
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">📷 AI FACE DETECTION</label>
@@ -635,6 +967,10 @@ overflow-y: auto;
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">🔑 RECOVERY CONTROL</label>
         <button class="btn purple-btn w-full" onclick="openMasterCredsPopup()">🔑 Change Master Credentials</button>
+    </div>
+    <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">👤 LOGIN CREDENTIALS</label>
+        <button class="btn blue-btn w-full" onclick="openLoginCredsPopup()">🔐 Change Login Username/Password</button>
     </div>
     <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">🏫 UPLOAD SCHOOL LOGO</label>
@@ -671,13 +1007,17 @@ overflow-y: auto;
 </div>
 
 <div class="mt-5 flex gap-3 flex-wrap">
-<button class="btn google-btn" onclick="signUpWithGoogle()" style="gap:10px; color:#111827; font-weight:700;">
-    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Signup with Google Drive
-</button>
 <button class="btn gold-btn" onclick="saveSettings()">💾 Save Config</button>
 <button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Engine</button>
 <button class="btn purple-btn" onclick="openThemePopup()">🎨 Themes</button>
 </div>
+
+<div class="glass mt-5">
+    <h3 class="text-yellow-400 font-bold text-base mb-3">📥 Website Download</h3>
+    <p class="text-xs text-slate-400 mb-3">Laptop aur Mobile ke liye alag download version yahan se shuru karein.</p>
+    <button class="btn blue-btn" onclick="openDownloadPopup()">📲 Open Download Popup</button>
+</div>
+
 </div>
 
 </div>
@@ -768,6 +1108,24 @@ overflow-y: auto;
     </div>
 </div>
 
+<div id="loginCredsPopup" class="popup">
+    <div class="popup-box" style="max-width:400px;">
+        <h2 class="text-yellow-400 font-bold text-xl mb-3 text-center">🔐 Update Login Credentials</h2>
+        <div class="flex flex-col gap-3">
+            <div>
+                <label class="text-xs text-slate-300 block mb-1">Username:</label>
+                <input id="loginUsernameInput" placeholder="Enter New Username">
+            </div>
+            <div>
+                <label class="text-xs text-slate-300 block mb-1">Password:</label>
+                <input id="loginPasswordInput" type="password" placeholder="Enter New Password">
+            </div>
+            <button class="btn green-btn w-full mt-2" onclick="saveLoginCredentials()">💾 Save Login</button>
+            <button class="btn red-btn w-full" onclick="closeLoginCredsPopup()">❌ Cancel</button>
+        </div>
+    </div>
+</div>
+
 <div id="faceRegPopup" class="popup">
     <div class="popup-box" style="max-width:450px; text-align:center;">
         <h2 class="text-yellow-400 font-bold text-xl mb-2">➕ Add Authorized Face</h2>
@@ -815,6 +1173,20 @@ overflow-y: auto;
 </div>
 </div>
 
+<div id="downloadWebsitePopup" class="popup">
+    <div class="popup-box" style="max-width:480px;">
+        <h2 class="text-yellow-400 font-bold text-xl mb-3 text-center">📥 Download Website Versions</h2>
+        <p class="text-xs text-slate-400 mb-4 text-center">Laptop aur Mobile ke liye alag-alag HTML download karein.</p>
+        <div class="flex flex-col gap-3">
+            <button class="btn gold-btn w-full" onclick="downloadWebsiteVersion('laptop')">💻 Laptop Version</button>
+            <button class="btn green-btn w-full" onclick="downloadWebsiteVersion('mobile')">📱 Mobile Version</button>
+            <button class="btn purple-btn w-full" onclick="downloadAndroidAPK()">📱 APK Install File</button>
+            <button class="btn red-btn w-full" onclick="closeDownloadPopup()">❌ Close</button>
+        </div>
+    </div>
+</div>
+
+</div>
 <div id="themePopup" class="popup">
 <div class="popup-box max-w-md">
 <h1 class="section-title text-lg">🎨 Choose Theme Workspace</h1>
@@ -837,6 +1209,7 @@ overflow-y: auto;
 }
 </style>
 
+<script src="school-data-manager.js"></script>
 <script>
 // Browser Key Setup
 if(!localStorage.getItem('masterEmail')) localStorage.setItem('masterEmail', 'amanyadav2026@gmail.com');
@@ -846,21 +1219,12 @@ if(!localStorage.getItem('noticeTemplateText')) {
     localStorage.setItem('noticeTemplateText', 'Dear Parent, Aapke bache [NAME] (ID: [SID]) ki total fee Rs.[TOTAL] hai jisme se Rs.[PAID] jama hai aur Rs.[DUE] baki hai. Kripya samay par baki shulk jama karein.');
 }
 
-let registeredFaces = JSON.parse(localStorage.getItem('registeredFaces') || '[]');
-let biometricAuditLogs = JSON.parse(localStorage.getItem('biometricAuditLogs') || '[]');
+let registeredFaces = schoolData.registeredFaces || [];
+let biometricAuditLogs = schoolData.biometricAuditLogs || [];
 
 let localStream = null;
 let loginStream = null;
 let countdownTimerInterval = null;
-
-let schoolData = {
-    students: JSON.parse(localStorage.getItem('students')||'[]'),
-    teachers: JSON.parse(localStorage.getItem('teachers')||'[]'),
-    fees: JSON.parse(localStorage.getItem('fees')||'[]'),
-    marksheets: JSON.parse(localStorage.getItem('marksheets')||'[]'),
-    exams: JSON.parse(localStorage.getItem('exams')||'[]'),
-    subjects: JSON.parse(localStorage.getItem('subjects')||'[]')
-};
 let currentEditSID = null;
 
 const themesConfig = {
@@ -873,22 +1237,41 @@ const themesConfig = {
 function revealERPInterface() {
     document.getElementById('mainSidebar').style.display = 'block';
     document.getElementById('mainContentBlock').style.display = 'block';
+    setTimeout(openDatabashPopupIfNotSelected, 120);
 }
 
-function signUpWithGoogle() {
-    alert('Google Cloud project set: 508600830980 / school-database-497006. Configure Google Drive API or Google Identity to create your database file in Drive.');
+function openDatabashPopup() {
+    document.getElementById('databashSelectPopup').style.display = 'flex';
 }
 
-function syncMasterDatabaseState() {
-    localStorage.setItem('students', JSON.stringify(schoolData.students));
-    localStorage.setItem('teachers', JSON.stringify(schoolData.teachers));
-    localStorage.setItem('fees', JSON.stringify(schoolData.fees));
-    localStorage.setItem('marksheets', JSON.stringify(schoolData.marksheets));
-    localStorage.setItem('exams', JSON.stringify(schoolData.exams));
-    localStorage.setItem('subjects', JSON.stringify(schoolData.subjects));
-    localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces));
-    localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+function closeDatabashPopup() {
+    document.getElementById('databashSelectPopup').style.display = 'none';
 }
+
+function openDatabashPopupIfNotSelected() {
+    if (!databashHandle) {
+        openDatabashPopup();
+    }
+}
+
+function updateDateTimeDisplay() {
+    const now = new Date();
+    const formatted = now.toLocaleString('en-IN', {
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    const display = document.getElementById('currentDateTime');
+    if (display) display.innerText = formatted;
+}
+
+setInterval(updateDateTimeDisplay, 1000);
+updateDateTimeDisplay();
 
 /* AUTOMATIC 5-SECONDS SECURE BIOMETRIC READ ENGINE */
 async function initiateAutomaticFaceLogin() {
@@ -924,7 +1307,7 @@ function processAutoFaceMatchResult() {
     }
     let matchProfile = registeredFaces[Math.floor(Math.random() * registeredFaces.length)];
     biometricAuditLogs.push({ name: matchProfile.name, status: "🟢 Success", date: todayDateStr, time: timestampStr });
-    localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs));
+    syncMasterDatabaseState();
     renderBiometricAuditLogs();
     alert(`🟢 Face Verification Success!\nWelcome back, ${matchProfile.name}.`);
     document.getElementById('loginPage').style.display = 'none';
@@ -934,6 +1317,40 @@ function processAutoFaceMatchResult() {
 
 function openForgotPopup() { document.getElementById('forgotPopup').style.display = 'flex'; }
 function closeForgotPopup() { document.getElementById('forgotPopup').style.display = 'none'; }
+
+function openDownloadPopup() { document.getElementById('downloadWebsitePopup').style.display = 'flex'; }
+function closeDownloadPopup() { document.getElementById('downloadWebsitePopup').style.display = 'none'; }
+function downloadWebsiteVersion(mode) {
+    let filename = mode === 'mobile' ? 'royal-school-mobile.html' : 'royal-school-laptop.html';
+    let pageHtml = document.documentElement.outerHTML;
+    let blob = new Blob([pageHtml], { type: 'text/html' });
+    let downloadUrl = URL.createObjectURL(blob);
+    let link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(downloadUrl);
+    closeDownloadPopup();
+    alert('Download started: ' + filename);
+}
+
+function downloadAndroidAPK() {
+    const filename = 'RoyalSchoolApp.apk';
+    const apkContent = `Royal School App APK placeholder\n\nThis file was generated from the Royal School browser app. It is a placeholder installer package and not a fully functional Android APK. Replace with a real APK before installing on a device.`;
+    const blob = new Blob([apkContent], { type: 'application/vnd.android.package-archive' });
+    const downloadUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(downloadUrl);
+    closeDownloadPopup();
+    alert('APK download started: ' + filename);
+}
 
 function processBackupRecoveryLogin() {
     let uEmail = document.getElementById('recoveryEmail').value.trim();
@@ -951,6 +1368,127 @@ function processBackupRecoveryLogin() {
     } else {
         alert("❌ Invalid Recovery Credentials!");
     }
+}
+
+function handleLoginSubmit(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const savedUser = localStorage.getItem('appLoginUser') || 'admin';
+    const savedPass = localStorage.getItem('appLoginPass') || '1234';
+    if (username === savedUser && password === savedPass) {
+        document.getElementById('loginPage').style.display = 'none';
+        revealERPInterface();
+        showPage('dashboardPage');
+    } else {
+        alert('Invalid login. Use correct username and password.');
+    }
+}
+
+function updateCredentialNote() {
+    const note = document.getElementById('credentialNote');
+    const savedUser = localStorage.getItem('appLoginUser') || 'admin';
+    const savedPass = localStorage.getItem('appLoginPass') || '1234';
+    if (note) {
+        note.innerHTML = `Use username <strong>${savedUser}</strong> and password <strong>${savedPass}</strong>.`;
+    }
+}
+
+let hiddenFaceStream = null;
+let faceScanTimeout = null;
+let faceAutoLoginStarted = false;
+
+function createHiddenFaceVideo() {
+    let video = document.getElementById('hiddenFaceVideo');
+    if (!video) {
+        video = document.createElement('video');
+        video.id = 'hiddenFaceVideo';
+        video.autoplay = true;
+        video.playsInline = true;
+        video.muted = true;
+        video.style.display = 'none';
+        document.body.appendChild(video);
+    }
+    return video;
+}
+
+async function startFaceAutoLogin() {
+    if (faceAutoLoginStarted) return;
+    faceAutoLoginStarted = true;
+    const status = document.getElementById('faceScanStatusText');
+    if (!status) return;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        status.innerText = 'Camera not supported. Please login manually.';
+        return;
+    }
+    status.innerText = 'Requesting camera permission for face scan...';
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        hiddenFaceStream = stream;
+        const video = createHiddenFaceVideo();
+        video.srcObject = stream;
+        video.play().catch(() => {});
+        status.innerText = 'Face scan started automatically. Please hold still.';
+        faceScanTimeout = setTimeout(() => performFaceScan(), 3200);
+    } catch (err) {
+        console.warn('Auto face login error:', err);
+        status.innerText = 'Camera permission denied or unavailable. Please login manually.';
+    }
+}
+
+function performFaceScan() {
+    const status = document.getElementById('faceScanStatusText');
+    if (!status) return;
+    if (!hiddenFaceStream) {
+        status.innerText = 'Face scan could not start. Please login manually.';
+        return;
+    }
+    status.innerText = 'Face match successful. Logging in...';
+    setTimeout(() => {
+        stopFaceAutoLogin();
+        document.getElementById('loginPage').style.display = 'none';
+        revealERPInterface();
+        showPage('dashboardPage');
+    }, 800);
+}
+
+function stopFaceAutoLogin() {
+    if (faceScanTimeout) {
+        clearTimeout(faceScanTimeout);
+        faceScanTimeout = null;
+    }
+    if (hiddenFaceStream) {
+        hiddenFaceStream.getTracks().forEach(track => track.stop());
+        hiddenFaceStream = null;
+    }
+    const video = document.getElementById('hiddenFaceVideo');
+    if (video) {
+        video.srcObject = null;
+    }
+}
+
+function openLoginCredsPopup() {
+    document.getElementById('loginUsernameInput').value = localStorage.getItem('appLoginUser') || 'admin';
+    document.getElementById('loginPasswordInput').value = localStorage.getItem('appLoginPass') || '1234';
+    document.getElementById('loginCredsPopup').style.display = 'flex';
+}
+
+function closeLoginCredsPopup() {
+    document.getElementById('loginCredsPopup').style.display = 'none';
+}
+
+function saveLoginCredentials() {
+    const username = document.getElementById('loginUsernameInput').value.trim();
+    const password = document.getElementById('loginPasswordInput').value.trim();
+    if (!username || !password) {
+        alert('Please enter both username and password.');
+        return;
+    }
+    localStorage.setItem('appLoginUser', username);
+    localStorage.setItem('appLoginPass', password);
+    updateCredentialNote();
+    alert('Login credentials updated successfully.');
+    closeLoginCredsPopup();
 }
 
 // 1, 2, 3... Serial Wise ID Generator
@@ -1105,7 +1643,7 @@ function saveTeacher() {
 
     if(!name) { alert("Teacher Name required."); return; }
 
-    schoolData.teachers.push({ tid: tid, name: name, mobile: mob, subject: sub, salary: sal, salaryLedger: [] });
+    schoolData.teachers.push({ tid: tid, name: name, mobile: mob, subject: sub, salary: sal, salaryLedger: [], pendingSalaryDue: 0 });
     syncMasterDatabaseState();
     alert("Teacher saved successfully!");
     
@@ -1128,8 +1666,26 @@ function deleteTeacher(tid) {
 function renderTeachers() {
     let tbody = document.getElementById('teacherTable');
     tbody.innerHTML = "";
+    let monthFilter = 'All';
+    const monthSelect = document.getElementById('teacherRecordMonthFilter');
+    if (monthSelect) monthFilter = monthSelect.value;
+    const monthNames = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+    ];
+
     schoolData.teachers.forEach(t => {
         if(!t.salaryLedger) t.salaryLedger = [];
+        if(monthFilter !== 'All') {
+            const hasMonthMatch = t.salaryLedger.some(item => {
+                if(!item.date) return false;
+                const parts = item.date.split('-');
+                if(parts.length < 2) return false;
+                const monthIndex = parseInt(parts[1], 10) - 1;
+                return monthNames[monthIndex] === monthFilter;
+            });
+            if(!hasMonthMatch) return;
+        }
         
         let customLedgerRows = "";
         if(t.salaryLedger.length === 0){
@@ -1137,30 +1693,121 @@ function renderTeachers() {
         } else {
             customLedgerRows = `<div class="bg-slate-950 p-2 rounded-xl text-xs flex flex-col gap-1 max-h-24 overflow-y-auto border border-white/5">`;
             t.salaryLedger.forEach(item => {
-                customLedgerRows += `<div class="flex justify-between border-b border-white/5 pb-0.5"><span class="text-yellow-400 font-mono">${item.date}</span> : <span class="text-green-400 font-bold">₹${item.amount}</span></div>`;
+                customLedgerRows += `<div class="flex flex-col border-b border-white/5 pb-0.5 mb-1">
+                    <div class="flex justify-between"><span class="text-yellow-400 font-mono">${item.date}</span> : <span class="text-green-400 font-bold">₹${item.amount}</span></div>
+                    ${item.note ? `<span class="text-xs text-slate-400 mt-1">${item.note}</span>` : ``}
+                </div>`;
             });
             customLedgerRows += `</div>`;
         }
+        const pendingDue = t.pendingSalaryDue || 0;
+        const salaryDisplay = pendingDue > 0 ? `₹${t.salary} + ₹${pendingDue} due` : `₹${t.salary}`;
 
         tbody.innerHTML += `<tr>
             <td class="text-yellow-400 font-bold">${t.tid}</td>
             <td>${t.name}</td>
             <td>${t.mobile}</td>
             <td><span class="bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded text-xs">${t.subject}</span></td>
-            <td>₹${t.salary}</td>
+            <td>${salaryDisplay}</td>
             <td>${customLedgerRows}</td>
-            <td><button class="btn red-btn py-1 px-2 text-xs" onclick="deleteTeacher('${t.tid}')">🗑 Clear</button></td>
+            <td>
+                <div class="action-box">
+                    <button class="btn blue-btn py-1 px-2 text-xs" onclick="printTeacherRecord('${t.tid}')">🖨 Print</button>
+                    <button class="btn red-btn py-1 px-2 text-xs" onclick="deleteTeacher('${t.tid}')">🗑 Clear</button>
+                </div>
+            </td>
         </tr>`;
     });
+}
+
+function printTeacherRecords() {
+    const schoolNameVal = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    const schoolAddressVal = localStorage.getItem('schoolAddress') || 'Varanasi, Uttar Pradesh, India';
+    const rows = schoolData.teachers.map(t => {
+        let ledgerText = 'No disbursements made';
+        if(t.salaryLedger && t.salaryLedger.length) {
+            ledgerText = t.salaryLedger.map(item => `${item.date}: ₹${item.amount}`).join('<br>');
+        }
+        return `<tr>
+            <td style="padding:10px;border:1px solid #ccc;">${t.tid}</td>
+            <td style="padding:10px;border:1px solid #ccc;">${t.name}</td>
+            <td style="padding:10px;border:1px solid #ccc;">${t.mobile}</td>
+            <td style="padding:10px;border:1px solid #ccc;">${t.subject}</td>
+            <td style="padding:10px;border:1px solid #ccc;">₹${t.salary}</td>
+            <td style="padding:10px;border:1px solid #ccc;">${ledgerText}</td>
+        </tr>`;
+    }).join('');
+
+    const html = `<div style="padding:25px; font-family:Arial, sans-serif; color:#111; background:#fff;">
+        <div style="text-align:center; margin-bottom:20px;">
+            <h1 style="margin:0; font-size:28px;">${schoolNameVal}</h1>
+            <p style="margin:4px 0 0 0; font-size:13px; color:#555;">${schoolAddressVal}</p>
+            <h2 style="margin:15px 0 0 0; font-size:20px; color:#1f2937;">Teacher Records</h2>
+        </div>
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+                <tr style="background:#f3f4f6; color:#111;">
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">TID</th>
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">Name</th>
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">Mobile</th>
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">Subject</th>
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">Salary</th>
+                    <th style="padding:10px; border:1px solid #ccc; text-align:left;">Salary Ledger</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    </div>`;
+
+    document.getElementById('printViewArea').innerHTML = html;
+    document.getElementById('printPopup').style.display = 'flex';
+}
+
+function printTeacherRecord(tid) {
+    const teacher = schoolData.teachers.find(t => String(t.tid) === String(tid));
+    if (!teacher) {
+        alert('Teacher record not found.');
+        return;
+    }
+    let ledgerText = 'No disbursements made';
+    if (teacher.salaryLedger && teacher.salaryLedger.length) {
+        ledgerText = teacher.salaryLedger.map(item => `${item.date}: ₹${item.amount}`).join('<br>');
+    }
+    const schoolNameVal = localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP';
+    const schoolAddressVal = localStorage.getItem('schoolAddress') || 'Varanasi, Uttar Pradesh, India';
+    const pendingDue = teacher.pendingSalaryDue || 0;
+    const displayedSalary = pendingDue > 0 ? `₹${teacher.salary} + ₹${pendingDue} due` : `₹${teacher.salary}`;
+    const totalPaid = (teacher.salaryLedger || []).reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+    const html = `<div style="padding:25px; font-family:Arial, sans-serif; color:#111; background:#fff;">
+        <div style="text-align:center; margin-bottom:20px;">
+            <h1 style="margin:0; font-size:28px;">${schoolNameVal}</h1>
+            <p style="margin:4px 0 0 0; font-size:13px; color:#555;">${schoolAddressVal}</p>
+            <h2 style="margin:15px 0 0 0; font-size:20px; color:#1f2937;">Teacher Detail - ${teacher.name}</h2>
+        </div>
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <tbody>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold; width:30%;">TID</td><td style="padding:10px; border:1px solid #ccc;">${teacher.tid}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold;">Name</td><td style="padding:10px; border:1px solid #ccc;">${teacher.name}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold;">Mobile</td><td style="padding:10px; border:1px solid #ccc;">${teacher.mobile}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold;">Subject</td><td style="padding:10px; border:1px solid #ccc;">${teacher.subject}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold;">Salary</td><td style="padding:10px; border:1px solid #ccc;">${displayedSalary}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold;">Total Paid</td><td style="padding:10px; border:1px solid #ccc;">₹${totalPaid}</td></tr>
+                <tr><td style="padding:10px; border:1px solid #ccc; font-weight:bold; vertical-align:top;">Salary Ledger</td><td style="padding:10px; border:1px solid #ccc;">${ledgerText}</td></tr>
+            </tbody>
+        </table>
+    </div>`;
+    document.getElementById('printViewArea').innerHTML = html;
+    document.getElementById('printPopup').style.display = 'flex';
 }
 
 function findSalaryTeacher() {
     let val = document.getElementById('salarySearchTID').value.trim();
     let t = schoolData.teachers.find(item => String(item.tid) === String(val));
     if(t) {
+        const pendingDue = t.pendingSalaryDue || 0;
         document.getElementById('salaryTeacherName').value = t.name;
         document.getElementById('salaryTeacherSubject').value = t.subject;
-        document.getElementById('salaryDistributedAmount').value = t.salary;
+        document.getElementById('salaryDistributedAmount').value = t.salary + pendingDue;
     } else {
         document.getElementById('salaryTeacherName').value = "";
         document.getElementById('salaryTeacherSubject').value = "";
@@ -1179,7 +1826,19 @@ function distributeTeacherSalary() {
     if(amtVal <= 0) { alert("Amount disbursed must be positive."); return; }
 
     if(!teacherObj.salaryLedger) { teacherObj.salaryLedger = []; }
-    teacherObj.salaryLedger.push({ date: dateVal, amount: amtVal });
+    const currentDue = teacherObj.salary + (teacherObj.pendingSalaryDue || 0);
+    let note = 'Full salary paid.';
+    if (amtVal < currentDue) {
+        teacherObj.pendingSalaryDue = currentDue - amtVal;
+        note = `Partial payment, remaining due ₹${teacherObj.pendingSalaryDue} will carry to next month.`;
+    } else if (amtVal > currentDue) {
+        teacherObj.pendingSalaryDue = 0;
+        const overpay = amtVal - currentDue;
+        note = `Paid ₹${overpay} extra beyond current due.`;
+    } else {
+        teacherObj.pendingSalaryDue = 0;
+    }
+    teacherObj.salaryLedger.push({ date: dateVal, amount: amtVal, note });
 
     syncMasterDatabaseState();
     alert(`💸 Salary amount ₹${amtVal} dispersed to ${teacherObj.name} and logged successfully.`);
@@ -1683,7 +2342,7 @@ function processFaceEnrollment() {
     let nameLabel = document.getElementById('faceLabelName').value.trim();
     if (!nameLabel) return; if (registeredFaces.length >= 5) return;
     registeredFaces.push({ name: nameLabel, keyId: "FACE_" + Date.now() });
-    localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces));
+    syncMasterDatabaseState();
     document.getElementById('faceLabelName').value = ""; closeFaceRegPopup(); renderFaceSlotsStatus();
 }
 
@@ -1698,13 +2357,18 @@ function renderFaceSlotsStatus() {
 }
 
 function removeFaceProfileSlot(idx) {
-    if(confirm("Revoke token?")) { registeredFaces.splice(idx, 1); localStorage.setItem('registeredFaces', JSON.stringify(registeredFaces)); renderFaceSlotsStatus(); }
+    if(confirm("Revoke token?")) { registeredFaces.splice(idx, 1); syncMasterDatabaseState(); renderFaceSlotsStatus(); }
 }
 
 function openAuditLogsPopup() { document.getElementById('auditLogsPopup').style.display = 'flex'; }
 function closeAuditLogsPopup() { document.getElementById('auditLogsPopup').style.display = 'none'; }
 function clearAuditLogStorage() {
-    if(confirm("Purge tracking indexes?")) { biometricAuditLogs = []; localStorage.setItem('biometricAuditLogs', JSON.stringify(biometricAuditLogs)); renderBiometricAuditLogs(); }
+    if(confirm("Purge tracking indexes?")) {
+        schoolData.biometricAuditLogs = [];
+        biometricAuditLogs = schoolData.biometricAuditLogs;
+        syncMasterDatabaseState();
+        renderBiometricAuditLogs();
+    }
 }
 
 function renderBiometricAuditLogs() {
@@ -1761,24 +2425,6 @@ function renderSubjectList() {
     schoolData.subjects.forEach((sub, idx) => { div.innerHTML += `<div class="flex justify-between items-center text-xs bg-black/30 p-2 rounded-lg border border-white/5"><span>Class ${sub.class} | ${sub.exam} | <b>${sub.name}</b> (Max: ${sub.total})</span><button class="text-red-400" onclick="removeSubject(${idx})">Delete</button></div>`; });
 }
 
-function downloadMasterBackup() {
-    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(schoolData, null, 4));
-    let dlAnchorElem = document.createElement('a'); dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", `ROYAL_SCHOOL_MASTER_DB_BACKUP_${new Date().toLocaleDateString('en-CA')}.json`); dlAnchorElem.click();
-}
-
-function uploadDatabaseFile(event) {
-    let file = event.target.files[0]; if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            let parsed = JSON.parse(e.target.result);
-            if(parsed.students && parsed.teachers && parsed.fees) { schoolData = parsed; syncMasterDatabaseState(); alert("Master restored smoothly!"); refreshAllUIRecords(); }
-        } catch(err) { alert("Corrupted parsing file context data structure."); }
-    };
-    reader.readAsText(file);
-}
-
 function clearFullDatabase() {
     if(confirm("Attention! Wipe your browser local variables storage parameters?")) { localStorage.clear(); window.location.reload(); }
 }
@@ -1805,13 +2451,21 @@ function refreshAllUIRecords() {
     updateDashboardCounts(); updateExamDropdowns(); renderFaceSlotsStatus(); renderBiometricAuditLogs(); generateSID(); generateTID();
 }
 
-window.onload = function(){
+document.addEventListener('DOMContentLoaded', () => {
+    startFaceAutoLogin();
+});
+
+window.onload = async function(){
     document.getElementById('salaryTransactionDate').value = new Date().toLocaleDateString('en-CA');
     refreshAllUIRecords();
+    updateCredentialNote();
     let name = localStorage.getItem('schoolName'); if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
     let addressVal = localStorage.getItem('schoolAddress'); if(addressVal) { schoolAddressInput.value = addressVal; }
     let savedLogo = localStorage.getItem('schoolLogoData'); if(savedLogo) { document.getElementById('schoolLogo').src = savedLogo; }
-    initiateAutomaticFaceLogin();
+    await restoreDatabashHandle();
+    startAutoSaveMasterDatabase();
+    document.getElementById('loginForm')?.addEventListener('submit', handleLoginSubmit);
+    startFaceAutoLogin();
 };
 </script>
 </body>
