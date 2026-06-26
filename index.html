@@ -609,10 +609,8 @@ overflow-y: auto;
                 <input type="password" id="password" name="password" placeholder="Enter password" />
               </div>
               <button type="submit" class="submit-btn">Sign In</button>
-              <button type="button" class="submit-btn" style="margin-top:12px; background:#1f7a3c;" onclick="chooseDatabashFile()">📂 Select Record File</button>
             </form>
             <p id="credentialNote" class="credential-note">Use username <strong>admin</strong> and password <strong>1234</strong>.</p>
-            <p id="databashStatusText" class="credential-note" style="margin-top:6px; font-size:13px; color:#cbd5e1;">No data file selected. Click the green button to create or open your records file.</p>
             <p class="face-id-status" id="faceScanStatusText">Face scan active automatically. No preview will show.</p>
             <p class="footer-note">Login with your school credentials or contact support if you need help.</p>
           </div>
@@ -634,16 +632,6 @@ overflow-y: auto;
     </div>
 </div>
 
-<div id="databashSelectPopup" class="popup">
-    <div class="popup-box" style="max-width:420px;">
-        <h2 style="color:#facc15; font-size:22px; font-weight:bold; margin-bottom:10px; text-align:center;">📂 Select Databash File</h2>
-        <p style="font-size:13px; color:#94a3b8; margin-bottom:20px; text-align:center;">Login successful! Choose your databash file now to load and save records.</p>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-            <button class="btn green-btn" onclick="chooseDatabashFile()">📁 Select Databash File</button>
-        </div>
-        <p id="databashPopupNote" style="color:#cbd5e1; font-size:13px; margin-top:16px; text-align:center;">If your browser blocks direct file access, use Chrome or Edge, or continue with local data in the browser.</p>
-    </div>
-</div>
 
 <div class="sidebar" id="mainSidebar">
 <div class="logo-box">
@@ -690,13 +678,7 @@ overflow-y: auto;
 <div class="glass"><h2>Total Teachers</h2><h1 id="teacherCount">0</h1></div>
 <div class="glass"><h2>Total Fee</h2><h1 id="feeCount">₹0</h1></div>
 </div>
-<div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-    <label class="btn green-btn file-select-label">
-        📂 Select Databash File
-        <input type="file" id="dashboardDatabashFileInput" accept=".json,application/json" onchange="uploadDatabaseFile(event)">
-    </label>
-    <span style="color:#cbd5e1; font-size:14px;">Choose a JSON data file from your dashboard to select stored records.</span>
-</div>
+
 </div>
 
 <div id="addStudentPage" class="page">
@@ -977,8 +959,16 @@ overflow-y: auto;
         <input type="file" id="schoolLogoUploadInput" accept="image/*" onchange="uploadSchoolLogo(event)" style="padding:10px;">
     </div>
     <div>
+        <label class="text-xs text-yellow-400 font-bold block mb-1">📂 UPLOAD DATABASE JSON (dta.json)</label>
+        <input type="file" id="databaseUploadInput" accept=".json,application/json" onchange="uploadDatabaseFile(event)" style="padding:10px;">
+        <button class="btn green-btn w-full mt-2" onclick="selectDatabaseFileForAutoSave()">📁 Select Database File for Auto-Save</button>
+        <button class="btn blue-btn w-full mt-2" onclick="downloadMasterBackup()">⬇️ Download Current Database JSON</button>
+        <p id="databashStatusText" class="text-xs text-slate-400 mt-2">Upload the offline database file from <strong>C:\Users\School work\OneDrive\dta.json</strong>.</p>
+    </div>
+    <div>
         <label class="text-xs text-yellow-400 font-bold block mb-1">📝 NOTICE TEMPLATE</label>
         <button class="btn gold-btn w-full" onclick="openNoticeEditorPopup()">✏️ Edit Notice Template</button>
+        <button class="btn gold-btn w-full mt-2" onclick="openAdmitCardEditorPopup()">🎟️ Edit Admit Card Template</button>
     </div>
 </div>
 
@@ -1010,6 +1000,13 @@ overflow-y: auto;
 <button class="btn gold-btn" onclick="saveSettings()">💾 Save Config</button>
 <button class="btn blue-btn" onclick="openMarksheetPopup()">📝 Marksheet Engine</button>
 <button class="btn purple-btn" onclick="openThemePopup()">🎨 Themes</button>
+<button class="btn green-btn" onclick="document.getElementById('databaseUploadInput').click()">📂 Upload Database JSON</button>
+</div>
+
+<div class="glass mt-5 bg-slate-950/70 border border-slate-800 p-4">
+    <h3 class="text-yellow-400 font-bold text-base mb-3">📂 Database Upload</h3>
+    <p class="text-xs text-slate-400 mb-3">Ye button aapko offline JSON database file upload karne mein madad karega.</p>
+    <button class="btn green-btn w-full" onclick="document.getElementById('databaseUploadInput').click()">📂 Upload Database JSON</button>
 </div>
 
 <div class="glass mt-5">
@@ -1034,11 +1031,47 @@ overflow-y: auto;
             <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[TOTAL]')">Total Fee</button>
             <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[PAID]')">Paid Fee</button>
             <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[DUE]')">Due Fee</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[SCHOOL_LOGO]')">School Logo</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[STUDENT_PHOTO]')">Student Photo</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[SCH_NAME]')">School Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertNoticePlaceholder('[SCH_ADDRESS]')">School Address</button>
         </div>
         <textarea id="noticeTemplateTextArea" rows="8" class="w-full text-sm p-3 bg-slate-950 border border-slate-700 rounded-xl mb-4 text-white" placeholder="Write notice content here..."></textarea>
         <div class="flex gap-3 justify-end">
             <button class="btn green-btn" onclick="saveNoticeTemplateText()">💾 Save Template</button>
             <button class="btn red-btn" onclick="document.getElementById('noticeEditorPopup').style.display='none'">❌ Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="admitCardEditorPopup" class="popup">
+    <div class="popup-box" style="max-width: 760px;">
+        <div class="flex items-center justify-between mb-4" style="align-items:center; gap:12px;">
+            <div>
+                <h2 class="text-yellow-400 font-bold text-xl mb-1">🎟️ Admit Card Template Editor</h2>
+                <p class="text-xs text-slate-400">Click placeholders to insert them at the cursor position, just like a document editor.</p>
+            </div>
+            <div class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-300" style="display:flex; gap:8px;">
+                <span>File</span><span>Home</span><span>Insert</span><span>View</span>
+            </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-3">
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[SID]')">Student SID</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[NAME]')">Full Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[FATHER]')">Father Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[MOTHER]')">Mother Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[CLASS]')">Class</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[EXAM]')">Exam</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[TOTAL]')">Total Fee</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[SCHOOL_LOGO]')">School Logo</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[STUDENT_PHOTO]')">Student Photo</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[SCH_NAME]')">School Name</button>
+            <button class="btn blue-btn text-xs py-1 px-2" onclick="insertAdmitCardPlaceholder('[SCH_ADDRESS]')">School Address</button>
+        </div>
+        <div id="admitCardTemplateContent" contenteditable="true" class="w-full text-sm p-4 bg-slate-950 border border-slate-700 rounded-xl mb-4 text-white" style="min-height:260px; outline:none; overflow:auto; white-space:pre-wrap; font-family:inherit;">Write admit card layout here...</div>
+        <div class="flex gap-3 justify-end">
+            <button class="btn green-btn" onclick="saveAdmitCardTemplateText()">💾 Save Template</button>
+            <button class="btn red-btn" onclick="document.getElementById('admitCardEditorPopup').style.display='none'">❌ Close</button>
         </div>
     </div>
 </div>
@@ -1179,6 +1212,7 @@ overflow-y: auto;
         <p class="text-xs text-slate-400 mb-4 text-center">Laptop aur Mobile ke liye alag-alag HTML download karein.</p>
         <div class="flex flex-col gap-3">
             <button class="btn gold-btn w-full" onclick="downloadWebsiteVersion('laptop')">💻 Laptop Version</button>
+            <button class="btn blue-btn w-full" onclick="downloadLaptopSetupPackage()">🖥️ Laptop Setup Package</button>
             <button class="btn green-btn w-full" onclick="downloadWebsiteVersion('mobile')">📱 Mobile Version</button>
             <button class="btn purple-btn w-full" onclick="downloadAndroidAPK()">📱 APK Install File</button>
             <button class="btn red-btn w-full" onclick="closeDownloadPopup()">❌ Close</button>
@@ -1218,6 +1252,9 @@ if(!localStorage.getItem('schoolAddress')) localStorage.setItem('schoolAddress',
 if(!localStorage.getItem('noticeTemplateText')) {
     localStorage.setItem('noticeTemplateText', 'Dear Parent, Aapke bache [NAME] (ID: [SID]) ki total fee Rs.[TOTAL] hai jisme se Rs.[PAID] jama hai aur Rs.[DUE] baki hai. Kripya samay par baki shulk jama karein.');
 }
+if(!localStorage.getItem('admitCardTemplateText')) {
+    localStorage.setItem('admitCardTemplateText', '<div style="text-align:center;margin-bottom:16px;"><div style="font-size:18px; font-weight:bold;">[SCH_NAME]</div><div style="font-size:12px; margin-bottom:8px;">[SCH_ADDRESS]</div>[SCHOOL_LOGO]</div><div style="display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:14px;"><div style="flex:1; font-size:13px; line-height:1.5;"><p><b>Student ID:</b> [SID]</p><p><b>Name:</b> [NAME]</p><p><b>Class:</b> [CLASS]</p><p><b>Exam:</b> [EXAM]</p><p><b>Fee Total:</b> ₹[TOTAL]</p></div><div style="width:120px; height:150px; border:2px solid #000; padding:4px; box-sizing:border-box;">[STUDENT_PHOTO]</div></div><div style="font-size:12px; background:#f8f8f8; padding:12px; border:1px solid #ddd;">This admit card is valid only for the exam. Carry it with a valid photo ID.</div>');
+}
 
 let registeredFaces = schoolData.registeredFaces || [];
 let biometricAuditLogs = schoolData.biometricAuditLogs || [];
@@ -1237,7 +1274,6 @@ const themesConfig = {
 function revealERPInterface() {
     document.getElementById('mainSidebar').style.display = 'block';
     document.getElementById('mainContentBlock').style.display = 'block';
-    setTimeout(openDatabashPopupIfNotSelected, 120);
 }
 
 function openDatabashPopup() {
@@ -1350,6 +1386,124 @@ function downloadAndroidAPK() {
     URL.revokeObjectURL(downloadUrl);
     closeDownloadPopup();
     alert('APK download started: ' + filename);
+}
+
+function downloadLaptopSetupPackage() {
+    const pageHtml = document.documentElement.outerHTML;
+    const htmlFile = new TextEncoder().encode(pageHtml);
+    const batFile = new TextEncoder().encode('@echo off\r\ncd /d "%~dp0"\r\nstart "" "royal-school-laptop.html"\r\n');
+    const zipBlob = createZipBlob([
+        { name: 'royal-school-laptop.html', data: htmlFile },
+        { name: 'run-royal-school.bat', data: batFile }
+    ]);
+    const downloadUrl = URL.createObjectURL(zipBlob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'RoyalSchoolLaptopSetup.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+    closeDownloadPopup();
+    alert('Laptop setup package download started. Extract and run the BAT to open the laptop version.');
+}
+
+const CRC32_TABLE = new Uint32Array(256);
+(function() {
+    for (let i = 0; i < 256; i++) {
+        let crc = i;
+        for (let j = 0; j < 8; j++) {
+            crc = (crc & 1) ? (0xedb88320 ^ (crc >>> 1)) : (crc >>> 1);
+        }
+        CRC32_TABLE[i] = crc >>> 0;
+    }
+})();
+
+function crc32(data) {
+    let crc = 0xffffffff;
+    for (let i = 0; i < data.length; i++) {
+        crc = CRC32_TABLE[(crc ^ data[i]) & 0xff] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+}
+
+function makeDosDateTime(date = new Date()) {
+    const time = ((date.getHours() & 0x1f) << 11) | ((date.getMinutes() & 0x3f) << 5) | ((Math.floor(date.getSeconds() / 2) & 0x1f));
+    const dosDate = (((date.getFullYear() - 1980) & 0x7f) << 9) | (((date.getMonth() + 1) & 0x0f) << 5) | (date.getDate() & 0x1f);
+    return { time, date: dosDate };
+}
+
+function createZipBlob(entries) {
+    let offset = 0;
+    const parts = [];
+    const centralDirectory = [];
+    for (const entry of entries) {
+        const filenameBytes = new TextEncoder().encode(entry.name);
+        const data = entry.data;
+        const crc = crc32(data);
+        const compSize = data.length;
+        const uncompSize = data.length;
+        const mod = makeDosDateTime(new Date());
+
+        const localHeader = new Uint8Array(30 + filenameBytes.length);
+        const lhView = new DataView(localHeader.buffer);
+        lhView.setUint32(0, 0x04034b50, true);
+        lhView.setUint16(4, 20, true);
+        lhView.setUint16(6, 0, true);
+        lhView.setUint16(8, 0, true);
+        lhView.setUint16(10, mod.time, true);
+        lhView.setUint16(12, mod.date, true);
+        lhView.setUint32(14, crc, true);
+        lhView.setUint32(18, compSize, true);
+        lhView.setUint32(22, uncompSize, true);
+        lhView.setUint16(26, filenameBytes.length, true);
+        lhView.setUint16(28, 0, true);
+        localHeader.set(filenameBytes, 30);
+        parts.push(localHeader);
+        parts.push(data);
+
+        const centralHeader = new Uint8Array(46 + filenameBytes.length);
+        const chView = new DataView(centralHeader.buffer);
+        chView.setUint32(0, 0x02014b50, true);
+        chView.setUint16(4, 20, true);
+        chView.setUint16(6, 20, true);
+        chView.setUint16(8, 0, true);
+        chView.setUint16(10, 0, true);
+        chView.setUint16(12, mod.time, true);
+        chView.setUint16(14, mod.date, true);
+        chView.setUint32(16, crc, true);
+        chView.setUint32(20, compSize, true);
+        chView.setUint32(24, uncompSize, true);
+        chView.setUint16(28, filenameBytes.length, true);
+        chView.setUint16(30, 0, true);
+        chView.setUint16(32, 0, true);
+        chView.setUint16(34, 0, true);
+        chView.setUint16(36, 0, true);
+        chView.setUint32(38, 0, true);
+        chView.setUint32(42, offset, true);
+        centralHeader.set(filenameBytes, 46);
+        centralDirectory.push(centralHeader);
+
+        offset += localHeader.length + data.length;
+    }
+
+    const centralOffset = offset;
+    const centralSize = centralDirectory.reduce((sum, item) => sum + item.length, 0);
+    parts.push(...centralDirectory);
+
+    const endRecord = new Uint8Array(22);
+    const erView = new DataView(endRecord.buffer);
+    erView.setUint32(0, 0x06054b50, true);
+    erView.setUint16(4, 0, true);
+    erView.setUint16(6, 0, true);
+    erView.setUint16(8, entries.length, true);
+    erView.setUint16(10, entries.length, true);
+    erView.setUint32(12, centralSize, true);
+    erView.setUint32(16, centralOffset, true);
+    erView.setUint16(20, 0, true);
+    parts.push(endRecord);
+
+    return new Blob(parts, { type: 'application/zip' });
 }
 
 function processBackupRecoveryLogin() {
@@ -1701,7 +1855,7 @@ function renderTeachers() {
             customLedgerRows += `</div>`;
         }
         const pendingDue = t.pendingSalaryDue || 0;
-        const salaryDisplay = pendingDue > 0 ? `₹${t.salary} + ₹${pendingDue} due` : `₹${t.salary}`;
+        const salaryDisplay = pendingDue > 0 ? `₹${t.salary} - ₹${pendingDue} due` : `₹${t.salary}`;
 
         tbody.innerHTML += `<tr>
             <td class="text-yellow-400 font-bold">${t.tid}</td>
@@ -1984,24 +2138,9 @@ function renderAdmitCardEngineTable() {
 function printSingleAdmitCard(sid) {
     let s = schoolData.students.find(item => String(item.sid) === String(sid));
     if (!s) return;
-    let schName = localStorage.getItem('schoolName') || "ROYAL SCHOOL ERP";
-    let schAddress = localStorage.getItem('schoolAddress') || "Varanasi, Uttar Pradesh, India";
-    let logoData = localStorage.getItem('schoolLogoData') || "";
-    let logoHtml = logoData ? `<img src="${logoData}" style="width:50px; height:50px; border-radius:50%; margin-bottom:5px;">` : "";
-
-    let html = `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; max-width:550px; margin:auto;">
-        <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px; margin-bottom:15px;">
-            ${logoHtml}
-            <h2 style="margin:0; font-size:22px; color:#1e3a8a;">${schName}</h2>
-            <p style="margin:2px 0; font-size:11px; color:#555;">${schAddress}</p>
-            <h3 style="margin:8px 0; font-size:14px; background:#000; color:white; display:inline-block; padding:3px 10px; border-radius:4px;">EXAMINATION ADMIT CARD</h3>
-        </div>
-        <table style="width:100%; font-size:13px; color:black;">
-            <tr><td><b>Student ID (SID):</b> ${s.sid}</td><td style="text-align:right;"><b>Class Roll:</b> Regular</td></tr>
-            <tr><td><b>Student Name:</b> ${s.name}</td><td style="text-align:right;"><b>Class:</b> Class ${s.class}</td></tr>
-        </table>
-    </div>`;
-
+    let templateText = localStorage.getItem('admitCardTemplateText') || "";
+    let parsedHtml = parseAdmitCardVariables(templateText, s);
+    let html = `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; max-width:600px; margin:auto;">${parsedHtml}</div>`;
     document.getElementById('printViewArea').innerHTML = html;
     document.getElementById('printPopup').style.display = 'flex';
 }
@@ -2016,6 +2155,7 @@ function printBulkFilteredAdmitCards() {
 
     let masterHtml = `<div style="display:flex; flex-direction:column; gap:40px; background:white; padding:10px;">`;
     let addedAny = false;
+    let templateText = localStorage.getItem('admitCardTemplateText') || "";
 
     schoolData.students.forEach(s => {
         if (classFilter !== 'All' && s.class !== classFilter) return;
@@ -2023,16 +2163,7 @@ function printBulkFilteredAdmitCards() {
         if (paidSum < minFee) return;
 
         addedAny = true;
-        masterHtml += `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; page-break-inside:avoid; width:100%; max-width:550px; margin:auto;">
-            <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px; margin-bottom:15px;">
-                ${logoHtml}
-                <h2 style="margin:0; font-size:22px; color:#1e3a8a;">${schName}</h2>
-                <h3 style="margin:8px 0; font-size:14px; background:#000; color:white; display:inline-block; padding:3px 10px; border-radius:4px;">EXAMINATION ADMIT CARD</h3>
-            </div>
-            <table style="width:100%; font-size:13px; color:black;">
-                <tr><td><b>Student ID:</b> ${s.sid}</td><td><b>Name:</b> ${s.name}</td></tr>
-            </table>
-        </div>`;
+        masterHtml += `<div style="padding:20px; font-family:Arial, sans-serif; color:black; background:white; border:3px double #000; page-break-inside:avoid; width:100%; max-width:600px; margin:auto;">${parseAdmitCardVariables(templateText, s)}</div>`;
     });
 
     masterHtml += `</div>`;
@@ -2066,13 +2197,20 @@ function renderNoticeEngineTable() {
 function parseNoticeVariables(template, s) {
     let paidSum = schoolData.fees.filter(f => String(f.sid) === String(s.sid)).reduce((sum, item) => sum + item.paid, 0);
     let dueSum = s.yearlyFee - paidSum;
+    let logoData = localStorage.getItem('schoolLogoData') || "";
+    let schoolLogoHtml = logoData ? `<div style="text-align:center;margin-bottom:10px;"><img src="${logoData}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;"></div>` : "";
+    let studentPhotoHtml = s.photo ? `<img src="${s.photo}" style="width:100px;height:130px;object-fit:cover;border:1px solid #333;">` : `<div style="width:100px;height:130px;background:#f0f0f0;color:#555;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid #ccc;">No Photo</div>`;
     return template.replace(/\[SID\]/g, s.sid)
                    .replace(/\[NAME\]/g, s.name)
                    .replace(/\[FATHER\]/g, s.father)
                    .replace(/\[MOTHER\]/g, s.mother || "N/A")
                    .replace(/\[TOTAL\]/g, s.yearlyFee)
                    .replace(/\[PAID\]/g, paidSum)
-                   .replace(/\[DUE\]/g, dueSum);
+                   .replace(/\[DUE\]/g, dueSum)
+                   .replace(/\[SCHOOL_LOGO\]/g, schoolLogoHtml)
+                   .replace(/\[STUDENT_PHOTO\]/g, studentPhotoHtml)
+                   .replace(/\[SCH_NAME\]/g, localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP')
+                   .replace(/\[SCH_ADDRESS\]/g, localStorage.getItem('schoolAddress') || 'Varanasi, Uttar Pradesh, India');
 }
 
 function printSingleNotice(sid) {
@@ -2141,6 +2279,61 @@ function saveNoticeTemplateText() {
     localStorage.setItem('noticeTemplateText', txt);
     alert("Notice configuration parameters updated!");
     document.getElementById('noticeEditorPopup').style.display = 'none';
+}
+
+function openAdmitCardEditorPopup() {
+    let content = localStorage.getItem('admitCardTemplateText') || "";
+    let editor = document.getElementById('admitCardTemplateContent');
+    if (editor) {
+        editor.innerHTML = content || 'Write admit card layout here...';
+    }
+    document.getElementById('admitCardEditorPopup').style.display = 'flex';
+}
+
+function insertTextAtCaret(text) {
+    let sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    let range = sel.getRangeAt(0);
+    range.deleteContents();
+    let node = document.createTextNode(text);
+    range.insertNode(node);
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+function insertAdmitCardPlaceholder(variable) {
+    let editor = document.getElementById('admitCardTemplateContent');
+    if (!editor) return;
+    editor.focus();
+    insertTextAtCaret(variable);
+}
+
+function saveAdmitCardTemplateText() {
+    let editor = document.getElementById('admitCardTemplateContent');
+    if (!editor) return;
+    let txt = editor.innerHTML;
+    localStorage.setItem('admitCardTemplateText', txt);
+    alert("Admit card template updated!");
+    document.getElementById('admitCardEditorPopup').style.display = 'none';
+}
+
+function parseAdmitCardVariables(template, s) {
+    let logoData = localStorage.getItem('schoolLogoData') || "";
+    let schoolLogoHtml = logoData ? `<div style="text-align:center;margin-bottom:14px;"><img src="${logoData}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;"></div>` : "";
+    let studentPhotoHtml = s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:#f0f0f0;color:#555;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid #ccc;">No Photo</div>`;
+    return template.replace(/\[SCHOOL_LOGO\]/g, schoolLogoHtml)
+                   .replace(/\[STUDENT_PHOTO\]/g, studentPhotoHtml)
+                   .replace(/\[SID\]/g, s.sid)
+                   .replace(/\[NAME\]/g, s.name)
+                   .replace(/\[FATHER\]/g, s.father || "N/A")
+                   .replace(/\[MOTHER\]/g, s.mother || "N/A")
+                   .replace(/\[CLASS\]/g, s.class)
+                   .replace(/\[EXAM\]/g, document.getElementById('markExam') ? document.getElementById('markExam').value : '')
+                   .replace(/\[TOTAL\]/g, s.yearlyFee || 0)
+                   .replace(/\[SCH_NAME\]/g, localStorage.getItem('schoolName') || 'ROYAL SCHOOL ERP')
+                   .replace(/\[SCH_ADDRESS\]/g, localStorage.getItem('schoolAddress') || 'Varanasi, Uttar Pradesh, India');
 }
 
 function findMarksheetStudent() {
@@ -2457,12 +2650,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async function(){
     document.getElementById('salaryTransactionDate').value = new Date().toLocaleDateString('en-CA');
-    refreshAllUIRecords();
     updateCredentialNote();
     let name = localStorage.getItem('schoolName'); if(name) { schoolName.innerText = name; schoolNameInput.value = name; }
     let addressVal = localStorage.getItem('schoolAddress'); if(addressVal) { schoolAddressInput.value = addressVal; }
     let savedLogo = localStorage.getItem('schoolLogoData'); if(savedLogo) { document.getElementById('schoolLogo').src = savedLogo; }
     await restoreDatabashHandle();
+    refreshAllUIRecords();
     startAutoSaveMasterDatabase();
     document.getElementById('loginForm')?.addEventListener('submit', handleLoginSubmit);
     startFaceAutoLogin();
